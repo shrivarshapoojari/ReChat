@@ -23,14 +23,16 @@ const Login = () => {
      e.preventDefault
     }
     return (
-
+    <div className='bg-black' >
     <Container component={"main"} 
     maxWidth="xs"
     sx={{height:"100vh",
 
         display:"flex",
         alignItems:"center",
-        justifyContent:"center"
+        justifyContent:"center",
+        padding:"1rem",
+      
     }}>
         <Paper
             elevation={3}
@@ -38,7 +40,9 @@ const Login = () => {
                 padding: 4,
                 display: "flex",
                 flexDirection: "column",
-                alignItems: "center"
+                alignItems: "center",
+                borderRadius: 5,
+                
             }}
 
 
@@ -241,7 +245,8 @@ const Login = () => {
 
         </Paper>
      
-    </Container>)
+    </Container>
+    </div>)
 }
 
 export default Login
