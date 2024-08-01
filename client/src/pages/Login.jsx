@@ -23,11 +23,11 @@ const Login = () => {
      e.preventDefault
     }
     return (
-    <div className='bg-black' >
+    <div className='bg-gradient-to-t from-[#0029ff]  to-[#00c6ff] min-h-[100vh] flex items-center justify-center' >
     <Container component={"main"} 
     maxWidth="xs"
-    sx={{height:"100vh",
-
+    sx={{
+    
         display:"flex",
         alignItems:"center",
         justifyContent:"center",
@@ -65,11 +65,12 @@ const Login = () => {
                     <TextField
                         required
                         fullWidth
-                        label="username"
+                        label="Username"
                         margin='normal'
                         variant='outlined'
                         value={username.value}
                         onChange={username.changeHandler}
+                        
                     />
                     <TextField
                         required
@@ -89,17 +90,36 @@ const Login = () => {
                         type='submit'
                         fullWidth
                         sx={{
-                            marginTop: "1rem"
-
-                        }}
+                            mt: '1rem',
+                            py: '0.5rem',
+                            backgroundImage: 'linear-gradient(to right, #56CCF2, #2F80ED)',
+                            color: 'white',
+                            
+                            borderRadius: '0.375rem',
+                            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
+                            transition: 'background-position 0.3s ease-in-out',
+                            backgroundSize: '200% 200%',
+                            backgroundPosition: 'left',
+                            fontWeight: 'bold',
+                            '&:hover': {
+                              backgroundPosition: 'right',
+                            },
+                          }}
                     >
                         Login
                     </Button>
                     <Typography textAlign={"center"} m={"1rem"}>OR</Typography>
                     <Button
-                        variant='text'
+                        variant='outlined'
                         sx={{
-                            marginTop: "1rem"
+                            marginTop: "1rem",
+                           
+                             
+                            '&:hover': {
+                                background: 'linear-gradient(to right, #56CCF2, #2F80ED)', // Gradient background on hover
+                                color: 'white',  
+                                borderColor: 'transparent', 
+                            }
                         }}
                         onClick={() => toggleLogin()}
                         fullWidth
@@ -222,17 +242,35 @@ const Login = () => {
                             type='submit'
                             fullWidth
                             sx={{
-                                marginTop: "1rem"
-    
-                            }}
+                                mt: '1rem',
+                                py: '0.5rem',
+                                backgroundImage: 'linear-gradient(to right, #56CCF2, #2F80ED)',
+                                color: 'white',
+                                borderRadius: '0.375rem',
+                                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.5)',
+                                transition: 'background-position 0.3s ease-in-out',
+                                backgroundSize: '200% 200%',
+                                fontWeight: 'bold',
+                                backgroundPosition: 'left',
+                                '&:hover': {
+                                  backgroundPosition: 'right',
+                                },
+                              }}
                         >
                           Register
                         </Button>
                         <Typography textAlign={"center"} m={"1rem"}>OR</Typography>
                         <Button
-                            variant='text'
+                            variant='outlined'
                             sx={{
-                                marginTop: "1rem"
+                                marginTop: "1rem",
+                               
+                                 
+                                '&:hover': {
+                                    background: 'linear-gradient(to right, #56CCF2, #2F80ED)', // Gradient background on hover
+                                    color: 'white',  
+                                    borderColor: 'transparent', 
+                                }
                             }}
                             onClick={() => toggleLogin()}
                             fullWidth
