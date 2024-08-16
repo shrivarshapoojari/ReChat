@@ -4,6 +4,7 @@ import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/
 import { CssBaseline } from '@mui/material';
 import './index.css';
 import App from './App';
+import { HelmetProvider } from 'react-helmet-async';
  
 
 const rootElement = document.getElementById('root');
@@ -28,13 +29,15 @@ const theme = createTheme({
 
 root.render(
   <React.StrictMode>
+    <HelmetProvider>
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <App />
       </ThemeProvider>
     </StyledEngineProvider>
-  </React.StrictMode>,
+    </HelmetProvider>
+  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
