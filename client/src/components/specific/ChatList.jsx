@@ -19,10 +19,10 @@ const ChatList = (
   return (
     <Stack width={w} direction={"column"}>
       {
-        chats?.map(data=>{
-            return <div> d</div>
-        })
-      }
+  chats?.map((data, index) => {
+    return <div key={index}>{data}</div>;
+  })
+}
     </Stack>
   )
 }
