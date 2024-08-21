@@ -1,2 +1,2 @@
 
-export const orange="#0029ff"
+export const blue="#0029ff"
