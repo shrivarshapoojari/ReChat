@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { AppBar, Box, Icon, IconButton, Menu, Toolbar, Tooltip } from '@mui/material'
+import { AppBar, Backdrop, Box, Icon, IconButton, Menu, Toolbar, Tooltip } from '@mui/material'
 import { Typography } from '@mui/material'
 import { blue } from '../../constants/color'
 import { Menu as MenuIcon, Search as SearchICon} from '@mui/icons-material'
@@ -12,6 +12,7 @@ import { useState } from 'react';
 const Search = React.lazy(()=>import('../specific/Search'));
 const NewGroup = React.lazy(()=>import('../specific/NewGroup'));
 const Notifications = React.lazy(()=>import('../specific/Notifications'));
+ 
 const Header = () => {
   const [isMobile, setIsMobile] = useState(false);
   const[isSearch, setIsSearch] = useState(false);
@@ -111,21 +112,21 @@ const logoutHandler = () => {
       </Box>
       {
         isSearch &&(
-           <Suspense fallback={<div>Loading...</div>}>
+           <Suspense fallback={<Backdrop open/>}>
             <Search />
           </ Suspense>
         )
       }
       {
          isNewGroup&&(
-           <Suspense fallback={<div>Loading...</div>}>
+           <Suspense fallback= {<Backdrop open/>}>
             <NewGroup />
           </ Suspense>
         )
       }
       {
         isNotification &&(
-           <Suspense fallback={<div>Loading...</div>}>
+           <Suspense fallback= {<Backdrop open/>}>
             <Notifications />
           </ Suspense>
         )
