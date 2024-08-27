@@ -1,6 +1,7 @@
  import React from 'react'
- import { Link } from '@mui/icons-material'
- import { Stack, Typography } from '@mui/material'
+ import { Link } from '../styles/StyledComponents'
+ import { Box, Stack, Typography } from '@mui/material'
+ import {memo} from 'react'
  const ChatItem = (
 {
 
@@ -15,10 +16,10 @@
   handleDeleteChatOpen,
 }
  ) => {
+    
   
-
    return (
-     <  Link to={`/chat/${_id}`}>
+     <  Link to={`/chat/${_id}`} onContextMenu={(e)=>handleDeleteChatOpen(e,_id,groupChat)}>
       <div style={
 
         {
@@ -36,9 +37,10 @@
 
         }
       }>
-        {/* Avatar */}
+         
         <Stack>
              <Typography variant="h6">{name}</Typography>
+            
              {
                 newMessageAlert && (
                   <Typography>
@@ -47,7 +49,23 @@
                 )
              }
         </Stack>
+      { isOnline && (
 
+      <Box sx={
+        {
+          width: "10px",
+          height: "10px",
+          borderRadius: "50%",
+          backgroundColor: "green",
+          position: "absolute",
+          right: "5px",
+          top: "50%",
+          transform: "translateY(-50%)",
+        }
+      }
+      />
+    )
+  }
 
 
       </div>
@@ -55,5 +73,5 @@
    )
  }
  
- export default ChatItem
+ export default ChatItem;
  
