@@ -2,6 +2,7 @@
  import { Link } from '../styles/StyledComponents'
  import { Box, Stack, Typography } from '@mui/material'
  import {memo} from 'react'
+import AvatarCard from './AvatarCard'
  const ChatItem = (
 {
 
@@ -13,13 +14,20 @@
   isOnline,
   newMessageAlert,
   index=0,
-  handleDeleteChatOpen,
+  handleDeleteChat,
 }
  ) => {
     
   
    return (
-     <  Link to={`/chat/${_id}`} onContextMenu={(e)=>handleDeleteChatOpen(e,_id,groupChat)}>
+     < Link to={`/chat/${_id}`} onContextMenu={(e)=>handleDeleteChat(e,_id,groupChat)}
+       sx={{
+        padding: "0",
+        
+       }}
+     
+     >
+       
       <div style={
 
         {
@@ -37,10 +45,11 @@
 
         }
       }>
+        <AvatarCard avatar={avatar} />
          
         <Stack>
              <Typography variant="h6">{name}</Typography>
-            
+              
              {
                 newMessageAlert && (
                   <Typography>
@@ -73,5 +82,5 @@
    )
  }
  
- export default ChatItem;
+ export default memo(ChatItem);
  

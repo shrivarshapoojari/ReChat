@@ -19,7 +19,7 @@ const ChatList = (
 ) => {
   return (
     <Stack width={w} direction={"column"}>
-      {console.log(chats)}
+      
       { 
        
   chats?.map((data, index) => {
@@ -38,8 +38,8 @@ const ChatList = (
     _id={_id}
     key={_id}
     groupChat={groupChat}
-    sameSender={_id === chatId}
-    handleDeleteChatOpen={handleDeleteChat}
+    sameSender={_id == chatId}
+    handleDeleteChat={handleDeleteChat}
     
     />
     ;

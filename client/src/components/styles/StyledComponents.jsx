@@ -17,7 +17,9 @@ import {Link as LinkComponent} from 'react-router-dom'
    color: "black",
    padding: "1rem",
    '&:hover': {
-     backgroundColor: "#f0f0f0", // Add quotes around the color value
+     backgroundColor: "rgba(0,0,0,0.1)", // Add quotes around the color value
    
    }
  });
+
+ 
