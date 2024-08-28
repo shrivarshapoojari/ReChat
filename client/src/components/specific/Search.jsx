@@ -2,9 +2,20 @@ import { Dialog, DialogTitle,InputAdornment,Stack,TextField,List, ListItem, List
 import React from 'react'
 import { useInputValidation } from '6pp'
 import SearchIcon from '@mui/icons-material/Search';
+import UserItem from '../shared/UserItem';
+import { useState } from 'react';
+import { sampleUsers } from '../../constants/sampleData';
 const Search = () => {
-  const users=[];
+ 
   const search=useInputValidation("")
+  const addFriendHandler=(id)=>{
+
+
+    console.log(id)
+  } 
+  let isLoadingSendFriendRequest=false
+  const [users,setUsers]=useState(sampleUsers)
+   
   return (
     <Dialog open>
         <Stack p={"2rem"} direction={"column"} width={"25rem"}>
@@ -24,13 +35,14 @@ const Search = () => {
                 /> 
 
                 <List>
+                  
+                  
 
                         {
                           users?.map((user) =>
-                            <ListItem>
-                                 <ListItemText />
-                            </ListItem>
-                        
+                          
+                            <UserItem user={user} key={user._id} handler={addFriendHandler} handlerIsLoading={isLoadingSendFriendRequest}/>
+                            
                         )
                         }
 

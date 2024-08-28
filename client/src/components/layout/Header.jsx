@@ -24,7 +24,7 @@ const Header = () => {
     setIsMobile((prev)=>!prev);
   }
   const openSearch = () => {
-    console.log('search');
+     
       setIsSearch((prev)=>!prev);
   }
   const openNewGroup = () => {
