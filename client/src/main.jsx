@@ -33,9 +33,9 @@ root.render(
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <div onContextMenu={(e)=>e.preventDefault()}>
+        {/* <div onContextMenu={(e)=>e.preventDefault()}> */}
         <App />
-        </div>
+        {/* </div> */}
       </ThemeProvider>
     </StyledEngineProvider>
     </HelmetProvider>
