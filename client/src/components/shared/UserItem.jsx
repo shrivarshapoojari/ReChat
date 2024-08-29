@@ -1,10 +1,11 @@
 import { Add } from '@mui/icons-material'
+import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { Avatar, IconButton, ListItem, Stack, Typography } from '@mui/material'
 import React from 'react'
 import {memo} from 'react'
 const UserItem = ({user,handler,handlerIsLoading}) => {
 
-    const {name,_id,avatar} = user
+    const {name,_id,avatar,isAdded} = user
    
 
     return (
@@ -34,15 +35,18 @@ const UserItem = ({user,handler,handlerIsLoading}) => {
                  size='small'
                  sx={{
 
-                    bgcolor:"primary.main",
+                    bgcolor:  isAdded ? "error.main" :"primary.main",
                     color:"white",
                     "&:hover":{
-                        bgcolor:"primary.dark"  
+                        bgcolor:isAdded ? "error.dark":"primary.dark"  
                  }}
                 }
              
              onClick={()=>handler(_id)} disable={handlerIsLoading}>
-                <Add/>
+               {
+                  isAdded ?<RemoveCircleOutlineIcon/> :  <Add/>
+               }
+               
 
              </IconButton>
          </Stack>
