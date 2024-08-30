@@ -5,7 +5,14 @@ import { useRef } from 'react'
 import { AttachFileOutlined, Send } from '@mui/icons-material'
 import {InputBox} from '../components/styles/StyledComponents'
 import { grayColor } from '../constants/color'
+import FileMenu from '../components/dialogs/FileMenu'
+import Message from '../components/shared/Message'
+import { sampleMessage } from '../constants/sampleData'
 const Chat = () => {
+  const user={
+    _id:"sdfsdfsdf",
+    name:"Shri"
+  }
   const containerRef=useRef(null)
   return (
     <Fragment> 
@@ -24,6 +31,13 @@ const Chat = () => {
      >
 
 {/* Message */}
+
+
+{
+  sampleMessage.map((message)=>(
+    <Message key={message._id} message={message} user={user}/>
+  ))
+}
      </Stack>
 
      <form
@@ -74,6 +88,7 @@ const Chat = () => {
 
 
      </form>
+     <FileMenu/>
      </Fragment>
   )
 }
