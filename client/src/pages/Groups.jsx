@@ -1,9 +1,9 @@
 import React, { memo, useEffect } from 'react'
-import { Box, Drawer, Grid, Icon, IconButton, Stack, TextField, Tooltip,Typography } from '@mui/material'
+import { Box, Button, Drawer, Grid, Icon, IconButton, Stack, TextField, Tooltip,Typography } from '@mui/material'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { useNavigate,useSearchParams } from 'react-router-dom';
 import { useState } from 'react';
-import {Done, Menu as MenuIcon} from '@mui/icons-material'
+import {Add, Delete, Done, Menu as MenuIcon} from '@mui/icons-material'
 import { Link } from '../components/styles/StyledComponents';
 export const bgGradient = "linear-gradient(rgb(255 225 209), rgb(249 159 159))";
 import AvatarCard from '../components/shared/AvatarCard';
@@ -16,10 +16,21 @@ const chatId=useSearchParams()[0].get("group")
   const navigateBack=()=>{
     navigate("/")
   }
+
+  const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false)
   const updateGroupNameHandler=()=>{
     setIsEdit(false)
     }
 
+    const openconfirmDeleteHandler=()=>{
+      setConfirmDeleteDialog(true)
+    }
+
+const closeConfirmDeleteHandler=()=>{
+  setConfirmDeleteDialog(false)
+}
+    const openAddMember=()=>{
+    }
     const [groupName, setGroupName] = useState("")
     const [groupNameUpdated, setGroupNameUpdated] = useState("")
   const handleMobileClose=()=>{
@@ -97,6 +108,23 @@ const chatId=useSearchParams()[0].get("group")
     </>}  
   </Stack>
   
+
+  const ButtonGroup= <Stack
+  direction={{
+    xs:"column-reverse",
+    sm:"row"
+  }}
+  spacing={"1rem"}
+  p={{
+    xs:"0",
+    sm:"1rem",
+    md:"1rem 4rem"
+
+  }}
+  >
+<Button size='large' color='error' variant='outlined' startIcon={<Delete/>} onClick={openconfirmDeleteHandler}>Delete Group</Button>
+<Button size='large'variant='contained' startIcon={<Add/>} onClick={openAddMember}>Add Member</Button>
+  </Stack>
   return (
     <Grid container height={"100vh"}>
         <Grid
@@ -130,9 +158,41 @@ const chatId=useSearchParams()[0].get("group")
            > 
             {IconBtns}
             {
-              groupName&&GroupName
+              groupName&& <>
+              
+
+              {GroupName}
+              <Typography margin={"2rem"}
+              alignSelf={"flex-start"}
+              variant='body1'
+              
+              >
+                Members
+              </Typography>
+              <Stack
+              maxWidth={"45rem"}
+              width={"100%"}
+              boxSizing={"border-box"}
+              padding={{
+                sm:"1rem",
+                xs:"0",
+                md:"1rem 4rem "
+              }}
+              spacing={"2rem"}
+              bgcolor={"gray"}
+              height={"50vh"}
+              overflow={"auto"}
+              >
+             {/**Members */}
+              </Stack>
+                 {ButtonGroup}
+              </>
             }
             </Grid>
+
+            {
+              confirmDeleteDialog && <> {/* dialog */}</>
+            }
             <Drawer open={isMobileMenuOpen} onClose={handleMobileClose}
                    sx={{
 
