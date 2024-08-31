@@ -1,13 +1,14 @@
-import React, { memo } from 'react'
-import { Box, Drawer, Grid, Icon, IconButton, Stack, Tooltip,Typography } from '@mui/material'
+import React, { memo, useEffect } from 'react'
+import { Box, Drawer, Grid, Icon, IconButton, Stack, TextField, Tooltip,Typography } from '@mui/material'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { useNavigate,useSearchParams } from 'react-router-dom';
 import { useState } from 'react';
-import {Menu as MenuIcon} from '@mui/icons-material'
+import {Done, Menu as MenuIcon} from '@mui/icons-material'
 import { Link } from '../components/styles/StyledComponents';
 export const bgGradient = "linear-gradient(rgb(255 225 209), rgb(249 159 159))";
 import AvatarCard from '../components/shared/AvatarCard';
 import { sampleChats } from '../constants/sampleData';
+import EditIcon from '@mui/icons-material/Edit';
 const Groups = () => {
 
 const chatId=useSearchParams()[0].get("group")
@@ -15,14 +16,31 @@ const chatId=useSearchParams()[0].get("group")
   const navigateBack=()=>{
     navigate("/")
   }
+  const updateGroupNameHandler=()=>{
+    setIsEdit(false)
+    }
+
+    const [groupName, setGroupName] = useState("")
+    const [groupNameUpdated, setGroupNameUpdated] = useState("")
   const handleMobileClose=()=>{
     setIsMobileMenuOpen(false)
   }
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  const [isEdit, setIsEdit] = useState(false);
   const handleMobile=()=>{
     setIsMobileMenuOpen((prev)=>!prev)
   }
+
+  useEffect(() => {
+       setGroupName("Group Name")
+       setGroupNameUpdated("Group Name")
+
+       return () => {
+          setGroupName("")
+          setGroupNameUpdated("")
+          setIsEdit(false)
+        }
+  },[chatId])
   const  IconBtns= <>
   
 <Box    sx={{
@@ -58,7 +76,27 @@ const chatId=useSearchParams()[0].get("group")
       <KeyboardBackspaceIcon/>
     </IconButton>
     </Tooltip>
+
+
+    
   </>
+  const GroupName= <Stack direction={"row"} alignItems={"center"} justifyContent={"center"} spacing={"1rem"} padding={"3rem"}>
+    {isEdit ? <>
+    <TextField value={groupNameUpdated} onChange={(e)=>setGroupNameUpdated(e.target.value)} />
+    <IconButton onClick={()=>setIsEdit(false)}>
+      <Done/>
+      </IconButton>
+     
+    </> :<>
+    <Typography variant='h4'>
+     {groupName}
+      </Typography>
+      <IconButton onClick={updateGroupNameHandler}>
+         <EditIcon/>
+        </IconButton>
+    </>}  
+  </Stack>
+  
   return (
     <Grid container height={"100vh"}>
         <Grid
@@ -91,6 +129,9 @@ const chatId=useSearchParams()[0].get("group")
             }}
            > 
             {IconBtns}
+            {
+              groupName&&GroupName
+            }
             </Grid>
             <Drawer open={isMobileMenuOpen} onClose={handleMobileClose}
                    sx={{
