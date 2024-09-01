@@ -10,6 +10,7 @@ import AvatarCard from '../components/shared/AvatarCard';
 import { sampleChats } from '../constants/sampleData';
 import EditIcon from '@mui/icons-material/Edit';
 const ConfirmDeleteDialog=lazy(()=>import("../components/dialogs/ConfirmDeleteDialog"))
+const  AddMemberDialog=lazy(()=>import("../components/dialogs/AddMemberDialog"))
 const Groups = () => {
 
 const chatId=useSearchParams()[0].get("group")
@@ -18,6 +19,8 @@ const chatId=useSearchParams()[0].get("group")
     navigate("/")
   }
 
+
+  const isAddMember=true
   const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false)
   const updateGroupNameHandler=()=>{
     setIsEdit(false)
@@ -198,6 +201,12 @@ const closeConfirmDeleteHandler=()=>{
             {
               confirmDeleteDialog && <Suspense fallback={<Backdrop open/>}>
                          <ConfirmDeleteDialog open={confirmDeleteDialog} handleClose={closeConfirmDeleteHandler} deleteHandler={deleteHandler}/>
+                </Suspense>
+            }
+
+            {
+              isAddMember &&<Suspense fallback={<Backdrop open/>}>
+                          <AddMemberDialog open/>
                 </Suspense>
             }
             <Drawer open={isMobileMenuOpen} onClose={handleMobileClose}
