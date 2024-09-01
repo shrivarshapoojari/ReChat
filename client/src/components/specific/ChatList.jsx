@@ -18,7 +18,12 @@ const ChatList = (
     }
 ) => {
   return (
-    <Stack width={w} direction={"column"}>
+    <Stack width={w} direction={"column"}
+      sx={{
+        overflow:"auto",
+        height:"100%",
+      }}
+    >
       
       { 
        

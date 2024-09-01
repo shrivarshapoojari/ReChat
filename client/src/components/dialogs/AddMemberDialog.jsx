@@ -7,13 +7,23 @@ import { useState } from 'react'
 
 
 const AddMemberDialog = ({addMember,isLoadingAddMemeber,chatId}) => {
-    
-        const addFriendHandler=(userId)=>{
-             
-        }
+     
+    const [members ,setMembers]=useState(sampleUsers);
+   const [selectedMembers,setSelectedMembers]=useState([])
+   const selectMemberHandler=(id)=>{
+      setMembers((prev)=> prev.map((user)=> user._id===id ? {...user,isAdded:!user.isAdded} : user))
+    setSelectedMembers((prev)=> prev.includes(id)? prev.filter((i)=> i!==id) : [...prev ,id])
+   }
+
+
+
+         
         const addMemberSubmitHandler=()=>{  
+            closeHandler()
         }
         const closeHandler=()=>{
+            setSelectedMembers([])
+            setMembers([])
         }
   return (
     <Dialog open onClose={closeHandler}>
@@ -23,9 +33,9 @@ const AddMemberDialog = ({addMember,isLoadingAddMemeber,chatId}) => {
                 </DialogTitle>
                 <Stack spacing={"1rem"}>
                      {
-                        sampleUsers.length>0 ? sampleUsers.map((user)=>(
+                        members.length>0 ? members.map((user)=>(
 
-                            <UserItem key={user.id} user={user} handler={addFriendHandler}/>
+                            <UserItem key={user._id} user={user} handler={selectMemberHandler} isAdded={selectedMembers.includes(user._id)}/>
                         )
                         ) : <Typography textAlign={"center"}>No users</Typography>
                      }

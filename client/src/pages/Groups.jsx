@@ -7,8 +7,9 @@ import {Add, Delete, Done, Menu as MenuIcon} from '@mui/icons-material'
 import { Link } from '../components/styles/StyledComponents';
 export const bgGradient = "linear-gradient(rgb(255 225 209), rgb(249 159 159))";
 import AvatarCard from '../components/shared/AvatarCard';
-import { sampleChats } from '../constants/sampleData';
+import { sampleChats, sampleUsers } from '../constants/sampleData';
 import EditIcon from '@mui/icons-material/Edit';
+import UserItem from '../components/shared/UserItem';
 const ConfirmDeleteDialog=lazy(()=>import("../components/dialogs/ConfirmDeleteDialog"))
 const  AddMemberDialog=lazy(()=>import("../components/dialogs/AddMemberDialog"))
 const Groups = () => {
@@ -19,8 +20,11 @@ const chatId=useSearchParams()[0].get("group")
     navigate("/")
   }
 
-
-  const isAddMember=true
+  const [members ,setMembers]=useState(sampleUsers);
+   
+  const removeMemberHandler=(id)=>{
+  }
+  const isAddMember=false
   const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false)
   const updateGroupNameHandler=()=>{
     setIsEdit(false)
@@ -51,8 +55,10 @@ const closeConfirmDeleteHandler=()=>{
   }
 
   useEffect(() => {
+      if(chatId){
        setGroupName("Group Name")
        setGroupNameUpdated("Group Name")
+      }
 
        return () => {
           setGroupName("")
@@ -187,11 +193,28 @@ const closeConfirmDeleteHandler=()=>{
                 md:"1rem 4rem "
               }}
               spacing={"2rem"}
-              bgcolor={"gray"}
+              bgcolor={"rgba(0,0,0,0.1)"}
               height={"50vh"}
               overflow={"auto"}
               >
              {/**Members */}
+             {
+              members.map((user)=>(
+
+                <UserItem 
+                key={user._id}
+                 user={user} 
+                 isAdded={true}
+                 handler={removeMemberHandler}   styling={
+                  {
+                    boxShadow:"0 0 0.5rem rgba(0,0,0,0.2)",
+                    padding:"1rem",
+                    borderRadius:"1rem"
+                  }
+                  
+                }/>
+              ))
+             }
               </Stack>
                  {ButtonGroup}
               </>

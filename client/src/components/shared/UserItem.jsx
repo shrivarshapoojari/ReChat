@@ -3,9 +3,9 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { Avatar, IconButton, ListItem, Stack, Typography } from '@mui/material'
 import React from 'react'
 import {memo} from 'react'
-const UserItem = ({user,handler,handlerIsLoading}) => {
+const UserItem = ({user,handler,handlerIsLoading ,styling={},isAdded=false} ) => {
 
-    const {name,_id,avatar,isAdded} = user
+    const {name,_id,avatar} = user
    
 
     return (
@@ -15,6 +15,7 @@ const UserItem = ({user,handler,handlerIsLoading}) => {
            alignItems={"center"}
            spacing={"1rem"}
            width={"100%"}
+           {...styling}
          >
 
             <Avatar/>
