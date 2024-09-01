@@ -1,5 +1,5 @@
-import React, { memo, useEffect } from 'react'
-import { Box, Button, Drawer, Grid, Icon, IconButton, Stack, TextField, Tooltip,Typography } from '@mui/material'
+import React, { lazy, memo, Suspense, useEffect } from 'react'
+import { Backdrop, Box, Button, Drawer, Grid, Icon, IconButton, Stack, TextField, Tooltip,Typography } from '@mui/material'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { useNavigate,useSearchParams } from 'react-router-dom';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ export const bgGradient = "linear-gradient(rgb(255 225 209), rgb(249 159 159))";
 import AvatarCard from '../components/shared/AvatarCard';
 import { sampleChats } from '../constants/sampleData';
 import EditIcon from '@mui/icons-material/Edit';
+const ConfirmDeleteDialog=lazy(()=>import("../components/dialogs/ConfirmDeleteDialog"))
 const Groups = () => {
 
 const chatId=useSearchParams()[0].get("group")
@@ -40,6 +41,10 @@ const closeConfirmDeleteHandler=()=>{
   const [isEdit, setIsEdit] = useState(false);
   const handleMobile=()=>{
     setIsMobileMenuOpen((prev)=>!prev)
+  }
+  const deleteHandler=()=>{ 
+    closeConfirmDeleteHandler();
+
   }
 
   useEffect(() => {
@@ -191,7 +196,9 @@ const closeConfirmDeleteHandler=()=>{
             </Grid>
 
             {
-              confirmDeleteDialog && <> {/* dialog */}</>
+              confirmDeleteDialog && <Suspense fallback={<Backdrop open/>}>
+                         <ConfirmDeleteDialog open={confirmDeleteDialog} handleClose={closeConfirmDeleteHandler} deleteHandler={deleteHandler}/>
+                </Suspense>
             }
             <Drawer open={isMobileMenuOpen} onClose={handleMobileClose}
                    sx={{
