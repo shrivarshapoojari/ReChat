@@ -22,11 +22,12 @@ const Chat = () => {
         boxSizing={"border-box"}
         padding={"1rem"}
         spacing={"1rem"}
-        bgcolor={grayColor}
+        
         height={"90%"}
         sx={{
           overflowX: "hidden",
           overflowY: "auto",
+           backgroundImage: "linear-gradient(to right, #FFFFFF, #D4DFED)"
         }}
      >
 
@@ -52,6 +53,7 @@ const Chat = () => {
       padding={"1rem"}
       alignItems={"center"}
       position={"relative"}
+      
       >
 
         <IconButton
@@ -88,7 +90,7 @@ const Chat = () => {
 
 
      </form>
-     <FileMenu/>
+     {/* <FileMenu/> */}
      </Fragment>
   )
 }

@@ -22,6 +22,7 @@ const ChatList = (
       sx={{
         overflow:"auto",
         height:"100%",
+         backgroundImage: "linear-gradient(to right, #FFFFFF, #D4DFED)"
       }}
     >
       

@@ -14,8 +14,8 @@ const Profile = () => {
             height:200,
             objectFit:"contain",
             marginBottom:"1rem",
-            border:"5px solid white"
-
+            border:"5px solid white",
+             
           }}
         
         

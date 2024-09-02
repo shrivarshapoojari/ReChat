@@ -5,7 +5,12 @@ import { grayColor } from '../constants/color';
 
 const Home = () => {
   return (
-    <Box bgcolor={grayColor} height={"100%"}>
+    <Box
+      sx={{
+        backgroundImage: "linear-gradient(to right, #FFFFFF, #D4DFED)"
+      }}
+    
+    height={"100%"}>
      <Typography p={"2rem"} variant='h5' textAlign={"center"} >Select a friend to chat</Typography>
      </Box>
   )
