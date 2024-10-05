@@ -8,7 +8,7 @@ const Groups = lazy(() => import('./pages/Groups'))
 import ProtectRoute from './components/auth/ProtectRoute';
 import { LayoutLoader } from './components/layout/Loaders';
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
-
+const DashBoard = lazy(() => import('./pages/admin/DashBoard'))
 let user = true
 
 const App = () => {
@@ -32,6 +32,7 @@ const App = () => {
 
 
         <Route path="/admin" element={<AdminLogin/>} />
+        <Route path="/admin/dashboard" element={<DashBoard/>} />
         <Route path="*" element={<h1>Notfound</h1>} />
       </Routes>
       </Suspense>
