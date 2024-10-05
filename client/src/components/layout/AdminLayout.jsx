@@ -1,16 +1,27 @@
 import React, { Children } from 'react'
-import { Grid, IconButton } from '@mui/material'
+import { Grid, IconButton, Typography } from '@mui/material'
 import { Box } from '@mui/system'
 import MenuIcon from '@mui/icons-material/Menu';
 import Close from '@mui/icons-material/Close';
 import Drawer from '@mui/material/Drawer';
+import { Stack } from '@mui/material';
 import { useState } from 'react';
-const SideBar = () => {
-    return (
-        <div>
-            sidebar
-        </div>
-    )
+import {useLocation} from 'react-router-dom';
+const SideBar = ({w="100%"}) => {
+   
+   const location=useLocation();
+   
+   return <Stack width={w} direction={"column"} p={"3rem"} spacing={"3rem"}>
+      <Typography variant={"h5"} textTransform={"uppercase"}>RECHAT</Typography>  
+                        <Stack spacing={"1rem"}>
+                             
+
+
+
+
+                          </Stack>
+
+    </Stack>
 }
 
 const AdminLayout = ({children}) => {
