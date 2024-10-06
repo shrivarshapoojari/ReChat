@@ -36,3 +36,31 @@ import { grayColor } from '../../constants/color';
     
    
  })
+
+
+ export const SearchField =styled("input")`
+   padding:1rem 2rem;
+   width:20vmax;
+   border:none;
+   outline:none;
+   border-radius:1.5rem;
+   background-color:#f1f1f1;
+   font-size:1.1rem
+ 
+ `
+
+
+ export const CurveButton=styled("button")`
+  border-radius:1.5rem;
+ padding:1rem 2rem;
+ border:none;
+ outline:none;
+ cursor:pointer;
+ background-color:black;
+ color:white;
+ font-size:1.1rem;
+ &:hover{
+   background-color:${0,0,0,0.8}  
+}
+ 
+ `

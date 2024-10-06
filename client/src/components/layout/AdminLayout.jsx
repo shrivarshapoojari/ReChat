@@ -1,5 +1,5 @@
-import React, { Children } from 'react'
-import { Grid, IconButton, Typography } from '@mui/material'
+import React from 'react'
+import { Grid, IconButton, Typography,styled } from '@mui/material'
 import { Box } from '@mui/system'
 import MenuIcon from '@mui/icons-material/Menu';
 import Close from '@mui/icons-material/Close';
@@ -8,10 +8,27 @@ import { Stack } from '@mui/material';
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import {Link} from 'react-router-dom';
+import {Link as LinkComponent} from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import GroupIcon from '@mui/icons-material/Group';
 import MessageIcon from '@mui/icons-material/Message';
+import ExitToApp from '@mui/icons-material/ExitToApp';
+import { Navigate } from 'react-router-dom';
+const Link = styled(LinkComponent)`
+  text-decoration: none;
+  border-radius: 2rem;
+  padding: 1rem 2rem;
+  color: black;
+
+  &:hover {
+    color: rgba(0, 0, 0, 0.54);
+  }
+`;
+
+
+const isAdmin = true;
+
+
 const  adminTabs=[
    {
 
@@ -40,6 +57,10 @@ const  adminTabs=[
 
 
 ]
+
+const logouthandler=()=>{
+   console.log("logout");
+}
 const SideBar = ({ w = "100%" }) => {
 
    const location = useLocation();
@@ -52,16 +73,34 @@ const SideBar = ({ w = "100%" }) => {
 
 
             adminTabs.map((tab) => (
-               <Link key={tab.path} to ={tab.path}>
+               <Link key={tab.path} to ={tab.path}
+                   sx={
+
+                     location.pathname === tab.path &&
+                     {
+                            bgcolor: 'black',
+                            color:"white",
+                              "&:hover": {
+                                 color: "white"
+                              }
+                     }
+
+                   }
+               >
                    <Stack  direction={"row"} alignItems={"center"} spacing={"1rem"}>
                              {tab.icon}
-                             <Typography variant={"h6"}>{tab.name}</Typography>
+                             <Typography >{tab.name}</Typography>
                    </Stack>
                </Link>
             )
                    )     }
 
-
+             <Link>
+                   <Stack  direction={"row"} alignItems={"center"} spacing={"1rem"}>
+                              <ExitToApp/>
+                             <Typography >Logout</Typography>
+                   </Stack>
+               </Link>
 
       </Stack>
 
@@ -74,7 +113,9 @@ const AdminLayout = ({ children }) => {
 
    const handleMobile = () => { setIsMobile(!isMobile) };
    const handleClose = () => { setIsMobile(false) };
-
+   if(!isAdmin){
+      return   <Navigate to="admin/login"/>
+   }
 
 
    return (
