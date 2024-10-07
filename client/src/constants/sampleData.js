@@ -77,3 +77,38 @@ export const sampleMessage = [
     createdAt: "2024-02-12T10:41:30.630Z",
   },
 ];
+
+
+export const dashboarddata={
+  users:[
+
+
+    {
+      avatar: "https://www.w3schools.com/howto/img_avatar.png",
+      name: "Shrivarsha Poojary",
+      _id: "1",
+      username:"shri",
+        friends:20,
+        groups:5
+      
+    },
+    {
+      avatar: "https://www.w3schools.com/howto/img_avatar.png",
+      name: "Shrivarsha Poojary",
+      _id: "2",
+      username:"shri",
+      friends:20,
+      groups:5
+    
+    },
+    {
+      avatar: "https://www.w3schools.com/howto/img_avatar.png",
+      name: "Shrivarsha Poojary",
+      _id: "3",
+      username:"shri",
+      friends:20,
+      groups:5
+    
+    },
+  ]
+}

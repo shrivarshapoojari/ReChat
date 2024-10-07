@@ -42,18 +42,7 @@ const  adminTabs=[
    path:"/admin/users-management",
    icon:<ManageAccountsIcon/>
 },
-   {
-
-   name:"Chats",
-   path:"/admin/chats-management",
-   icon:<GroupIcon/>
-},
-   {
-
-   name:"Messages",
-   path:"/admin/messages-management",
-   icon:<MessageIcon/>
-},
+    
 
 
 ]
