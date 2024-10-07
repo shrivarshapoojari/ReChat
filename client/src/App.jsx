@@ -13,7 +13,8 @@ const DashBoard = lazy(() => import('./pages/admin/DashBoard'))
 const UserManagement = lazy(() => import('./pages/admin/UserManagement'))
 const MessageManagement = lazy(() => import('./pages/admin/MessageManagement'))
 const ChatManagement = lazy(() => import('./pages/admin/ChatManagement'))
-let user = true
+
+let user=false;``
 
 const App = () => {
   return (
