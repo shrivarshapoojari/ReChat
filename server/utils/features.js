@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 dotenv.config();
 
 const cookieOptions = {
-    maxAge:process.env.COOKIE_EXPIRE,
+    maxAge:24*60*60*1000,
     sameSite:"none",
     httpOnly:true,
     secure:true
