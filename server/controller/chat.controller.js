@@ -1,6 +1,7 @@
 import { emitEvent } from '../utils/features.js';
 import { Chat } from '../models/chat.model.js';
 import { ALERT, REFETCH_CHATS } from '../constants/events.js';
+import { getOtherMember } from '../lib/helper.js';
 
 const newGroupChat = async (req, res, next) => {
     try {
@@ -41,26 +42,43 @@ const newGroupChat = async (req, res, next) => {
     }
 };
 
-const getMyChats = async (req, res, next) => {
+const getMyChats = async (req, res) => {
     try {
-        // Find chats where the user is a member
-        const myChats = await Chat.find({ members: req.user }).populate("members", "name avatar");
-
-        // Transform chat data before sending the response
-        const transformedChats = myChats.map(chat => ({
-            _id: chat._id,
-            name: chat.name,
-            groupChat: chat.groupChat,
-            members: chat.members,
-            lastmessage: chat.lastmessage,
-        }));
-
-        return res.status(200).json({ success: true, chats: transformedChats });
-
+      const chats = await Chat.find({ members: req.user }).populate(
+        "members",
+        "name avatar"
+      );
+  
+      const transformedChats = chats.map(({ _id, name, members, groupChat }) => {
+        const otherMember = getOtherMember(members, req.user);
+  
+        return {
+          _id,
+          groupChat,
+          avatar: groupChat
+            ? members.slice(0, 3).map(({ avatar }) => avatar.url)
+            : [otherMember.avatar.url],
+          name: groupChat ? name : otherMember.name,
+          members: members.reduce((prev, curr) => {
+            if (curr._id.toString() !== req.user.toString()) {
+              prev.push(curr._id);
+            }
+            return prev;
+          }, []),
+        };
+      });
+  
+      return res.status(200).json({
+        success: true,
+        chats: transformedChats,
+      });
     } catch (error) {
-        console.error("Error fetching chats:", error);
-        return res.status(500).json({ success: false, message: "Internal server error" });
+      return res.status(500).json({
+        success: false,
+        message: error.message || "Internal Server Error",
+      });
     }
-};
+  };
+  
 
 export { newGroupChat, getMyChats };
