@@ -96,4 +96,9 @@ const getMyProfile = async (req, res) => {
     return res.status(200).cookie("rechat-token", "", cookieOptions).json({ success: true, message: "Logged out" });
   }
 
-export { login, newUser,getMyProfile,logout };
+  const searchUser=async(req,res)=>{
+
+    
+  }
+
+export { login, newUser,getMyProfile,logout,searchUser };

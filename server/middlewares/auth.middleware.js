@@ -5,13 +5,13 @@ const isAuthentificated = (req, res, next) => {
 
 
 const token=req.cookies['rechat-token'];
-console.log(token)
+
 if(!token){
     return next(new ErrorHandler("Login to access this resource",401));
 }
 try {
     const decoded=jwt.verify(token,process.env.JWT_SECRET);
-    console.log(decoded)
+    
     req.user=decoded.id;
     console.log("id:",req.user)
     next();

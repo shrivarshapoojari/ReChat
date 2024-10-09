@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import e from "cors";
 dotenv.config();
 
 const cookieOptions = {
@@ -41,4 +42,10 @@ const sendToken =(res,user,code,message)=>{
     
       });
 }
-export {connectDB,sendToken}
+
+
+
+const emitEvent=(req,event,users,data)=>{
+console.log("Emitting event",event)
+}
+export {connectDB,sendToken,emitEvent}
