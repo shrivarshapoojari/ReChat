@@ -101,4 +101,6 @@ const getMyProfile = async (req, res) => {
     
   }
 
-export { login, newUser,getMyProfile,logout,searchUser };
+  
+
+export { login, newUser,getMyProfile,logout,searchUser};
