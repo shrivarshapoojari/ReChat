@@ -2,7 +2,7 @@ import express  from "express"
  
 import { multerUpload } from "../middlewares/multer.middleware.js";
 import { isAuthentificated } from "../middlewares/auth.middleware.js";
-import { getMyGroups, newGroupChat ,addMembers} from "../controller/chat.controller.js";
+import { getMyGroups, newGroupChat ,addMembers, removeMember,leaveGroup} from "../controller/chat.controller.js";
 import { getMyChats } from "../controller/chat.controller.js";
 const app=express.Router();
 
@@ -14,4 +14,7 @@ app.post("/new",newGroupChat)
 app.get("/my",getMyChats)
 app.get("/my/groups",getMyGroups)
 app.put("/my/addMembers",addMembers)
+app.put("/my/removeMember",removeMember)
+app.delete("/leave/:id",leaveGroup)
+
 export default app;

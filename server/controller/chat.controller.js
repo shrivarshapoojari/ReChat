@@ -7,8 +7,8 @@ import { User } from '../models/user.model.js';
 const newGroupChat = async (req, res, next) => {
     try {
         const { name, members } = req.body;
-        console.log(req.body);
-        console.log("MEMBERS:", members);
+         
+       
 
         // Check if required fields are provided
         if (!name || !members) {
@@ -126,7 +126,7 @@ const addMembers=async(req,res,next)=>{
   if(!members || members.length<=0)
     return next(new ErrorHandler("Please provide memebers",400))
   const chat =await Chat.findById(chatId);
-  console.log(chat)
+ 
   if(!chat)
   {
     return next(new ErrorHandler("Chat not found",404))
@@ -171,4 +171,134 @@ const addMembers=async(req,res,next)=>{
     }
 
 }
-export { newGroupChat, getMyChats,getMyGroups,addMembers};
+
+
+const removeMember=async(req,res,next)=>{
+try{
+  const {userId,chatId}=req.body;
+ 
+  if(!userId || !chatId)
+    return next(new ErrorHandler("All fields are required",400))
+      // const [chat,userTobeRemoved]=await Promise.all(
+      //   [
+      //     Chat.findById(chatId),
+      //     User.findById(userId,"name")
+      //   ])
+        const chat =await Chat.findById(chatId);
+        const userTobeRemoved= await User.findById(userId)
+       
+if(!userTobeRemoved)
+{
+  return next(new ErrorHandler("User not found",404))
+}  
+ 
+        const memberExists = chat.members.some(member => member.toString() === userId.toString());
+
+        if (!memberExists) {
+          return next(new ErrorHandler("memeber not there in group", 400));
+        }
+        
+  if(!chat)
+  {
+    return next(new ErrorHandler("Chat not found",404))
+  }
+  if(!chat.groupChat)
+    return next(new ErrorHandler("Not a group chat",400))
+
+   
+  if(chat.creator.toString()!=req.user.toString())
+  {
+    return next(new ErrorHandler("Unauthoized to remove member",403))
+  }
+
+      if(chat.members.length<=3){
+        return next(new ErrorHandler("Group must have atleast 3 members"))
+
+      }
+
+
+      chat.members=chat.members.filter((member)=>member.toString()!=userId.toString())
+      await  chat.save();
+
+      emitEvent(
+        req,
+        ALERT,
+        chat.members,
+        `${userTobeRemoved.name} has been removed from the group`
+      )
+
+      emitEvent(req,REFETCH_CHATS,chat.members)
+
+      return res.status(200).json({
+        success:true,
+        message:"Member removed successfully"
+      })
+    }
+    catch(error)
+    {
+      console.log(error)
+      return next(new ErrorHandler(error.message,500))
+    }
+
+}
+
+
+
+
+
+
+
+const leaveGroup=async(req,res,next)=>{
+  try{
+
+    const chatId=req.params.id
+
+    const chat=await Chat.findById(chatId)
+
+    if(!chat)
+      {
+        return next(new ErrorHandler("Chat not found",404))
+      }
+      if(!chat.groupChat)
+        return next(new ErrorHandler("Not a group chat",400))
+
+      if(chat.creator.toString()==req.user.toString())
+      {
+               const remainingMembers=chat.members.filter((member)=>member.toString()!=req.user.toString())
+               const newCreator=remainingMembers[0];
+               chat.creator=newCreator;
+      }
+     
+
+      const memberExists = chat.members.some(member => member.toString() === req.user.toString());
+
+      if (!memberExists) {
+        return next(new ErrorHandler("You are not a member of this group", 400));
+      }
+      
+
+      chat.members=chat.members.filter((member)=>member.toString()!=req.user.toString());
+    const user=await User.findById(req.user,"name")
+      await chat.save();
+      emitEvent(
+        req,
+        ALERT,
+        chat.members,
+        `${user.name} left the group`
+      )
+
+      return res.status(200).json({
+        success:true,
+        message:"You have left the group successfully"
+      })
+      
+
+    
+  }catch(error)
+  {
+    return next(new ErrorHandler("Error in exiting group",500))
+  }
+
+
+}
+export { newGroupChat, getMyChats,getMyGroups,addMembers,removeMember,leaveGroup};
