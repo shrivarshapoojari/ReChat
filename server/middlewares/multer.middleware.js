@@ -9,6 +9,8 @@ export const multerUpload=multer({
 })
 
 
+export const attachmentsMulter=multerUpload.array("file", 10);
+
 
 
 
