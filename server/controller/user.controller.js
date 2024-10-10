@@ -12,7 +12,7 @@ const cookieOptions = {
   httpOnly:true,
   secure:true
 }
-const newUser = async (req, res) => {
+const newUser = async (req, res,next) => {
   try {
     const { name, username, password, bio } = req.body;
 
@@ -48,7 +48,7 @@ const newUser = async (req, res) => {
   }
 };
 
-const login = async (req, res) => {
+const login = async (req, res,next) => {
   try {
     const { username, password } = req.body;
 
@@ -76,7 +76,7 @@ const login = async (req, res) => {
   }
 };
 
-const getMyProfile = async (req, res) => {
+const getMyProfile = async (req, res,next) => {
     try {
       const user = await User.findById(req.user).select("-password");
        console.log(user)
@@ -98,7 +98,7 @@ const getMyProfile = async (req, res) => {
     return res.status(200).cookie("rechat-token", "", cookieOptions).json({ success: true, message: "Logged out" });
   }
 
-  const searchUser=async(req,res)=>{
+  const searchUser=async(req,res,next)=>{
 try{
     const {name=""}=req.query;
     if(!name)
@@ -185,7 +185,7 @@ return res.status(200).json({success:true,users})
       {
         return next(new ErrorHandler("Request not found",404))
       }
-      if(request.receiver.toString()!==req.user.toString())
+      if(request.receiver._id.toString()!==req.user.toString())
       {
         return next(new ErrorHandler("You are not authorized to accept this request",403))
       }
@@ -224,4 +224,80 @@ return res.status(200).json({success:true,users})
     }
   }
 
-export { login, newUser,getMyProfile,logout,searchUser,sendRequest,acceptRequest };
+
+  const getMyNotifications = async (req, res,next) => 
+    {
+
+    try
+    
+        {
+
+    
+            const requests = await Request.find({ receiver: req.user }).populate(
+              "sender",
+              "name avatar"
+            );
+          
+            const allRequests = requests.map(({ _id, sender }) => ({
+              _id,
+              sender: {
+                _id: sender._id,
+                name: sender.name,
+                avatar: sender.avatar.url,
+              },
+            }));
+  
+    return res.status(200).json({
+      success: true,
+      allRequests,
+    });
+  }
+  catch(error)
+  {
+    return next(new ErrorHandler(error.message,500))
+  }
+}
+ 
+
+const getMyFriends =  async(req, res,next) => {
+  try{
+    const chatId = req.query.chatId;
+  
+    const chats = await Chat.find({
+      members: req.user,
+      groupChat: false,
+    }).populate("members", "name avatar");
+  
+    const friends = chats.map(({ members }) => {
+      const otherUser = getOtherMember(members, req.user);
+  
+      return {
+        _id: otherUser._id,
+        name: otherUser.name,
+        avatar: otherUser.avatar.url,
+      };
+    });
+  
+    if (chatId) {
+      const chat = await Chat.findById(chatId);
+  
+      const availableFriends = friends.filter(
+        (friend) => !chat.members.includes(friend._id)
+      );
+  
+      return res.status(200).json({
+        success: true,
+        friends: availableFriends,
+      });
+    } else {
+      return res.status(200).json({
+        success: true,
+        friends,
+      });
+    }
+  }catch(error)
+  {
+    return next(new ErrorHandler(error.message,500))
+  }
+  };
+export { login, newUser,getMyProfile,logout,searchUser,sendRequest,acceptRequest ,getMyNotifications,getMyFriends};
