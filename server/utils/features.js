@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import e from "cors";
+ 
 dotenv.config();
 
 const cookieOptions = {
@@ -53,4 +53,4 @@ const deleteFilesFromCloudinary =async (public_ids)=>{}
 
 
 
-export {connectDB,sendToken,emitEvent,deleteFilesFromCloudinary}
+export {connectDB,sendToken,emitEvent,deleteFilesFromCloudinary,cookieOptions}
