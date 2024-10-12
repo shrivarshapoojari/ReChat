@@ -1,7 +1,7 @@
 import React, { lazy, Suspense, useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import axios from 'axios'
-import {Toaster} from "react-hot-toast"
+import toast, {Toaster} from "react-hot-toast"
 const Home = lazy(() => import('./pages/Home'));
 const Login = lazy(() => import('./pages/Login'))
 const Chat = lazy(() => import('./pages/Chat'))
@@ -12,29 +12,53 @@ import { useDispatch, useSelector } from "react-redux"
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
 const DashBoard = lazy(() => import('./pages/admin/DashBoard'))
 const UserManagement = lazy(() => import('./pages/admin/UserManagement'))
-import userNotExist from "./redux/reducers/auth"
+import userNotExist, { userExists } from "./redux/reducers/auth"
 
 import { server } from './constants/config';
 
  
 const App = () => {
   const dispatch = useDispatch()
-  const { user, loader } = useSelector(state => state.auth)
-  console.log(user)
+  const { user, loader } = useSelector((state) => state.auth)
+  
+  
+
+
+
   useEffect(() => {
-    console.log('server', server)
+    console.log('server', server);
+    
     const fetchUser = async () => {
       try {
-        await axios.get(`${server}/api/v1/user/me`, { withCredentials: true })
+        const response = await axios.get(`${server}/api/v1/user/me`, { withCredentials: true });
+        console.log('Response:', response); // Check what the response contains
+        return response.data; // Make sure you return the correct part of the response
+      } catch (error) {
+        console.error('Error fetching user:', error.response); // Log the error details
+        if (error.response && error.response.status === 401) {
+          alert('Unauthorized, please login.');
+        }
+        dispatch(userNotExist());
+        return null;
       }
-      catch (error) {
-        dispatch(userNotExist())
+    };
+  
+    const getUserData = async () => {
+      const result = await fetchUser(); // Await the result of fetchUser
+       
+      if (result) {
+          dispatch(userExists(result.user));
+      } else {
+        dispatch(userNotExist());
+        toast.error("Unauthorized, please login.")
       }
-    }
-    const res = fetchUser()
-    console.log('res', res)
-  }, [dispatch])
-  return   (
+        // Check the fetched data
+    };
+  
+    getUserData(); // Call the async function inside useEffect
+  }, [dispatch]);
+  
+  return  loader ?(<LayoutLoader/>) : (
     <BrowserRouter>
       <Suspense fallback={<LayoutLoader />}>
         <Routes>
