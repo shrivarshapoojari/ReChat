@@ -63,41 +63,126 @@ try{
     toast.error(e.response.data.message)
 }
   };
-  const handleSignup = async(e) => {
-    e.preventDefault();
-    console.log(username.value)
-    console.log(name.value)
-    console.log(password.value)
-    console.log(avatar.file)
-    if(!name.value || !bio.value || !username.value || !password.value || !avatar.file)
-    {
-      toast.error("Please fill all the fields")
-      return ;
-    }
+//   const handleSignup = async(e) => {
+//     e.preventDefault();
+//     console.log(username.value)
+//     console.log(name.value)
+//     console.log(password.value)
+//     console.log(avatar.file)
+//     if(!name.value || !bio.value || !username.value || !password.value || !avatar.file)
+//     {
+//       toast.error("Please fill all the fields")
+//       return ;
+//     }
     
-    const formData=new FormData();
-    formData.append("name",name.value)
-    formData.append("bio",bio.value)
-    formData.append("username",username.value)
-    formData.append("password",password.value)
-    formData.append("avatar",avatar.file) 
-    try
-    {
-      const data =await axios.post(`${server}/api/v1/user/new`,formData,{
-    },{
-      withCredentials:true,
-      headers:{
-        "Content-Type":"multipart/form-data"
-      } 
-    })
-    dispatch(userExists(true))
-    toast.success("Registered Successfully")
-  }catch(e)
-  {
-    console.log(e)
-    toast.error(e.response.data.message)
+//     const formData=new FormData();
+//     formData.append("name",name.value)
+//     formData.append("bio",bio.value)
+//     formData.append("username",username.value)
+//     formData.append("password",password.value)
+//     formData.append("avatar",avatar.file) 
+//     try
+//     {
+//       toast.promise("Hang on .. Onboarding in a second")
+//       const data =await axios.post(`${server}/api/v1/user/new`,formData,{
+//     },{
+//       withCredentials:true,
+//       headers:{
+//         "Content-Type":"multipart/form-data"
+//       } 
+//     })
+//     dispatch(userExists(true))
+//     toast.success("Registered Successfully")
+//   }catch(e)
+//   {
+//     console.log(e)
+//     toast.error(e.response.data.message)
+//   }
+// }
+
+const handleSignup = async (e) => {
+  e.preventDefault();
+
+  // Check if any required field is missing
+  if (!name.value || !bio.value || !username.value || !password.value || !avatar.file) {
+    toast.error("Please fill all the fields");
+    return;
   }
-}
+
+  // Prepare form data
+  const formData = new FormData();
+  formData.append("name", name.value);
+  formData.append("bio", bio.value);
+  formData.append("username", username.value);
+  formData.append("password", password.value);
+  formData.append("avatar", avatar.file);
+
+  
+
+  // try {
+  //  const data= await toast.promise(
+  //     axios.post(`${server}/api/v1/user/new`, formData, {
+  //       withCredentials: true,
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     }),
+  //     {
+  //       pending: 'Onboarding in progress...',
+  //       success: 'Registered Successfully 👌',
+  //       error: 'Registration failed, please try again', // Default error message
+  //     },
+  //     dispatch(userExists(true)
+  //   );
+  // } catch (error) {
+  //   console.error(error);
+  
+  //   // Handle axios error more gracefully
+  //   if (error.response) {
+  //     // Server responded with a status other than 200 range
+  //     toast.error(error.response.data.message || 'Request failed with error');
+  //   } else if (error.request) {
+  //     // Request made but no response received
+  //     toast.error('No response received from the server');
+  //   } else {
+  //     // Any other error that occurred while setting up the request
+  //     toast.error('An unexpected error occurred');
+  //   }
+  // }
+
+  try {
+    const data=await toast.promise(
+      axios.post(`${server}/api/v1/user/new`, formData, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+      {
+        loading: 'Onboarding in progress...',
+        success: 'Registered Successfully 👌',
+        error: 'Registration failed, please try again', // Default error message
+      }
+    );
+  
+    // Dispatch userExists action upon successful registration
+    dispatch(userExists(true));
+  
+  } catch (error) {
+    console.error(error);
+  
+    // Handle axios error more gracefully
+    if (error.response) {
+      toast.error(error.response.data.message || 'Request failed with error');
+    } else if (error.request) {
+      toast.error('No response received from the server');
+    } else {
+      toast.error('An unexpected error occurred');
+    }
+  }
+  
+  
+};
 
   return (
     <div className="min-h-[100vh] md:flex bg-gradient-to-t from-[#0029ff]  to-[#00c6ff]">
