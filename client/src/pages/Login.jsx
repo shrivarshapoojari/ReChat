@@ -30,39 +30,106 @@ const Login = () => {
   const dispatch = useDispatch();
 
 
+
+
+
   const handleLogin = async (e) => {
     e.preventDefault();
+  
+    // Check if username and password are provided
+    if (!username.value || !password.value) {
+      toast.error("Please fill all the fields");
+      return;
+    }
+  
     const config = {
       withCredentials: true,
       headers: {
         "Content-Type": "application/json",
       },
     };
-try{
-  if(!username.value || !password.value)
-    {
-      toast.error("Please fill all the fields")
+  
+    try {
+      // Use toast.promise to display loading, success, and error states
+      const { data } = await toast.promise(
+        axios.post(
+          `${server}/api/v1/user/login`,
+          {
+            username: username.value,
+            password: password.value,
+          },
+          config
+        ),
+        {
+          loading: "Logging in...",
+          success: "Logged in successfully 👌",
+          error: "Login failed, please check your credentials", // Default error message
+        }
+      );
+  
+      // Dispatch action after successful login
+      dispatch(userExists(true));
+  
+    } catch (error) {
+      console.error(error);
+  
+      // Graceful error handling with more detailed error message
+      if (error.response) {
+        toast.error(error.response.data.message || "Request failed with error");
+      } else if (error.request) {
+        toast.error("No response received from the server");
+      } else {
+        toast.error("An unexpected error occurred");
+      }
     }
- console.log("username",username.value)
- console.log("password",password.value)
-
-
-   const {data}= await axios.post(
-      `${server}/api/v1/user/login`,
-      {
-        username: username.value,
-        password: password.value,
-      },
-      config
-    );
-    dispatch(userExists(true))
-    toast.success("Logged in")
-}catch(e)
-{
-    console.log(e)
-    toast.error(e.response.data.message)
-}
   };
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+//   const handleLogin = async (e) => {
+//     e.preventDefault();
+//     const config = {
+//       withCredentials: true,
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     };
+// try{
+//   if(!username.value || !password.value)
+//     {
+//       toast.error("Please fill all the fields")
+//     }
+//  console.log("username",username.value)
+//  console.log("password",password.value)
+
+
+//    const {data}= await axios.post(
+//       `${server}/api/v1/user/login`,
+//       {
+//         username: username.value,
+//         password: password.value,
+//       },
+//       config
+//     );
+//     dispatch(userExists(true))
+//     toast.success("Logged in")
+// }catch(e)
+// {
+//     console.log(e)
+//     toast.error(e.response.data.message)
+// }
+//   };
 //   const handleSignup = async(e) => {
 //     e.preventDefault();
 //     console.log(username.value)
