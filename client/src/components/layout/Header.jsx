@@ -9,11 +9,17 @@ import { useNavigate } from "react-router-dom";
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { useState } from 'react';
+import { server } from '../../constants/config'
+import toast from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+import { userNotExist } from '../../redux/reducers/auth'
+import axios from 'axios'
 const Search = React.lazy(()=>import('../specific/Search'));
 const NewGroup = React.lazy(()=>import('../specific/NewGroup'));
 const Notifications = React.lazy(()=>import('../specific/Notifications'));
  
 const Header = () => {
+  const dispatch=useDispatch();
   const [isMobile, setIsMobile] = useState(false);
   const[isSearch, setIsSearch] = useState(false);
   const[isNewGroup, setIsNewGroup] = useState(false);
@@ -38,8 +44,20 @@ const Header = () => {
 const navigateToGroup = () => {
   navigate('/groups')
 }
-const logoutHandler = () => {   
-  console.log('logout') ;
+const logoutHandler = async() => {   
+ 
+ try{
+
+   const {data}= await axios.get(`${server}/api/v1/user/logout`,{withCredentials:true})
+   dispatch(userNotExist())
+    toast.success(data.message)
+
+ }catch(error)
+ {
+  console.log(error)
+  toast.error(error?.response?.data?.message || "Something went wrong")
+ }
+
   
 }
   return (

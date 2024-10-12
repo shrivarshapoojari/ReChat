@@ -71,7 +71,7 @@ const Login = () => {
       dispatch(userExists(true));
   
     } catch (error) {
-      console.error(error);
+      
   
       // Graceful error handling with more detailed error message
       if (error.response) {

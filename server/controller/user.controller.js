@@ -70,7 +70,7 @@ const newUser = async (req, res,next) => {
    
        
         catch(e){
-              console.log(e)
+             
         }
 
    
@@ -101,7 +101,8 @@ const newUser = async (req, res,next) => {
 const login = async (req, res,next) => {
   try {
     const { username, password } = req.body;
-   console.log(req.body)
+    
+
     // Check if all required fields are provided
     if (!username || !password) {
      return  res.status(400).json({ success: false, message: "Username and password are required" });
@@ -129,7 +130,7 @@ const login = async (req, res,next) => {
 const getMyProfile = async (req, res,next) => {
     try {
       const user = await User.findById(req.user).select("-password");
-       console.log(user)
+       
       if (!user) {
         return res.status(404).json({ success: false, message: "User not found" }); // Stop further execution with return
       }

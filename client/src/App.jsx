@@ -12,7 +12,7 @@ import { useDispatch, useSelector } from "react-redux"
 const AdminLogin = lazy(() => import('./pages/admin/AdminLogin'))
 const DashBoard = lazy(() => import('./pages/admin/DashBoard'))
 const UserManagement = lazy(() => import('./pages/admin/UserManagement'))
-import userNotExist, { userExists } from "./redux/reducers/auth"
+import {userNotExist , userExists } from "./redux/reducers/auth"
 
 import { server } from './constants/config';
 
@@ -26,20 +26,18 @@ const App = () => {
 
 
   useEffect(() => {
-    console.log('server', server);
+     
     
     const fetchUser = async () => {
       try {
         const response = await axios.get(`${server}/api/v1/user/me`, { withCredentials: true });
-        console.log('Response:', response); // Check what the response contains
-        return response.data; // Make sure you return the correct part of the response
+        
+        return response.data;  
       } catch (error) {
-        console.error('Error fetching user:', error.response); // Log the error details
-        if (error.response && error.response.status === 401) {
-          alert('Unauthorized, please login.');
-        }
-        dispatch(userNotExist());
+       
+        
         return null;
+         
       }
     };
   
@@ -50,7 +48,7 @@ const App = () => {
           dispatch(userExists(result.user));
       } else {
         dispatch(userNotExist());
-        toast.error("Unauthorized, please login.")
+        
       }
         // Check the fetched data
     };
