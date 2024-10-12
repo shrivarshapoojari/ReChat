@@ -1,10 +1,12 @@
-import e from "cors";
+
 import { User } from "../models/user.model.js";
 import { emitEvent, sendToken } from "../utils/features.js";
 import { compare } from "bcrypt";
 import { ErrorHandler } from "../utils/utility.js";
 import { Chat } from "../models/chat.model.js";
 import {Request} from "../models/request.model.js";
+import cloudinary from "cloudinary"
+import fs from 'fs/promises'
 import { NEW_REQUEST } from "../constants/events.js";
 import { uploadToCloudinary } from "../utils/features.js";
 const cookieOptions = {
@@ -16,37 +18,83 @@ const cookieOptions = {
 const newUser = async (req, res,next) => {
   try {
     const { name, username, password, bio } = req.body;
-
-    // Check if all required fields are provided
-    if (!name || !username || !password || !bio || !req.files) {
+ 
+   
+    if (!name || !username || !password || !bio || !req.file) {
       return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
-    // Check if the username already exists
+    
     const existingUser = await User.findOne({ username });
     if (existingUser) {
       return res.status(400).json({ success: false, message: "Username already exists" });
     }
-    const file=req.files
-            const result = await uploadToCloudinary([file]);
-    const avatar = {
-      public_id: result[0].public_id,
-      url: result.secure_url,
-    };
+
+    const user = await User.create({
+      name: name,
+      username: username,
+      password: password,
+      avatar: {
+        public_id: username,
+        url: "htts://www.google.com",
+      },
+    });
+     
+             
+
+    if(req.file)
+      {
+        try{
+              const result = await cloudinary.v2.uploader.upload(req.file.path ,{
+               folder:'rechat',
+               width:250,
+               height:250,
+               gravity:'faces',
+               crop:'fill'
+              })
+   
+              if(result)
+              {
+                  user.avatar.public_id=result.public_id;
+                  user.avatar.url=result.secure_url;
+                   
+   
+                  
+                  fs.rm(`uploads/${req.file.filename}`)
+   
+   
+              }
+              await user.save();
+   
+        }
+   
+       
+        catch(e){
+              console.log(e)
+        }
+
+   
+      }
+
+
+
+
+
+
+
+
+
+
+
+     
 
     // Create a new user
-    const user = await User.create({
-      name,
-      bio,
-      username,
-      password,
-      avatar,
-    });
+     
 
     sendToken(res, user, 201, "User Created");
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ success: false, message: "Server Error" });
+     return next (new ErrorHandler(error.message,500))
   }
 };
 

@@ -65,12 +65,16 @@ try{
   };
   const handleSignup = async(e) => {
     e.preventDefault();
-
+    console.log(username.value)
+    console.log(name.value)
+    console.log(password.value)
+    console.log(avatar.file)
     if(!name.value || !bio.value || !username.value || !password.value || !avatar.file)
     {
       toast.error("Please fill all the fields")
       return ;
     }
+    
     const formData=new FormData();
     formData.append("name",name.value)
     formData.append("bio",bio.value)
