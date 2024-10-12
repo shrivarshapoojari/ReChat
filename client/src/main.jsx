@@ -5,7 +5,8 @@ import { CssBaseline } from '@mui/material';
 import './index.css';
 import App from './App';
 import { HelmetProvider } from 'react-helmet-async';
- 
+import {Provider} from 'react-redux';
+import store from './redux/store';
 
 const rootElement = document.getElementById('root');
 const root = ReactDOM.createRoot(rootElement);
@@ -29,6 +30,7 @@ const theme = createTheme({
 
 root.render(
   <React.StrictMode>
+    <Provider  store={store}>
     <HelmetProvider>
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
@@ -39,6 +41,7 @@ root.render(
       </ThemeProvider>
     </StyledEngineProvider>
     </HelmetProvider>
+    </Provider>
   </React.StrictMode>
 );
 
