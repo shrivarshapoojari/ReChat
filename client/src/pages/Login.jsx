@@ -12,11 +12,12 @@ import {
 import { CameraAlt as CameraAltIcon } from "@mui/icons-material";
 import { VisuallyHiddenInput } from "../components/styles/StyledComponents";
 import { useFileHandler, useInputValidation, useStrongPassword } from "6pp";
-
+import axios from "axios";
 import { usernameValidator } from "../utils/validators";
 import { server } from "../constants/config";
 import { useDispatch } from "react-redux";
 import { userExists } from "../redux/reducers/auth";
+import toast from "react-hot-toast";
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const toggleLogin = () => setIsLogin((prev) => !prev);
@@ -27,19 +28,27 @@ const Login = () => {
   const avatar = useFileHandler("single");
 
   const dispatch = useDispatch();
+
+
   const handleLogin = async (e) => {
     e.preventDefault();
     const config = {
       withCredentials: true,
       headers: {
-        "Content-Type": "applicatioon/json",
+        "Content-Type": "application/json",
       },
     };
 try{
+  if(!username.value || !password.value)
+    {
+      toast.error("Please fill all the fields")
+    }
+ console.log("username",username.value)
+ console.log("password",password.value)
 
 
    const {data}= await axios.post(
-      `${server}/api/user/login`,
+      `${server}/api/v1/user/login`,
       {
         username: username.value,
         password: password.value,
@@ -47,14 +56,44 @@ try{
       config
     );
     dispatch(userExists(true))
+    toast.success("Logged in")
 }catch(e)
 {
     console.log(e)
+    toast.error(e.response.data.message)
 }
   };
-  const handleSignup = (e) => {
+  const handleSignup = async(e) => {
     e.preventDefault();
-  };
+
+    if(!name.value || !bio.value || !username.value || !password.value || !avatar.file)
+    {
+      toast.error("Please fill all the fields")
+      return ;
+    }
+    const formData=new FormData();
+    formData.append("name",name.value)
+    formData.append("bio",bio.value)
+    formData.append("username",username.value)
+    formData.append("password",password.value)
+    formData.append("avatar",avatar.file) 
+    try
+    {
+      const data =await axios.post(`${server}/api/v1/user/new`,formData,{
+    },{
+      withCredentials:true,
+      headers:{
+        "Content-Type":"multipart/form-data"
+      } 
+    })
+    dispatch(userExists(true))
+    toast.success("Registered Successfully")
+  }catch(e)
+  {
+    console.log(e)
+    toast.error(e.response.data.message)
+  }
+}
 
   return (
     <div className="min-h-[100vh] md:flex bg-gradient-to-t from-[#0029ff]  to-[#00c6ff]">

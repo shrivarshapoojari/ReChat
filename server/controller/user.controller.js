@@ -6,6 +6,7 @@ import { ErrorHandler } from "../utils/utility.js";
 import { Chat } from "../models/chat.model.js";
 import {Request} from "../models/request.model.js";
 import { NEW_REQUEST } from "../constants/events.js";
+import { uploadToCloudinary } from "../utils/features.js";
 const cookieOptions = {
   maxAge:0,
   sameSite:"none",
@@ -17,7 +18,7 @@ const newUser = async (req, res,next) => {
     const { name, username, password, bio } = req.body;
 
     // Check if all required fields are provided
-    if (!name || !username || !password) {
+    if (!name || !username || !password || !bio || !req.files) {
       return res.status(400).json({ success: false, message: "All fields are required" });
     }
 
@@ -26,10 +27,11 @@ const newUser = async (req, res,next) => {
     if (existingUser) {
       return res.status(400).json({ success: false, message: "Username already exists" });
     }
-
+    const file=req.files
+            const result = await uploadToCloudinary([file]);
     const avatar = {
-      public_id: "a",
-      url: "a",
+      public_id: result[0].public_id,
+      url: result.secure_url,
     };
 
     // Create a new user
@@ -51,7 +53,7 @@ const newUser = async (req, res,next) => {
 const login = async (req, res,next) => {
   try {
     const { username, password } = req.body;
-
+   console.log(req.body)
     // Check if all required fields are provided
     if (!username || !password) {
      return  res.status(400).json({ success: false, message: "Username and password are required" });

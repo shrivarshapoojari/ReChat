@@ -34,7 +34,7 @@ const App = () => {
     const res = fetchUser()
     console.log('res', res)
   }, [dispatch])
-  return loader?(<LayoutLoader/>): (
+  return   (
     <BrowserRouter>
       <Suspense fallback={<LayoutLoader />}>
         <Routes>

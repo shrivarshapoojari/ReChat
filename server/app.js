@@ -6,12 +6,17 @@ import { Server } from "socket.io";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 import {createServer} from "http"
 import {v4 as uuid} from "uuid"
+import{ v2 as cloudinary} from "cloudinary"
+
 
 dotenv.config();
 const app =express();
 const server=createServer(app)
 const io=new Server(server,{})
 const PORT=process.env.PORT || 3000;
+
+
+
 
 import userRoutes from  "./routes/user.routes.js";
 import chatRoutes from  "./routes/chats.routes.js";
@@ -20,20 +25,30 @@ import { NEW_MESSAGE, NEW_MESSAGE_ALERT } from "./constants/events.js";
 import { getSockets } from "./lib/helper.js";
 import { Message } from "./models/message.model.js";
 
-
+import cors from "cors";
 
 
 const  userSocketId=new Map();
 
 
-
+cloudinary.config({
+    cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
+    api_key:process.env.CLOUDINARY_API_KEY,
+    api_secret:process.env.CLOUDINARY_API_SECRET
+})
 connectDB(process.env.MONGO_URI);
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
-app.use("/user",userRoutes);
-app.use("/chat",chatRoutes);
-app.use("/admin",adminROutes)
+app.use(cors(
+    {
+        origin:["http://localhost:5173","http://localhost:3000"],
+        credentials:true,
+    }
+))
+app.use("/api/v1/user",userRoutes);
+app.use("/api/v1/chat",chatRoutes);
+app.use("/api/v1/admin",adminROutes)
 app.get("/",(req,res)=>{
     res.send("Alive at 3000")
 })
