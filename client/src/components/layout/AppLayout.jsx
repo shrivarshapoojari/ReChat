@@ -18,11 +18,11 @@ const AppLayout = (WrappedComponent) => {
 
     const dispatch=useDispatch();
     const {isMobile}=useSelector((state)=>state.misc)
-   
+     const {user}=useSelector((state)=>state.auth)
      
         const {isLoading,data,isError,error,refetch}=useMyChatsQuery()
         
-
+   
  useErrors([{isError,error}])
 
     const params=useParams();
@@ -107,7 +107,7 @@ const handleMobileClose=()=>{
            }}
            >
 
-            <Profile/>
+            <Profile  user={user}/>
            </Grid>
              
          </Grid>

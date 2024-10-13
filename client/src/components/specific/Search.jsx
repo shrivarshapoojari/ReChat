@@ -12,6 +12,7 @@ import { useLazySearchUserQuery, useSendFriendRequestMutation } from '../../redu
  import toast from 'react-hot-toast'
 const Search = () => {
   const {isSearch}=useSelector((state)=>state.misc)
+  const [isLoadingFriendRequest,setLoadingFriendRequest]=useState(false)
   const search=useInputValidation("")
   const dispatch=useDispatch();
     const[searchUser]=useLazySearchUserQuery()
@@ -21,7 +22,12 @@ const Search = () => {
 
   const addFriendHandler=async(id)=>{
     try{
+      let loadId;
+      setLoadingFriendRequest(true)
+      loadId=toast.loading("Sending Friend request")
      const data= await sendFriendRequest({userId:id})
+     setLoadingFriendRequest(false)
+     toast.dismiss(loadId)
       if(data?.data?.success)
         toast.success("Friend Request sent")
      else
@@ -50,7 +56,8 @@ const Search = () => {
   }, [search.value]);
 
   
-  let isLoadingSendFriendRequest=false
+  
+  
   const [users,setUsers]=useState(null)
     const searchCloseHandler=()=>{
       dispatch(setIsSearch(false))
@@ -80,7 +87,7 @@ const Search = () => {
                         {
                           users?.map((user) =>
                           
-                            <UserItem user={user} key={user._id} handler={addFriendHandler} handlerIsLoading={isLoadingSendFriendRequest}/>
+                            <UserItem user={user} key={user._id} handler={addFriendHandler} handlerIsLoading={isLoadingFriendRequest}/>
                             
                         )
                         }
