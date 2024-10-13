@@ -22,7 +22,7 @@ const AppLayout = (WrappedComponent) => {
      
         const {isLoading,data,isError,error,refetch}=useMyChatsQuery()
           
-              console.log("applayout",error)
+              
              useErrors([{isError,error}])
 
     const params=useParams();

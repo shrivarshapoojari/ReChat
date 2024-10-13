@@ -28,6 +28,7 @@ console.log("inside handler")
 
   try{
    const res= await acceptFriendRequest({requestId:_id,accept})
+   console.log(res)
    if(res?.data?.success){
       console.log(res.data.message)
       toast.success(res.data.message)
