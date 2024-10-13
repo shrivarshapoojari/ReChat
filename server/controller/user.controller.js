@@ -34,6 +34,7 @@ const newUser = async (req, res,next) => {
       name: name,
       username: username,
       password: password,
+      bio:bio,
       avatar: {
         public_id: username,
         url: "htts://www.google.com",
