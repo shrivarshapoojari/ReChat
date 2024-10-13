@@ -47,7 +47,7 @@ app.use(cors(
     }
 ))
 app.use("/api/v1/user",userRoutes);
-app.use("/api/v1/chat",chatRoutes);
+app.use("/api/v1/chats",chatRoutes);
 app.use("/api/v1/admin",adminROutes)
 app.get("/",(req,res)=>{
     res.send("Alive at 3000")

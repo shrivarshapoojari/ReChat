@@ -70,7 +70,7 @@ const newUser = async (req, res,next) => {
    
        
         catch(e){
-             
+             return next(new ErrorHandler(e.message,500))
         }
 
    
