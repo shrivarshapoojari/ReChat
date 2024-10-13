@@ -225,7 +225,7 @@ return res.status(200).json({success:true,users})
 
   const acceptRequest = async(req,res,next)=>{
     const {requestId,accept}=req.body;
-
+             console.log(requestId,accept)
     if(!requestId)
     {
       return next(new ErrorHandler("Request id is required",400))

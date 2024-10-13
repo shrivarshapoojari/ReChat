@@ -1,9 +1,12 @@
 import e from "express";
 import { userSocketId } from "../app.js";
 
+// export const getOtherMember = (members, userId) => {
+//      members.filter(member => member._id.toString() !== userId.toString());
+// }
 export const getOtherMember = (members, userId) => {
-     members.filter(member => member._id.toString() !== userId.toString());
-}
+  return members.find(member => member._id.toString() !== userId.toString());
+};
 
 
 export const getSockets=(users=[])=>{

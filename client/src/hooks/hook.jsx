@@ -10,6 +10,7 @@ const useErrors = (errors = []) => {
           else{
 
             console.log(error)
+            
               toast.error(error?.data?.message || "Something went wrong");
           }
 

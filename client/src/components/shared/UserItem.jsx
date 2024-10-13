@@ -44,7 +44,7 @@ const UserItem = ({user,handler,handlerIsLoading ,styling={},isAdded=false} ) =>
                  }}
                 }
              
-             onClick={()=>handler(_id)} disabled={handlerIsLoading}>
+             onClick={()=>handler(_id)}  >
                {
                   isAdded ?<RemoveCircleOutlineIcon/> :  <Add/>
                }

@@ -4,18 +4,51 @@ import { sampleNotifications } from '../../constants/sampleData'
 import { memo } from 'react'
 import { useGetNotificationsQuery } from '../../redux/reducers/api/api'
 import { useErrors } from '../../hooks/hook'
+import { useDispatch, useSelector } from 'react-redux'
+import { setIsNotification } from '../../redux/reducers/misc'
+import toast from 'react-hot-toast'
+import { useAcceptFriendRequestMutation } from '../../redux/reducers/api/api'
 
 const Notifications = () => {
+  const dispatch=useDispatch();
+  const { isNotification}=useSelector((state)=>state.misc)    
   const{isLoading ,data,error,isError}=useGetNotificationsQuery()
+  console.log(data?.allRequests)
+  console.log("Notifica",error)
   useErrors([{error,isError}])
- 
-  const friendRequestHandler=({_id,accept})=>{
-    console.log(_id,accept)
+    const[acceptFriendRequest]=useAcceptFriendRequestMutation();
+
+
+
+  const friendRequestHandler=async({_id,accept})=>{
+console.log("inside handler")
+   console.log(data)
+
+
+
+  try{
+   const res= await acceptFriendRequest({requestId:_id,accept})
+   if(res?.data?.success){
+      console.log(res.data.message)
+      toast.success(res.data.message)
+   }
+   else{
+      toast.error(res?.data?.message || "Something went wrong")
+   }
+   console.log(res) 
+  }catch(error){
+    console.log(error)  
+  }
+     
+      closeNotification();
    
+  }
+  const closeNotification=()=>{
+    dispatch(setIsNotification(false))
   }
   return (
   
-  <Dialog open> 
+  <Dialog open={isNotification}  onClose={closeNotification}> 
        <Stack p={{xs:"1rem",sm:"2rem"}} maxWidth={"25rem"}>
           
           
@@ -27,11 +60,11 @@ const Notifications = () => {
              ( <>
               {
               data?.allRequests.length >0  ?
+                   
+              (data?.allRequests?.map(({sender,_id})=>
+                <NotificationItem sender={sender} _id={_id} handler={friendRequestHandler} key={_id}/>
               
-              (data?.allRequests?.map((i)=>
-                <NotificationItem sender={i.sender} id={i._id} handler={friendRequestHandler} key={i._id}/>
-              
-           
+                      
               )):
               
               (<Typography textAlign={"center"}>Nothing to show here! </Typography>)

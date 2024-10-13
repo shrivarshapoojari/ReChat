@@ -51,6 +51,8 @@ const getMyChats = async (req, res) => {
         "members",
         "name avatar"
       );
+
+          console.log(chats)
   
       const transformedChats = chats.map(({ _id, name, members, groupChat }) => {
         const otherMember = getOtherMember(members, req.user);
@@ -59,8 +61,8 @@ const getMyChats = async (req, res) => {
           _id,
           groupChat,
           avatar: groupChat
-            ? members.slice(0, 3).map(({ avatar }) => avatar.url)
-            : [otherMember.avatar.url],
+            ? members.slice(0, 3).map(({ avatar }) => avatar?.url)
+            : [otherMember?.avatar?.url],
           name: groupChat ? name : otherMember.name,
           members: members.reduce((prev, curr) => {
             if (curr._id.toString() !== req.user.toString()) {
@@ -76,6 +78,7 @@ const getMyChats = async (req, res) => {
         chats: transformedChats,
       });
     } catch (error) {
+      console.error("Error fetching chats:", error);
       return res.status(500).json({
         success: false,
         message: error.message || "Internal Server Error",

@@ -2,7 +2,7 @@ import React, { Suspense } from 'react'
 import { AppBar, Backdrop, Box, Icon, IconButton, Menu, Toolbar, Tooltip } from '@mui/material'
 import { Typography } from '@mui/material'
 import { blue } from '../../constants/color'
-import { Menu as MenuIcon, Search as SearchICon} from '@mui/icons-material'
+import { Menu as MenuIcon, Search as SearchICon } from '@mui/icons-material'
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { useNavigate } from "react-router-dom";
@@ -14,53 +14,52 @@ import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { userNotExist } from '../../redux/reducers/auth'
 import axios from 'axios'
-import { setIsMobile, setIsSearch } from '../../redux/reducers/misc'
-const Search = React.lazy(()=>import('../specific/Search'));
-const NewGroup = React.lazy(()=>import('../specific/NewGroup'));
-const Notifications = React.lazy(()=>import('../specific/Notifications'));
- 
-const Header = () => {
-  const dispatch=useDispatch();
-  
+import { setIsMobile, setIsNotification, setIsSearch } from '../../redux/reducers/misc'
+const Search = React.lazy(() => import('../specific/Search'));
+const NewGroup = React.lazy(() => import('../specific/NewGroup'));
+const Notifications = React.lazy(() => import('../specific/Notifications'));
 
- const {isSearch}=useSelector((state)=>state.misc)
-  const[isNewGroup, setIsNewGroup] = useState(false);
-  const [isNotification, setIsNotification] = useState(false);
+const Header = () => {
+  const dispatch = useDispatch();
+  const { isNotification } = useSelector((state) => state.misc)
+
+  const { isSearch } = useSelector((state) => state.misc)
+  const [isNewGroup, setIsNewGroup] = useState(false);
+
   const navigate = useNavigate();
   const handleMobile = () => {
-    
+
     dispatch(setIsMobile(true))
-    
+
 
   }
   const openSearch = () => dispatch(setIsSearch(true));
   const openNewGroup = () => {
     console.log('new group');
-    setIsNewGroup((prev)=>!prev);
+    setIsNewGroup((prev) => !prev);
   }
-  const openNotification = () => {  
-    console.log('notification') ;
-    setIsNotification((prev)=>!prev);
+  const openNotification = () => {
+    dispatch(setIsNotification(true))
   }
-const navigateToGroup = () => {
-  navigate('/groups')
-}
-const logoutHandler = async() => {   
- 
- try{
+  const navigateToGroup = () => {
+    navigate('/groups')
+  }
 
-   const {data}= await axios.get(`${server}/api/v1/user/logout`,{withCredentials:true})
-   dispatch(userNotExist())
-    toast.success(data.message)
+  const logoutHandler = async () => {
 
- }catch(error)
- {
-  console.log(error)
-  toast.error(error?.response?.data?.message || "Something went wrong")
- }
+    try {
 
-  
-}
+      const { data } = await axios.get(`${server}/api/v1/user/logout`, { withCredentials: true })
+      dispatch(userNotExist())
+      toast.success(data.message)
+
+    } catch (error) {
+      console.log(error)
+      toast.error(error?.response?.data?.message || "Something went wrong")
+    }
+
+
+  }
   return (
     <>
       <Box
@@ -108,19 +107,19 @@ const logoutHandler = async() => {
                   <GroupAddIcon />
                 </IconButton>
               </Tooltip>
-            <Tooltip title="Manage Groups">
-            <IconButton color='inherit' size="large" onClick={navigateToGroup}>
+              <Tooltip title="Manage Groups">
+                <IconButton color='inherit' size="large" onClick={navigateToGroup}>
                   <GroupsIcon />
                 </IconButton>
               </Tooltip>
-            <Tooltip title="Notifications">
-            <IconButton color='inherit' size="large" onClick={openNotification}>
+              <Tooltip title="Notifications">
+                <IconButton color='inherit' size="large" onClick={openNotification}>
                   <NotificationsIcon />
                 </IconButton>
               </Tooltip>
-            <Tooltip title="Logout">
-            <IconButton color='inherit' size="large" onClick={logoutHandler}>
-                 <PowerSettingsNewIcon />
+              <Tooltip title="Logout">
+                <IconButton color='inherit' size="large" onClick={logoutHandler}>
+                  <PowerSettingsNewIcon />
                 </IconButton>
               </Tooltip>
 
@@ -130,27 +129,27 @@ const logoutHandler = async() => {
 
       </Box>
       {
-        isSearch &&(
-           <Suspense fallback={<Backdrop open/>}>
+        isSearch && (
+          <Suspense fallback={<Backdrop open />}>
             <Search />
           </ Suspense>
         )
       }
       {
-         isNewGroup&&(
-           <Suspense fallback= {<Backdrop open/>}>
+        isNewGroup && (
+          <Suspense fallback={<Backdrop open />}>
             <NewGroup />
           </ Suspense>
         )
       }
       {
-        isNotification &&(
-           <Suspense fallback= {<Backdrop open/>}>
+        isNotification && (
+          <Suspense fallback={<Backdrop open />}>
             <Notifications />
           </ Suspense>
         )
       }
-      
+
 
     </>
   )
