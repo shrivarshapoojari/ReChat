@@ -8,7 +8,8 @@ import { sampleUsers } from '../../constants/sampleData';
 import { useSelector } from 'react-redux';
 import { setIsSearch } from '../../redux/reducers/misc';
 import { useDispatch } from 'react-redux';
-import { useLazySearchUserQuery } from '../../redux/reducers/api/api';
+import { useLazySearchUserQuery, useSendFriendRequestMutation } from '../../redux/reducers/api/api';
+ import toast from 'react-hot-toast'
 const Search = () => {
   const {isSearch}=useSelector((state)=>state.misc)
   const search=useInputValidation("")
@@ -16,9 +17,22 @@ const Search = () => {
     const[searchUser]=useLazySearchUserQuery()
 
 
+   const [sendFriendRequest]=useSendFriendRequestMutation();
 
-
-  const addFriendHandler=(id)=>{
+  const addFriendHandler=async(id)=>{
+    try{
+     const data= await sendFriendRequest({userId:id})
+      if(data?.data?.success)
+        toast.success("Friend Request sent")
+     else
+    {
+      toast.error(data?.error?.data?.message)
+    }
+    }
+    catch(e)
+    {
+        toast.error(e.message || "Something went wrong")
+    }
 
 
  
@@ -37,7 +51,7 @@ const Search = () => {
 
   
   let isLoadingSendFriendRequest=false
-  const [users,setUsers]=useState(sampleUsers)
+  const [users,setUsers]=useState(null)
     const searchCloseHandler=()=>{
       dispatch(setIsSearch(false))
     }

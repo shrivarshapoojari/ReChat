@@ -3,6 +3,7 @@ import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { Avatar, IconButton, ListItem, Stack, Typography } from '@mui/material'
 import React from 'react'
 import {memo} from 'react'
+import { transformImage } from '../../lib/features';
 const UserItem = ({user,handler,handlerIsLoading ,styling={},isAdded=false} ) => {
 
     const {name,_id,avatar} = user
@@ -18,7 +19,7 @@ const UserItem = ({user,handler,handlerIsLoading ,styling={},isAdded=false} ) =>
            {...styling}
          >
 
-            <Avatar/>
+            <Avatar src={transformImage(avatar)}/>
             <Typography
                variant='body1'
                sx={{
@@ -43,7 +44,7 @@ const UserItem = ({user,handler,handlerIsLoading ,styling={},isAdded=false} ) =>
                  }}
                 }
              
-             onClick={()=>handler(_id)} disable={handlerIsLoading}>
+             onClick={()=>handler(_id)} disabled={handlerIsLoading}>
                {
                   isAdded ?<RemoveCircleOutlineIcon/> :  <Add/>
                }
