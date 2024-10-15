@@ -15,6 +15,7 @@ const UserManagement = lazy(() => import('./pages/admin/UserManagement'))
 import {userNotExist , userExists } from "./redux/reducers/auth"
 
 import { server } from './constants/config';
+import { SocketProvider } from './socket';
 
  
 const App = () => {
@@ -61,7 +62,12 @@ const App = () => {
     <BrowserRouter>
       <Suspense fallback={<LayoutLoader />}>
         <Routes>
-          <Route element={<ProtectRoute user={user} />}>
+          <Route element={
+            
+            <SocketProvider>
+            <ProtectRoute user={user} />
+            </SocketProvider>
+            }>
             <Route path="/" element={<Home />} />
             <Route path="/chat/:chatId" element={<Chat />} />
             <Route path="/groups" element={<Groups />} />

@@ -2,6 +2,7 @@ import { ErrorHandler } from "../utils/utility.js";
 import jwt from 'jsonwebtoken';
 import dotenv from "dotenv"
 dotenv.config();
+import { User } from "../models/user.model.js";
 const adminSecretKey=process.env.ADMIN_KEY
 const isAuthentificated = (req, res, next) => {
 
@@ -43,7 +44,41 @@ const adminOnly = (req, res, next) => {
   };
   
 
+  const socketAuthenticator =async(err,socket,next)=>{
+ 
+try{
+
+  if(err)
+  {
+    return next(new ErrorHandler(err,500))
+
+
+    
+  }
+
+  const authToken=socket.request.cookies["rechat-token"]
+  
+  if(!authToken)
+  {
+    return next(new ErrorHandler("Authentication failed please login",500))
+
+
+  }
+
+  const decodedData=jwt.verify(authToken,process.env.JWT_SECRET)
+   
+   if(!decodedData)
+    return next(new ErrorHandler("Authentication failed",500))
+  socket.user =await User.findById(decodedData.id)
+ 
+  return next();
+}catch(error)
+{
+  return next(new ErrorHandler("Connection failed",500))
+}
+
+  }
 
 
 
-export {isAuthentificated,adminOnly}
+export {isAuthentificated,adminOnly,socketAuthenticator}

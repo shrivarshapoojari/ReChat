@@ -52,7 +52,7 @@ const getMyChats = async (req, res) => {
         "name avatar"
       );
 
-          console.log(chats)
+         
   
       const transformedChats = chats.map(({ _id, name, members, groupChat }) => {
         const otherMember = getOtherMember(members, req.user);
