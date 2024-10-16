@@ -78,7 +78,7 @@ useEffect(()=>{
   return ()=>{
     socket.off(NEW_MESSAGE,newMessageHandler)
   }
-},[socket])
+},[socket,newMessageHandler])
 useEffect(() => {
   if (bottomRef.current)
     bottomRef.current.scrollIntoView({ behavior: "smooth" });

@@ -302,66 +302,123 @@ const leaveGroup=async(req,res,next)=>{
 
 
 }
-const sendAttachments=async(req,res,next)=>{
+// const sendAttachments=async(req,res,next)=>{
    
-try{
-  const {chatId}=req.body;
-  const chat=await Chat.findById(chatId);
-  const me=await User.findById(req.user, "name")
-  if(!chat)
-    return next(new ErrorHandler("Chat not found",404))
-  if(!me)
-  {
-    return next(new ErrorHandler("Please login",403))
-  }
-  const files=req.files ||[]
+// try{
+//   const {chatId}=req.body;
+//   const chat=await Chat.findById(chatId);
+//   const me=await User.findById(req.user, "name")
+//   if(!chat)
+//     return next(new ErrorHandler("Chat not found",404))
+//   if(!me)
+//   {
+//     return next(new ErrorHandler("Please login",403))
+//   }
+//   const files=req.files ||[]
 
-  if(files.length<1)
-    return next(new ErrorHandler("Please attach files",400))
+//   if(files.length<1)
+//     return next(new ErrorHandler("Please attach files",400))
 
-const attachments=[];
+// const attachments=[];
 
-const messageForDB = {
-  content: "",
-  attachments,
-  sender: me._id,
-  chat: chatId,
-};
+// const messageForDB = {
+//   content: "",
+//   attachments,
+//   sender: me._id,
+//   chat: chatId,
+// };
 
-const messageForRealTime = {
-  ...messageForDB,
-  sender: {
-    _id: me._id,
-    name: me.name,
-  },
-};
+// const messageForRealTime = {
+//   ...messageForDB,
+//   sender: {
+//     _id: me._id,
+//     name: me.name,
+//   },
+// };
 
- emitEvent(req,NEW_ATTACHMENT,chat.members,{
-  message:messageForRealTime,
-  chatId,
- })
+//  emitEvent(req,NEW_ATTACHMENT,chat.members,{
+//   message:messageForRealTime,
+//   chatId,
+//  })
    
 
- emitEvent(req,NEW_MESSAGE_ALERT,chat.members,{chatId})
+//  emitEvent(req,NEW_MESSAGE_ALERT,chat.members,{chatId})
 
 
 
  
 
-  const message= await Message.create(messageForDB)
+//   const message= await Message.create(messageForDB)
+
+//   return res.status(200).json({
+//     success:true,
+//     message,
+//   })
+// }catch(error)
+// {
+//   return next(new ErrorHandler(error.message,500))
+// }
+
+
+// }
+
+const sendAttachments = async (req, res, next) => {
+  try{
+  const { chatId } = req.body;
+
+  const files = req.files || [];
+
+  if (files.length < 1)
+    return next(new ErrorHandler("Please Upload Attachments", 400));
+
+  if (files.length > 5)
+    return next(new ErrorHandler("Files Can't be more than 5", 400));
+
+  const [chat, me] = await Promise.all([
+    Chat.findById(chatId),
+    User.findById(req.user, "name"),
+  ]);
+
+  if (!chat) return next(new ErrorHandler("Chat not found", 404));
+
+  if (files.length < 1)
+    return next(new ErrorHandler("Please provide attachments", 400));
+
+  //   Upload files here
+  const attachments = await uploadFilesToCloudinary(files);
+
+  const messageForDB = {
+    content: "",
+    attachments,
+    sender: me._id,
+    chat: chatId,
+  };
+
+  const messageForRealTime = {
+    ...messageForDB,
+    sender: {
+      _id: me._id,
+      name: me.name,
+    },
+  };
+
+  const message = await Message.create(messageForDB);
+
+  emitEvent(req, NEW_MESSAGE, chat.members, {
+    message: messageForRealTime,
+    chatId,
+  });
+
+  emitEvent(req, NEW_MESSAGE_ALERT, chat.members, { chatId });
 
   return res.status(200).json({
-    success:true,
+    success: true,
     message,
-  })
-}catch(error)
-{
-  return next(new ErrorHandler("Error in sending attachments",404))
+  });
+}catch(error){
+  return next(new ErrorHandler(error.message,500))
 }
-
-
-}
-
+};
 
 
 

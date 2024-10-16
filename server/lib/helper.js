@@ -16,14 +16,6 @@ export const getSockets=(users=[])=>{
      return sockets;
 }
 
-export const getBase64 = (file) => {
-     return new Promise((resolve, reject) => {
-       try {
-         const base64String = Buffer.from(file).toString('base64');
-         resolve(`data:${file.mimetype};base64,${base64String}`);
-       } catch (error) {
-         reject(error);
-       }
-     });
-   };
+export const getBase64 = (file) =>
+  `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
    

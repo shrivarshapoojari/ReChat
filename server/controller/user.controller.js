@@ -9,7 +9,7 @@ import cloudinary from "cloudinary"
 import fs from 'fs/promises'
 import { NEW_REQUEST } from "../constants/events.js";
 import { REFETCH_CHATS } from "../constants/events.js";
-import { uploadToCloudinary } from "../utils/features.js";
+ 
 const cookieOptions = {
   maxAge:0,
   sameSite:"none",
