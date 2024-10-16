@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useCallback, useEffect, useState } from 'react'
 import AppLayout from '../components/layout/AppLayout'
 import { IconButton, Skeleton, Stack } from '@mui/material'
 import { useRef } from 'react'
@@ -11,12 +11,18 @@ import { sampleMessage } from '../constants/sampleData'
 import { getSocket } from '../socket'
 import { NEW_MESSAGE } from '../constants/events'
 import { useChatDetailsQuery } from '../redux/reducers/api/api'
+import { useSelector } from 'react-redux'
 const Chat = ({chatId}) => {
+
+  const user=useSelector((state)=>state?.auth?.user)
+   
    const chatDetails=useChatDetailsQuery({chatId,skip:!chatId})
 
+
+   const [messages,setMessages]=useState([])
+  //  console.log(messages)
 const members=chatDetails?.data?.chat?.members
-console.log(chatDetails)
-console.log(members)
+ 
  const socket=getSocket();
 const [message,setMessage]=useState("")
 const submitHandler=(e)=>{
@@ -28,10 +34,25 @@ const submitHandler=(e)=>{
 
 
 }
-  const user={
-    _id:"sdfsdfsdf",
-    name:"Shri"
+
+const newMessageHandler=useCallback ((data)=>{
+   
+  setMessages((prev)=>[...prev,data?.message])
+})
+
+
+useEffect(()=>{
+  socket.on(NEW_MESSAGE, 
+    newMessageHandler
+
+
+
+  )
+  return ()=>{
+    socket.off(NEW_MESSAGE,newMessageHandler)
   }
+},[socket])
+  
   const containerRef=useRef(null)
   return chatDetails.isLoading?<Skeleton/> : (
     <Fragment> 
@@ -53,8 +74,7 @@ const submitHandler=(e)=>{
 {/* Message */}
 
 
-{
-  sampleMessage.map((message)=>(
+{messages.map((message)=>(
     <Message key={message._id} message={message} user={user}/>
   ))
 }

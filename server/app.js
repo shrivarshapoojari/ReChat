@@ -76,7 +76,7 @@ io.on("connection",(socket)=>{
      console.log("user connected",socket.id)
     
     userSocketId.set(user._id.toString(),socket.id)
-
+      
      socket.on(NEW_MESSAGE,async({chatId,members,message})=>{
 
         const messageForRealTime={
@@ -93,7 +93,7 @@ io.on("connection",(socket)=>{
         const memberSocket=getSockets(members)
         io.to(memberSocket).emit(NEW_MESSAGE,{chatId,message:messageForRealTime})
         io.to(NEW_MESSAGE_ALERT,{chatId})
-        console.log("New message",messageForRealTime)
+        // console.log("New message",messageForRealTime)
         const messageForDB={
             content:message,
             sender:user._id,

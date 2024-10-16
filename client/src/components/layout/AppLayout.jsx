@@ -56,6 +56,7 @@ const handleMobileClose=()=>{
                  chats={data?.chats}
                  chatId={chatId}
                  handleDeleteChat={handleDeleteChat}
+                 
               
               />
               </Drawer>
