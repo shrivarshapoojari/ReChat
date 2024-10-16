@@ -32,10 +32,9 @@ export const multerUpload = multer({
   },
 });
 
- 
+const upload = multer({ storage: multer.diskStorage({}) })
 
-
-export const attachmentsMulter=multerUpload.array("file", 10);
+export const attachmentsMulter=upload.array("file", 10);
 
 
 

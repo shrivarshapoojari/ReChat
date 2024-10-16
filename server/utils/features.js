@@ -52,14 +52,50 @@ console.log("Emitting event",event)
 }
 
  
+// const uploadFilesToCloudinary = async (files = []) => {
+//   console.log(files)
+//   const uploadPromises = files.map((file) => {
+//     return new Promise((resolve, reject) => {
+//       cloudinary.uploader.upload(
+//         getBase64(file),
+//         {
+//           resource_type: "auto",
+//           public_id: uuid(),
+//         },
+//         (error, result) => {
+//           if (error) return reject(error);
+//           resolve(result);
+//         }
+//       );
+//     });
+//   });
+
+//   try {
+//     const results = await Promise.all(uploadPromises);
+        
+//     const formattedResults = results.map((result) => ({
+//       public_id: result.public_id,
+//       url: result.secure_url,
+//     }));
+//     return formattedResults;
+//   } catch (err) {
+//     console.log(err)
+//     throw new Error("Error uploading files to cloudinary", err);
+//   }
+// };
+
 const uploadFilesToCloudinary = async (files = []) => {
   const uploadPromises = files.map((file) => {
     return new Promise((resolve, reject) => {
+      // Detect the resource type based on MIME type
+      const resourceType = getResourceType(file.mimetype);
+
       cloudinary.uploader.upload(
-        getBase64(file),
+        file.path, // Use file path or buffer instead of Base64 for videos/audios
         {
-          resource_type: "auto",
-          public_id: uuid(),
+          resource_type: resourceType,
+          public_id: uuid(), // Unique public ID
+          timeout: 120000, // Set timeout (2 minutes)
         },
         (error, result) => {
           if (error) return reject(error);
@@ -76,9 +112,22 @@ const uploadFilesToCloudinary = async (files = []) => {
       public_id: result.public_id,
       url: result.secure_url,
     }));
+
     return formattedResults;
   } catch (err) {
-    throw new Error("Error uploading files to cloudinary", err);
+    console.log(err);
+    throw new Error("Error uploading files to Cloudinary", err);
+  }
+};
+
+// Helper function to detect resource type based on MIME type
+const getResourceType = (mimetype) => {
+  if (mimetype.startsWith("video")) {
+    return "video";
+  } else if (mimetype.startsWith("audio")) {
+    return "raw";
+  } else {
+    return "auto";  
   }
 };
 

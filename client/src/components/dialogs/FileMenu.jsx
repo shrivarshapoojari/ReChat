@@ -47,7 +47,7 @@ const FileMenu = ({ anchorE1, chatId }) => {
       const myForm = new FormData();
 
       myForm.append("chatId", chatId);
-      files.forEach((file) => myForm.append("files", file));
+      files.forEach((file) => myForm.append("file", file));
 
       const res = await sendAttachments(myForm);
     console.log(res)

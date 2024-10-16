@@ -5,7 +5,8 @@ import { getOtherMember } from '../lib/helper.js';
 import { ErrorHandler } from '../utils/utility.js';
 import { User } from '../models/user.model.js';
 import { Message } from '../models/message.model.js';
- 
+import { uploadFilesToCloudinary } from '../utils/features.js';
+import { NEW_MESSAGE } from '../constants/events.js';
 const newGroupChat = async (req, res, next) => {
     try {
         const { name, members } = req.body;
@@ -416,6 +417,7 @@ const sendAttachments = async (req, res, next) => {
     message,
   });
 }catch(error){
+  console.log(error)
   return next(new ErrorHandler(error.message,500))
 }
 };
