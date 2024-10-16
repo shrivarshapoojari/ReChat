@@ -7,21 +7,48 @@ import {InputBox} from '../components/styles/StyledComponents'
 import { grayColor } from '../constants/color'
 import FileMenu from '../components/dialogs/FileMenu'
 import Message from '../components/shared/Message'
-import { sampleMessage } from '../constants/sampleData'
+ 
 import { getSocket } from '../socket'
 import { NEW_MESSAGE } from '../constants/events'
-import { useChatDetailsQuery } from '../redux/reducers/api/api'
-import { useSelector } from 'react-redux'
+import { useChatDetailsQuery, useGetMessagesQuery } from '../redux/reducers/api/api'
+import { useDispatch, useSelector } from 'react-redux'
+import { useErrors } from '../hooks/hook'
+import { useInfiniteScrollTop } from "6pp";
+import { setIsFileMenu } from '../redux/reducers/misc'
 const Chat = ({chatId}) => {
+   const dispatch=useDispatch();
+  const containerRef = useRef(null);
+  const bottomRef = useRef(null);
+  const [page,setPage]=useState(1)
+  const [messages,setMessages]=useState([])
+  const [fileMenuAnchor, setFileMenuAnchor] = useState(null);
+
 
   const user=useSelector((state)=>state?.auth?.user)
    
-   const chatDetails=useChatDetailsQuery({chatId,skip:!chatId})
+   const chatDetails= useChatDetailsQuery({chatId,skip:!chatId})
+   const oldMessagesChunk= useGetMessagesQuery({chatId,page})
+   
+  
 
-
-   const [messages,setMessages]=useState([])
-  //  console.log(messages)
+   const { data: oldMessages, setData: setOldMessages } = useInfiniteScrollTop(
+    containerRef,
+    oldMessagesChunk.data?.totalPages,
+    page,
+    setPage,
+    oldMessagesChunk.data?.messages
+  );
+  
+   
 const members=chatDetails?.data?.chat?.members
+ const errors=[{isError:chatDetails?.isError,error:chatDetails?.error},
+  {isError:oldMessagesChunk?.isError,error:oldMessagesChunk?.error},
+ ]
+ useErrors(errors)
+  
+
+
+
  
  const socket=getSocket();
 const [message,setMessage]=useState("")
@@ -52,8 +79,22 @@ useEffect(()=>{
     socket.off(NEW_MESSAGE,newMessageHandler)
   }
 },[socket])
+useEffect(() => {
+  if (bottomRef.current)
+    bottomRef.current.scrollIntoView({ behavior: "smooth" });
+}, [messages]);
+const allMessages = [...oldMessages, ...messages];
   
-  const containerRef=useRef(null)
+  
+
+const handleFileOpen=(e)=>{
+  dispatch(setIsFileMenu(true))
+  setFileMenuAnchor(e.currentTarget);
+}
+
+
+
+
   return chatDetails.isLoading?<Skeleton/> : (
     <Fragment> 
   <Stack 
@@ -74,10 +115,12 @@ useEffect(()=>{
 {/* Message */}
 
 
-{messages.map((message)=>(
+{allMessages.map((message)=>(
     <Message key={message._id} message={message} user={user}/>
   ))
 }
+        
+<div ref={bottomRef} />
      </Stack>
 
      <form
@@ -103,7 +146,9 @@ useEffect(()=>{
             color: "white",
           left: "1.5rem",
         }}
+        onClick={handleFileOpen}
         >
+          
            <AttachFileOutlined/>
            
         </IconButton>
@@ -130,7 +175,8 @@ useEffect(()=>{
 
 
      </form>
-     {/* <FileMenu/> */}
+    
+     <FileMenu anchorE1={fileMenuAnchor} chatId={chatId} />
      </Fragment>
   )
 }

@@ -18,7 +18,7 @@ app.put("/my/removeMember",removeMember)
 app.delete("/leave/:id",leaveGroup)
 app.post("/message",attachmentsMulter,sendAttachments)
 
-app.put("/message/:id",getMessages);
+app.get("/message/:id",getMessages);
 
 app.route("/:id").get(getChatDetails).put(renameGroup).delete(deleteChat)
 export default app;

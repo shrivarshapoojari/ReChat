@@ -506,11 +506,11 @@ const deleteChat =async (req, res, next) => {
 
 
 const getMessages = async (req, res, next) => {
-
+   
   try{
   const chatId = req.params.id;
   const { page = 1 } = req.query;
-
+  console.log(page)
   const resultPerPage = 20;
   const skip = (page - 1) * resultPerPage;
 
