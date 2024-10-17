@@ -8,7 +8,14 @@ import {createServer} from "http"
 import {v4 as uuid} from "uuid"
 import{ v2 as cloudinary} from "cloudinary"
 import { socketAuthenticator } from "./middlewares/auth.middleware.js";
+import userRoutes from  "./routes/user.routes.js";
+import chatRoutes from  "./routes/chats.routes.js";
+import adminROutes from "./routes/admin.routes.js"
+import { NEW_MESSAGE, NEW_MESSAGE_ALERT, START_TYPING ,STOP_TYPING} from "./constants/events.js";
+import { getSockets } from "./lib/helper.js";
+import { Message } from "./models/message.model.js";
 
+import cors from "cors";
 dotenv.config();
 const app =express();
 const server=createServer(app)
@@ -27,14 +34,7 @@ const PORT=process.env.PORT || 3000;
 
 
 
-import userRoutes from  "./routes/user.routes.js";
-import chatRoutes from  "./routes/chats.routes.js";
-import adminROutes from "./routes/admin.routes.js"
-import { NEW_MESSAGE, NEW_MESSAGE_ALERT } from "./constants/events.js";
-import { getSockets } from "./lib/helper.js";
-import { Message } from "./models/message.model.js";
 
-import cors from "cors";
 
 
 const  userSocketId=new Map();
@@ -100,6 +100,16 @@ io.on("connection",(socket)=>{
             chat:chatId
         }
         await Message.create(messageForDB);
+     })
+     socket.on(START_TYPING,({members,chatId})=>{
+        const memberSocket=getSockets(members)
+        socket.to(memberSocket).emit(START_TYPING,{chatId})
+
+     })
+     socket.on(STOP_TYPING,({members,chatId})=>{
+        const memberSocket=getSockets(members)
+        socket.to(memberSocket).emit(STOP_TYPING,{chatId})
+
      })
     socket.on("disconnect",()=>{
         console.log("user disconnected")

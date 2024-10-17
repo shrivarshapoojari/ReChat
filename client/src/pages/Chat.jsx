@@ -16,6 +16,7 @@ import { useErrors } from '../hooks/hook'
 import { useInfiniteScrollTop } from "6pp";
 import { setIsFileMenu } from '../redux/reducers/misc'
 import { removeNewMessagesAlert } from '../redux/reducers/chat'
+import { START_TYPING,STOP_TYPING } from '../constants/events'
 const Chat = ({ chatId }) => {
 
 
@@ -112,7 +113,60 @@ const Chat = ({ chatId }) => {
     setFileMenuAnchor(e.currentTarget);
   }
 
+const messageChangeHandler=(e)=>{
+  setMessage(e.target.value)
+  if(!IamTyping){
+  socket.emit(START_TYPING,{members,chatId})
+  setIamTyping(true)
+  }
+  if(typingTimeout.current){
+    clearTimeout(typingTimeout.current)
+  }
+ typingTimeout.current= setTimeout(()=>{
+    socket.emit(STOP_TYPING,{members,chatId})
+setIamTyping(false)
 
+
+  },[2000])
+}
+
+const[IamTyping,setIamTyping]=useState(false)
+const[userTyping,setUserTyping]=useState(false)
+const typingTimeout=useRef(null)
+
+const startTypingListener= useCallback((data)=>{
+
+console.log("typing")
+
+},[chatId])
+const stopTypingListener= useCallback((data)=>{
+
+console.log("stoptyping")
+
+},[chatId])
+
+useEffect(() => {
+  socket.on(START_TYPING,
+    startTypingListener
+
+
+
+  )
+  return () => {
+    socket.off(START_TYPING, startTypingListener)
+  }
+}, [socket, startTypingListener])
+useEffect(() => {
+  socket.on(STOP_TYPING,
+    stopTypingListener
+
+
+
+  )
+  return () => {
+    socket.off(STOP_TYPING, stopTypingListener)
+  }
+}, [socket, startTypingListener])
 
   return chatDetails.isLoading ? <Skeleton /> : (
     <Fragment>
@@ -171,7 +225,7 @@ const Chat = ({ chatId }) => {
             <AttachFileOutlined />
 
           </IconButton>
-          <InputBox placeholder='Type Messages Here' value={message} onChange={(e) => setMessage(e.target.value)} />
+          <InputBox placeholder='Type Messages Here' value={message} onChange={messageChangeHandler} />
           <IconButton
             type='submit'
 
