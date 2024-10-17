@@ -17,6 +17,7 @@ import { useInfiniteScrollTop } from "6pp";
 import { setIsFileMenu } from '../redux/reducers/misc'
 import { removeNewMessagesAlert } from '../redux/reducers/chat'
 import { START_TYPING,STOP_TYPING } from '../constants/events'
+import { TypingLoader } from '../components/layout/Loaders'
 const Chat = ({ chatId }) => {
 
 
@@ -135,13 +136,15 @@ const[userTyping,setUserTyping]=useState(false)
 const typingTimeout=useRef(null)
 
 const startTypingListener= useCallback((data)=>{
-
-console.log("typing")
+if(data.chatId!==chatId)
+return
+setUserTyping(true)
 
 },[chatId])
 const stopTypingListener= useCallback((data)=>{
-
-console.log("stoptyping")
+  if(data.chatId!==chatId)
+    return
+ setUserTyping(false)
 
 },[chatId])
 
@@ -156,6 +159,7 @@ useEffect(() => {
     socket.off(START_TYPING, startTypingListener)
   }
 }, [socket, startTypingListener])
+
 useEffect(() => {
   socket.on(STOP_TYPING,
     stopTypingListener
@@ -167,6 +171,9 @@ useEffect(() => {
     socket.off(STOP_TYPING, stopTypingListener)
   }
 }, [socket, startTypingListener])
+
+
+
 
   return chatDetails.isLoading ? <Skeleton /> : (
     <Fragment>
@@ -186,13 +193,14 @@ useEffect(() => {
       >
 
         {/* Message */}
-
+        
 
         {allMessages.map((message) => (
           <Message key={message?._id} message={message} user={user} />
         ))
         }
-
+       
+       {userTyping &&<TypingLoader/>}
         <div ref={bottomRef} />
       </Stack>
 
