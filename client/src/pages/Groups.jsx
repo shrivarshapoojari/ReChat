@@ -1,7 +1,8 @@
 import React, { lazy, memo, Suspense, useEffect } from 'react'
-import { Backdrop, Box, Button, Drawer, Grid, Icon, IconButton, Stack, TextField, Tooltip,Typography } from '@mui/material'
+import { Backdrop, Box, Button, Drawer, Grid, Icon, IconButton, Skeleton, Stack, TextField, Tooltip,Typography } from '@mui/material'
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { useNavigate,useSearchParams } from 'react-router-dom';
+import { LayoutLoader } from '../components/layout/Loaders';
 import { useState } from 'react';
 import {Add, Delete, Done, Menu as MenuIcon} from '@mui/icons-material'
 import { Link } from '../components/styles/StyledComponents';
@@ -10,7 +11,10 @@ import AvatarCard from '../components/shared/AvatarCard';
 import { sampleChats, sampleUsers } from '../constants/sampleData';
 import EditIcon from '@mui/icons-material/Edit';
 import UserItem from '../components/shared/UserItem';
+import { useMyGroupsQuery } from '../redux/reducers/api/api';
+import { useErrors } from '../hooks/hook';
 const ConfirmDeleteDialog=lazy(()=>import("../components/dialogs/ConfirmDeleteDialog"))
+
 const  AddMemberDialog=lazy(()=>import("../components/dialogs/AddMemberDialog"))
 const Groups = () => {
 
@@ -20,8 +24,21 @@ const chatId=useSearchParams()[0].get("group")
     navigate("/")
   }
 
+  const myGroups=useMyGroupsQuery("")
+  console.log(myGroups.data)
+
+  const errors=[{isError:myGroups.isError,error:myGroups.error}]
+useErrors(errors)
+
+
+
   const [members ,setMembers]=useState(sampleUsers);
    
+
+
+
+
+
   const removeMemberHandler=(id)=>{
   }
   const isAddMember=false
@@ -139,7 +156,7 @@ const closeConfirmDeleteHandler=()=>{
 <Button size='large' color='error' variant='outlined' startIcon={<Delete/>} onClick={openconfirmDeleteHandler}>Delete Group</Button>
 <Button size='large'variant='contained' startIcon={<Add/>} onClick={openAddMember}>Add Member</Button>
   </Stack>
-  return (
+  return myGroups.isLoading ? <LayoutLoader/> :(
     <Grid container height={"100vh"}>
         <Grid
            item

@@ -18,6 +18,7 @@ import { setIsMobile, setIsNotification, setIsSearch } from '../../redux/reducer
 const Search = React.lazy(() => import('../specific/Search'));
 const NewGroup = React.lazy(() => import('../specific/NewGroup'));
 const Notifications = React.lazy(() => import('../specific/Notifications'));
+import { setIsNewGroup } from '../../redux/reducers/misc'
  
 const Header = () => {
   const dispatch = useDispatch();
@@ -26,8 +27,8 @@ const Header = () => {
    
   const { isNotification } = useSelector((state) => state.misc)
 
-  const { isSearch } = useSelector((state) => state.misc)
-  const [isNewGroup, setIsNewGroup] = useState(false);
+  const { isSearch,isNewGroup } = useSelector((state) => state.misc)
+  
 
   const navigate = useNavigate();
   const handleMobile = () => {
@@ -38,8 +39,7 @@ const Header = () => {
   }
   const openSearch = () => dispatch(setIsSearch(true));
   const openNewGroup = () => {
-    console.log('new group');
-    setIsNewGroup((prev) => !prev);
+    dispatch(setIsNewGroup(true))
   }
   const openNotification = () => {
     dispatch(setIsNotification(true))
