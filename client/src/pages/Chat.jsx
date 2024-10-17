@@ -16,6 +16,7 @@ import { useErrors } from '../hooks/hook'
 import { useInfiniteScrollTop } from "6pp";
 import { setIsFileMenu } from '../redux/reducers/misc'
 const Chat = ({chatId}) => {
+  console.log(chatId)
    const dispatch=useDispatch();
   const containerRef = useRef(null);
   const bottomRef = useRef(null);
@@ -27,9 +28,13 @@ const Chat = ({chatId}) => {
   const user=useSelector((state)=>state?.auth?.user)
    
    const chatDetails= useChatDetailsQuery({chatId,skip:!chatId})
-   const oldMessagesChunk= useGetMessagesQuery({chatId,page})
-   
   
+  
+   const oldMessagesChunk = useGetMessagesQuery({ chatId, page }, { skip: !chatId })
+   
+   console.log(oldMessagesChunk.refetch)
+
+    
 
    const { data: oldMessages, setData: setOldMessages } = useInfiniteScrollTop(
     containerRef,
@@ -47,7 +52,7 @@ const members=chatDetails?.data?.chat?.members
  useErrors(errors)
   
 
-
+ 
 
  
  const socket=getSocket();
@@ -65,7 +70,7 @@ const submitHandler=(e)=>{
 const newMessageHandler=useCallback ((data)=>{
    
   setMessages((prev)=>[...prev,data?.message])
-})
+},[chatId])
 
 
 useEffect(()=>{
@@ -83,17 +88,22 @@ useEffect(() => {
   if (bottomRef.current)
     bottomRef.current.scrollIntoView({ behavior: "smooth" });
 }, [messages]);
+
+
 const allMessages = [...oldMessages, ...messages];
   
+useEffect(() => {
+  setMessages([]);  
   
+  setPage(1);  
+}, [chatId]);
 
 const handleFileOpen=(e)=>{
   dispatch(setIsFileMenu(true))
   setFileMenuAnchor(e.currentTarget);
 }
 
-
-
+ 
 
   return chatDetails.isLoading?<Skeleton/> : (
     <Fragment> 

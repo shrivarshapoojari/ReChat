@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react'
-import { AppBar, Backdrop, Box, Icon, IconButton, Menu, Toolbar, Tooltip } from '@mui/material'
+import { AppBar, Backdrop, Badge, Box, Icon, IconButton, Menu, Toolbar, Tooltip } from '@mui/material'
 import { Typography } from '@mui/material'
 import { blue } from '../../constants/color'
 import { Menu as MenuIcon, Search as SearchICon } from '@mui/icons-material'
@@ -18,9 +18,12 @@ import { setIsMobile, setIsNotification, setIsSearch } from '../../redux/reducer
 const Search = React.lazy(() => import('../specific/Search'));
 const NewGroup = React.lazy(() => import('../specific/NewGroup'));
 const Notifications = React.lazy(() => import('../specific/Notifications'));
-
+ 
 const Header = () => {
   const dispatch = useDispatch();
+
+  const {notificationCount}=useSelector((state)=>state.chat)
+  console.log(notificationCount)
   const { isNotification } = useSelector((state) => state.misc)
 
   const { isSearch } = useSelector((state) => state.misc)
@@ -114,7 +117,10 @@ const Header = () => {
               </Tooltip>
               <Tooltip title="Notifications">
                 <IconButton color='inherit' size="large" onClick={openNotification}>
-                  <NotificationsIcon />
+                  {notificationCount >0 ?<Badge badgeContent={notificationCount} color="error"><NotificationsIcon/></Badge>
+                  : <NotificationsIcon/>
+                  }
+                  
                 </IconButton>
               </Tooltip>
               <Tooltip title="Logout">

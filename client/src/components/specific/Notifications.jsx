@@ -8,37 +8,35 @@ import { useDispatch, useSelector } from 'react-redux'
 import { setIsNotification } from '../../redux/reducers/misc'
 import toast from 'react-hot-toast'
 import { useAcceptFriendRequestMutation } from '../../redux/reducers/api/api'
-
+import { decrementNotification } from '../../redux/reducers/chat'
 const Notifications = () => {
   const dispatch=useDispatch();
   const { isNotification}=useSelector((state)=>state.misc)    
   const{isLoading ,data,error,isError}=useGetNotificationsQuery()
-  console.log(data?.allRequests)
-  console.log("Notifica",error)
+  
   useErrors([{error,isError}])
     const[acceptFriendRequest]=useAcceptFriendRequestMutation();
 
 
 
   const friendRequestHandler=async({_id,accept})=>{
-console.log("inside handler")
-   console.log(data)
+ 
 
 
 
   try{
    const res= await acceptFriendRequest({requestId:_id,accept})
-   console.log(res)
-   if(res?.data?.success){
-      console.log(res.data.message)
+ 
+   if(res?.data?.success){ 
       toast.success(res.data.message)
+      dispatch(decrementNotification())
    }
    else{
       toast.error(res?.data?.message || "Something went wrong")
    }
-   console.log(res) 
+ 
   }catch(error){
-    console.log(error)  
+     toast.error(error)
   }
      
       closeNotification();

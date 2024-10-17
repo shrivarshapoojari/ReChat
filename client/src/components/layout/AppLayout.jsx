@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import Header from './Header';
 import Title from '../shared/Title';
 import {Drawer, Grid, Skeleton} from '@mui/material';
@@ -12,13 +12,50 @@ import { setIsMobile } from '../../redux/reducers/misc';
 import toast from 'react-hot-toast';
 import { useErrors } from '../../hooks/hook';
 import { getSocket } from '../../socket';
+import { NEW_MESSAGE_ALERT, NEW_REQUEST } from '../../constants/events';
+import { incrementNotification } from '../../redux/reducers/chat';
 const AppLayout = (WrappedComponent) => {
   return (props) => {
-
+    const dispatch=useDispatch();
 
 const socket=getSocket()
+
+
+const newMessageAlertHandler=useCallback(()=>{},[]);
+const newRequestHandler=useCallback(()=>{
+  console.log("New request")
+ dispatch(incrementNotification())
+},[]);
+
+
+
+
+useEffect(()=>{
+  socket.on(NEW_MESSAGE_ALERT , 
+    newMessageAlertHandler
+
+
+  )
+  return ()=>{
+    socket.off(NEW_MESSAGE_ALERT,newMessageAlertHandler)
+  }
+},[socket,newMessageAlertHandler])
+
+
+
+
+
+useEffect(()=>{
+
+  socket.on(NEW_REQUEST,newRequestHandler)
+  
+  return ()=>{
+    socket.off(NEW_REQUEST,newRequestHandler)
+  }
+
+},[socket,newRequestHandler])
  
-    const dispatch=useDispatch();
+   
     const {isMobile}=useSelector((state)=>state.misc)
      const {user}=useSelector((state)=>state.auth)
      
@@ -29,6 +66,7 @@ const socket=getSocket()
 
     const params=useParams();
     const chatId=params.chatId
+   
     const handleDeleteChat=(e,_id,groupChat)=>{
       e.preventDefault();
       console.log("Delete chat")

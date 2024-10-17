@@ -215,7 +215,7 @@ return res.status(200).json({success:true,users})
               sender:req.user,
               receiver:userId
             })
-            emitEvent(req,"request",[userId])
+            emitEvent(req,"NEW_REQUEST",[userId])
               await  newRequest.save()
             return res.status(201).json({success:true,message:"Friend Request sent"})
           }catch(error)
