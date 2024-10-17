@@ -13,15 +13,25 @@ import toast from 'react-hot-toast';
 import { useErrors } from '../../hooks/hook';
 import { getSocket } from '../../socket';
 import { NEW_MESSAGE_ALERT, NEW_REQUEST } from '../../constants/events';
-import { incrementNotification } from '../../redux/reducers/chat';
+import { incrementNotification, setNewMessagesAlert } from '../../redux/reducers/chat';
+import { getOrSaveFromStorage } from '../../lib/features';
 const AppLayout = (WrappedComponent) => {
   return (props) => {
+    
+    const params=useParams();
+    const chatId=params.chatId
     const dispatch=useDispatch();
 
 const socket=getSocket()
+const {newMessagesAlert}=useSelector((state)=>state.chat)
 
+const newMessageAlertHandler=useCallback((data)=>{
+  if(data?.chatId===chatId)
+    return
+  dispatch(setNewMessagesAlert(data))
+console.log(data)
 
-const newMessageAlertHandler=useCallback(()=>{},[]);
+},[chatId]);
 const newRequestHandler=useCallback(()=>{
   console.log("New request")
  dispatch(incrementNotification())
@@ -64,8 +74,6 @@ useEffect(()=>{
                
              useErrors([{isError,error}])
 
-    const params=useParams();
-    const chatId=params.chatId
    
     const handleDeleteChat=(e,_id,groupChat)=>{
       e.preventDefault();
@@ -77,7 +85,9 @@ const handleMobileClose=()=>{
   dispatch(setIsMobile(false))
 }
 
-
+useEffect(()=>{
+  getOrSaveFromStorage({key:NEW_MESSAGE_ALERT,value:newMessagesAlert})
+},[newMessagesAlert])
 
     return (
       <>
@@ -95,7 +105,7 @@ const handleMobileClose=()=>{
                  chatId={chatId}
                  handleDeleteChat={handleDeleteChat}
                  
-              
+                 newMessagesAlert={newMessagesAlert}
               />
               </Drawer>
           )
@@ -117,7 +127,7 @@ const handleMobileClose=()=>{
                     chats ={data?.chats || sampleChats} 
                     chatId={chatId}
                     handleDeleteChat={handleDeleteChat}
-                    
+                    newMessagesAlert={newMessagesAlert}
                 
                    
                 />

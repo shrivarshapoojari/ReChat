@@ -23,7 +23,7 @@ const Header = () => {
   const dispatch = useDispatch();
 
   const {notificationCount}=useSelector((state)=>state.chat)
-  console.log(notificationCount)
+   
   const { isNotification } = useSelector((state) => state.misc)
 
   const { isSearch } = useSelector((state) => state.misc)

@@ -410,7 +410,7 @@ const sendAttachments = async (req, res, next) => {
     chatId,
   });
 
-  emitEvent(req, NEW_MESSAGE_ALERT, chat.members, { chatId });
+  // emitEvent(req, NEW_MESSAGE_ALERT, chat.members, { chatId });
 
   return res.status(200).json({
     success: true,
