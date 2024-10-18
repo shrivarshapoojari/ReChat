@@ -13,11 +13,16 @@ import EditIcon from '@mui/icons-material/Edit';
 import UserItem from '../components/shared/UserItem';
 import { useAddGroupMembersMutation, useChatDetailsQuery, useMyGroupsQuery, useRemoveGroupMemberMutation, useRenameGroupMutation } from '../redux/reducers/api/api';
 import { useAsyncMutation, useErrors } from '../hooks/hook';
+import { useDispatch, useSelector } from 'react-redux';
+import { setIsAddMember } from '../redux/reducers/misc';
 const ConfirmDeleteDialog=lazy(()=>import("../components/dialogs/ConfirmDeleteDialog"))
 
 const  AddMemberDialog=lazy(()=>import("../components/dialogs/AddMemberDialog"))
 const Groups = () => {
 
+
+  const {isAddMember}=useSelector((state)=>state.misc)
+  const dispatch=useDispatch();
 const chatId=useSearchParams()[0].get("group")
   const navigate=useNavigate();
   const navigateBack=()=>{
@@ -31,7 +36,7 @@ const chatId=useSearchParams()[0].get("group")
 
   const[updateGroup,isLoadingGroupName]=useAsyncMutation(useRenameGroupMutation)
   const[removeMember,isLoadingRemoveMember]=useAsyncMutation(useRemoveGroupMemberMutation)
-  const[addMember,isLoadingAddMember]=useAsyncMutation(useAddGroupMembersMutation)
+ 
   const errors=[{isError:myGroups.isError,error:myGroups.error},
 
                   {isError:groupDetails?.isError,error:groupDetails?.error},
@@ -67,7 +72,7 @@ useEffect(()=>{
   const removeMemberHandler=(userId)=>{
     removeMember("Removing Member",{chatId,userId})
   }
-  const isAddMember=false
+   
   const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false)
   const updateGroupNameHandler=()=>{
     setIsEdit(true)
@@ -86,6 +91,7 @@ const closeConfirmDeleteHandler=()=>{
   setConfirmDeleteDialog(false)
 }
     const openAddMember=()=>{
+      dispatch(setIsAddMember(true))
     }
     const [groupName, setGroupName] = useState("")
     const [groupNameUpdated, setGroupNameUpdated] = useState("")
@@ -266,7 +272,7 @@ const closeConfirmDeleteHandler=()=>{
 
             {
               isAddMember &&<Suspense fallback={<Backdrop open/>}>
-                          <AddMemberDialog open/>
+                          <AddMemberDialog chatId={chatId}/>
                 </Suspense>
             }
             <Drawer open={isMobileMenuOpen} onClose={handleMobileClose}
