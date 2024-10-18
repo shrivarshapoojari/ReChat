@@ -11,7 +11,7 @@ import AvatarCard from '../components/shared/AvatarCard';
 import { sampleChats, sampleUsers } from '../constants/sampleData';
 import EditIcon from '@mui/icons-material/Edit';
 import UserItem from '../components/shared/UserItem';
-import { useMyGroupsQuery } from '../redux/reducers/api/api';
+import { useChatDetailsQuery, useMyGroupsQuery } from '../redux/reducers/api/api';
 import { useErrors } from '../hooks/hook';
 const ConfirmDeleteDialog=lazy(()=>import("../components/dialogs/ConfirmDeleteDialog"))
 
@@ -25,14 +25,35 @@ const chatId=useSearchParams()[0].get("group")
   }
 
   const myGroups=useMyGroupsQuery("")
-  console.log(myGroups.data)
+   
+  const groupDetails=useChatDetailsQuery({chatId,populate:true},{skip:!chatId})
+  console.log(groupDetails)
+  const errors=[{isError:myGroups.isError,error:myGroups.error},
 
-  const errors=[{isError:myGroups.isError,error:myGroups.error}]
+                  {isError:groupDetails?.isError,error:groupDetails?.error}
+  ]
 useErrors(errors)
 
 
+useEffect(()=>{
 
-  const [members ,setMembers]=useState(sampleUsers);
+  if(groupDetails.data)
+  {
+    setMembers(groupDetails?.data?.chat?.members)
+    setGroupName(groupDetails?.data?.chat?.name)
+    setGroupNameUpdated(groupDetails?.data?.chat?.name)
+  }
+  return()=>{
+    return () => {
+      setGroupName("")
+      setGroupNameUpdated("")
+      setIsEdit(false)
+      setMembers([])
+    }
+  }
+},[groupDetails.data])
+
+  const [members ,setMembers]=useState([]);
    
 
 
@@ -70,19 +91,7 @@ const closeConfirmDeleteHandler=()=>{
     closeConfirmDeleteHandler();
 
   }
-
-  useEffect(() => {
-      if(chatId){
-       setGroupName("Group Name")
-       setGroupNameUpdated("Group Name")
-      }
-
-       return () => {
-          setGroupName("")
-          setGroupNameUpdated("")
-          setIsEdit(false)
-        }
-  },[chatId])
+ 
   const  IconBtns= <>
   
 <Box    sx={{
@@ -174,7 +183,7 @@ const closeConfirmDeleteHandler=()=>{
             sm={4}
 
            >
-           <GroupList myGroups={sampleChats} chatId={chatId}/>
+           <GroupList myGroups={myGroups?.data?.groups} chatId={chatId}/>
           
            </Grid>
            
@@ -216,7 +225,8 @@ const closeConfirmDeleteHandler=()=>{
               >
              {/**Members */}
              {
-              members.map((user)=>(
+ 
+            members.map((user)=>(
 
                 <UserItem 
                 key={user._id}
@@ -258,7 +268,7 @@ const closeConfirmDeleteHandler=()=>{
               }
                    }}
             >
-              <GroupList w={"50vw"} myGroups={sampleChats} chatId={chatId}/>
+              <GroupList w={"50vw"} myGroups={myGroups?.data?.groups} chatId={chatId}/>
                
             </Drawer>
 

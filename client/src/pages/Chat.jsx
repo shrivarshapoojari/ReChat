@@ -9,7 +9,7 @@ import FileMenu from '../components/dialogs/FileMenu'
 import Message from '../components/shared/Message'
 
 import { getSocket } from '../socket'
-import { NEW_MESSAGE } from '../constants/events'
+import { ALERT, NEW_MESSAGE } from '../constants/events'
 import { useChatDetailsQuery, useGetMessagesQuery } from '../redux/reducers/api/api'
 import { useDispatch, useSelector } from 'react-redux'
 import { useErrors } from '../hooks/hook'
@@ -173,7 +173,39 @@ useEffect(() => {
 }, [socket, startTypingListener])
 
 
+const alertListener = useCallback(
+  (data) => {
+    if (data.chatId !== chatId) return;
+    const messageForAlert = {
+      content: data.message,
+      sender: {
+        _id: "djasdhajksdhasdsadasdas",
+        name: "Admin",
+      },
+      chat: chatId,
+      createdAt: new Date().toISOString(),
+    };
 
+    setMessages((prev) => [...prev, messageForAlert]);
+  },
+  [chatId]
+);
+
+
+
+useEffect(() => {
+  socket.on(
+   ALERT,
+   alertListener
+
+
+
+  )
+  return () => {
+    socket.off(ALERT,
+      alertListener)
+  }
+}, [socket, alertListener])
 
   return chatDetails.isLoading ? <Skeleton /> : (
     <Fragment>

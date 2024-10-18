@@ -5,16 +5,16 @@ import { sampleUsers } from '../../constants/sampleData'
 import { useState } from 'react'
 import { useInputValidation } from '6pp'
 import { useDispatch, useSelector } from 'react-redux'
-import { useAvailableFriendsQuery } from '../../redux/reducers/api/api'
-import { useErrors } from '../../hooks/hook'
+import { useAvailableFriendsQuery, useNewGroupMutation } from '../../redux/reducers/api/api'
+import { useAsyncMutation, useErrors } from '../../hooks/hook'
 import { setIsNewGroup } from '../../redux/reducers/misc'
 import toast from 'react-hot-toast'
 const NewGroup = () => {
 const dispatch=useDispatch()
 const {isNewGroup}=useSelector((state)=>state.misc)
 const {isError,isLoading,error,data}=useAvailableFriendsQuery()
- 
-const errors=[{isError:error,error:error}]
+const[newGroup,isLoadingNewgroup]=useAsyncMutation(useNewGroupMutation)
+const errors=[{isError,error}]
 
 
 useErrors(errors)
@@ -28,7 +28,7 @@ if(selectedMembers.length<2)
   return toast.error("Atleast 2 members required to create a group")
                
 
-
+newGroup("Creating New Group",{name:groupName.value,members:selectedMembers})
 
 
 
@@ -73,7 +73,7 @@ closeHandler();
         </Stack>
         <Stack direction={"row"}  justifyContent={'space-evenly'}>
           <Button variant='outlined' color='error' onClick={closeHandler}>Cancel</Button>
-          <Button variant='contained' onClick={submitHandler}>Create</Button>
+          <Button variant='contained' onClick={submitHandler} disabled={isLoadingNewgroup}>Create</Button>
         </Stack>
           
       </Stack>
