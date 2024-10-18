@@ -7,6 +7,7 @@ import { User } from '../models/user.model.js';
 import { Message } from '../models/message.model.js';
 import { uploadFilesToCloudinary } from '../utils/features.js';
 import { NEW_MESSAGE } from '../constants/events.js';
+const reChatId="671290503f1e1f83fdb29bed"
 const newGroupChat = async (req, res, next) => {
     try {
         const { name, members } = req.body;
@@ -162,8 +163,13 @@ const addMembers=async(req,res,next)=>{
 
   const allUsersname=allNewMembers.map((i)=>i.name).join(",")
 
-  emitEvent(req,ALERT,chat.members,`${allUsersname} has been added to ${chat.name} group` )
-
+  emitEvent(req,ALERT,chat.members,{message:`${allUsersname} has been added to ${chat.name} group` ,chatId,members:chat.members})
+  const messageForDB={
+    content:`${allUsersname} has been added to ${chat.name} group`,
+    sender:reChatId,
+    chat:chatId
+}
+await Message.create(messageForDB);
   emitEvent(req,REFETCH_CHATS,chat.members);
 
   return res.status(200).json({
@@ -219,18 +225,25 @@ if(!userTobeRemoved)
 
       }
 
+       
+      const allChatMembers=chat.members.map((i)=>i.toString())
 
       chat.members=chat.members.filter((member)=>member.toString()!=userId.toString())
       await  chat.save();
+ 
+      const messageForDB={
+        content:`${userTobeRemoved.name} has been removed from the group`,
+        sender:reChatId,
+        chat:chatId
+    }
+    await Message.create(messageForDB);
+      emitEvent(req, ALERT, chat.members, {
+        message: `${userTobeRemoved.name} has been removed from the group`,
+        chatId,
+        members: chat.members,
+      });
 
-      emitEvent(
-        req,
-        ALERT,
-        chat.members,
-        `${userTobeRemoved.name} has been removed from the group`
-      )
-
-      emitEvent(req,REFETCH_CHATS,chat.members)
+      emitEvent(req,REFETCH_CHATS,allChatMembers)
 
       return res.status(200).json({
         success:true,
@@ -570,7 +583,7 @@ const getMessages = async (req, res, next) => {
   try{
   const chatId = req.params.id;
   const { page = 1 } = req.query;
-  console.log(page)
+   
   const resultPerPage = 20;
   const skip = (page - 1) * resultPerPage;
 

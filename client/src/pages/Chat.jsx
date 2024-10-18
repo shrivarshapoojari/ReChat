@@ -36,8 +36,7 @@ const Chat = ({ chatId }) => {
 
 
   const oldMessagesChunk = useGetMessagesQuery({ chatId, page }, { skip: !chatId })
-
-
+    
 
   const { data: oldMessages, setData: setOldMessages } = useInfiniteScrollTop(
     containerRef,
@@ -105,7 +104,7 @@ const Chat = ({ chatId }) => {
   }, [messages]);
 
 
-  const allMessages = [...oldMessages, ...messages];
+ 
 
 
 
@@ -174,7 +173,10 @@ useEffect(() => {
 
 
 const alertListener = useCallback(
+ 
   (data) => {
+    console.log(data)
+  
     if (data.chatId !== chatId) return;
     const messageForAlert = {
       content: data.message,
@@ -185,27 +187,28 @@ const alertListener = useCallback(
       chat: chatId,
       createdAt: new Date().toISOString(),
     };
-
+    
+     
+    
     setMessages((prev) => [...prev, messageForAlert]);
   },
   [chatId]
 );
 
-
-
 useEffect(() => {
-  socket.on(
-   ALERT,
-   alertListener
+  socket.on(ALERT, alertListener); 
 
-
-
-  )
   return () => {
-    socket.off(ALERT,
-      alertListener)
-  }
-}, [socket, alertListener])
+    socket.off(ALERT, alertListener); // Clean up listener
+  };
+}, [socket, alertListener]); // Include alertListener as a dependency
+
+
+
+
+const allMessages = [...oldMessages, ...messages];
+ 
+
 
   return chatDetails.isLoading ? <Skeleton /> : (
     <Fragment>

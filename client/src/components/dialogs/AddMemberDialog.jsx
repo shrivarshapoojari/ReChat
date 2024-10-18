@@ -17,12 +17,12 @@ const AddMemberDialog = ({ chatId }) => {
     const {isLoading,data,isError,error}=useAvailableFriendsQuery(chatId)
      
     useErrors([{isError,error}])
-  console.log(data)
-    const {isAddMember}=useSelector((state)=>state.misc)
    
+    const {isAddMember}=useSelector((state)=>state.misc)
+     
     const [selectedMembers, setSelectedMembers] = useState([])
     const selectMemberHandler = (id) => {
-        setMembers((prev) => prev.map((user) => user._id === id ? { ...user, isAdded: !user.isAdded } : user))
+        
         setSelectedMembers((prev) => prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id])
     }
 
@@ -35,8 +35,7 @@ const AddMemberDialog = ({ chatId }) => {
     }
     const closeHandler = () => {
         dispatch(setIsAddMember(false))
-        setSelectedMembers([])
-        setMembers([])
+        
     }
     return (
         <Dialog open={isAddMember} onClose={closeHandler}>

@@ -17,6 +17,8 @@ export const multerUpload = multer({
 
     if (
       ext !== ".jpg" &&
+      ext !== ".svg" &&
+      ext !== ".SVG" &&
       ext !== ".JPG" &&
       ext !== ".jpeg" &&
       ext !== ".webp" &&

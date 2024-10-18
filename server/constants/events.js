@@ -1,7 +1,7 @@
 
 
 
-const ALERT = 'ALERT';
+const ALERT = "ALERT";
 const REFETCH_CHATS="REFETCH_CHATS";
 
 const NEW_ATTACHMENT="NEW _ATTACHMENT"

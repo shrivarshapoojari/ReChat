@@ -11,7 +11,7 @@ import { socketAuthenticator } from "./middlewares/auth.middleware.js";
 import userRoutes from  "./routes/user.routes.js";
 import chatRoutes from  "./routes/chats.routes.js";
 import adminROutes from "./routes/admin.routes.js"
-import { NEW_MESSAGE, NEW_MESSAGE_ALERT, START_TYPING ,STOP_TYPING} from "./constants/events.js";
+import { ALERT, NEW_MESSAGE, NEW_MESSAGE_ALERT, START_TYPING ,STOP_TYPING} from "./constants/events.js";
 import { getSockets } from "./lib/helper.js";
 import { Message } from "./models/message.model.js";
 
@@ -101,6 +101,7 @@ io.on("connection",(socket)=>{
         }
         await Message.create(messageForDB);
      })
+    
      socket.on(START_TYPING,({members,chatId})=>{
         const memberSocket=getSockets(members)
         socket.to(memberSocket).emit(START_TYPING,{chatId})
