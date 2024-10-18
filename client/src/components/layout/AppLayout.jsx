@@ -8,15 +8,18 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Profile from '../specific/Profile';
 import { useMyChatsQuery } from '../../redux/reducers/api/api';
 import { useDispatch, useSelector } from 'react-redux';
-import { setIsMobile } from '../../redux/reducers/misc';
+import { setIsDeleteMenu, setIsMobile, setSelectedDeleteChat } from '../../redux/reducers/misc';
 import toast from 'react-hot-toast';
 import { useErrors } from '../../hooks/hook';
 import { getSocket } from '../../socket';
 import { NEW_MESSAGE_ALERT, NEW_REQUEST, REFETCH_CHATS } from '../../constants/events';
 import { incrementNotification, setNewMessagesAlert } from '../../redux/reducers/chat';
 import { getOrSaveFromStorage } from '../../lib/features';
+import DeleteChatMenu from '../dialogs/DeleteChatMenu';
+import { useRef } from 'react';
 const AppLayout = (WrappedComponent) => {
   return (props) => {
+    const  deleteMenuAnchor=useRef(null);
     const navigate=useNavigate();
     const { isLoading, data, isError, error, refetch } = useMyChatsQuery()
     const params = useParams();
@@ -91,8 +94,13 @@ const AppLayout = (WrappedComponent) => {
     useErrors([{ isError, error }])
 
 
-    const handleDeleteChat = (e, _id, groupChat) => {
+    const handleDeleteChat = (e,chatId, groupChat) => {
       e.preventDefault();
+      dispatch(setIsDeleteMenu(true))
+      
+       
+      dispatch(setSelectedDeleteChat({chatId,groupChat}))
+      deleteMenuAnchor.current=e.currentTarget;
       console.log("Delete chat")
     }
 
@@ -105,10 +113,14 @@ const AppLayout = (WrappedComponent) => {
       getOrSaveFromStorage({ key: NEW_MESSAGE_ALERT, value: newMessagesAlert })
     }, [newMessagesAlert])
 
+
+
+
     return (
       <>
         <Title />
         <Header />
+        <DeleteChatMenu  dispatch={dispatch}  deleteMenuAnchor={deleteMenuAnchor}/>
 
         {
           isLoading ? <Skeleton />
