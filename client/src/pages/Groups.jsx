@@ -11,8 +11,8 @@ import AvatarCard from '../components/shared/AvatarCard';
 import { sampleChats, sampleUsers } from '../constants/sampleData';
 import EditIcon from '@mui/icons-material/Edit';
 import UserItem from '../components/shared/UserItem';
-import { useChatDetailsQuery, useMyGroupsQuery } from '../redux/reducers/api/api';
-import { useErrors } from '../hooks/hook';
+import { useChatDetailsQuery, useMyGroupsQuery, useRenameGroupMutation } from '../redux/reducers/api/api';
+import { useAsyncMutation, useErrors } from '../hooks/hook';
 const ConfirmDeleteDialog=lazy(()=>import("../components/dialogs/ConfirmDeleteDialog"))
 
 const  AddMemberDialog=lazy(()=>import("../components/dialogs/AddMemberDialog"))
@@ -28,13 +28,15 @@ const chatId=useSearchParams()[0].get("group")
    
   const groupDetails=useChatDetailsQuery({chatId,populate:true},{skip:!chatId})
   console.log(groupDetails)
+
+  const[updateGroup,isLoadingGroupName]=useAsyncMutation(useRenameGroupMutation)
   const errors=[{isError:myGroups.isError,error:myGroups.error},
 
                   {isError:groupDetails?.isError,error:groupDetails?.error}
   ]
 useErrors(errors)
 
-
+const [members ,setMembers]=useState([]);
 useEffect(()=>{
 
   if(groupDetails.data)
@@ -53,7 +55,7 @@ useEffect(()=>{
   }
 },[groupDetails.data])
 
-  const [members ,setMembers]=useState([]);
+  
    
 
 
@@ -65,7 +67,12 @@ useEffect(()=>{
   const isAddMember=false
   const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false)
   const updateGroupNameHandler=()=>{
+    setIsEdit(true)
+   
+    }
+  const changeGroupName=()=>{
     setIsEdit(false)
+    updateGroup("Updating GroupName",{chatId,name:groupNameUpdated})
     }
 
     const openconfirmDeleteHandler=()=>{
@@ -134,7 +141,7 @@ const closeConfirmDeleteHandler=()=>{
   const GroupName= <Stack direction={"row"} alignItems={"center"} justifyContent={"center"} spacing={"1rem"} padding={"3rem"}>
     {isEdit ? <>
     <TextField value={groupNameUpdated} onChange={(e)=>setGroupNameUpdated(e.target.value)} />
-    <IconButton onClick={()=>setIsEdit(false)}>
+    <IconButton onClick={changeGroupName} disabled={isLoadingGroupName}>
       <Done/>
       </IconButton>
      
@@ -142,7 +149,7 @@ const closeConfirmDeleteHandler=()=>{
     <Typography variant='h4'>
      {groupName}
       </Typography>
-      <IconButton onClick={updateGroupNameHandler}>
+      <IconButton onClick={updateGroupNameHandler} disabled={isLoadingGroupName}>
          <EditIcon/>
         </IconButton>
     </>}  
