@@ -73,7 +73,7 @@ try{
 
 io.on("connection",(socket)=>{
     const user=socket.user
-     console.log("user connected",socket.id)
+      
     
     userSocketId.set(user._id.toString(),socket.id)
       
@@ -112,7 +112,7 @@ io.on("connection",(socket)=>{
 
      })
     socket.on("disconnect",()=>{
-        console.log("user disconnected")
+        
         userSocketId.delete(user._id.toString())
     })
 })

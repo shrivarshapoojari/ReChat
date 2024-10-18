@@ -11,7 +11,7 @@ import AvatarCard from '../components/shared/AvatarCard';
 import { sampleChats, sampleUsers } from '../constants/sampleData';
 import EditIcon from '@mui/icons-material/Edit';
 import UserItem from '../components/shared/UserItem';
-import { useChatDetailsQuery, useMyGroupsQuery, useRenameGroupMutation } from '../redux/reducers/api/api';
+import { useAddGroupMembersMutation, useChatDetailsQuery, useMyGroupsQuery, useRemoveGroupMemberMutation, useRenameGroupMutation } from '../redux/reducers/api/api';
 import { useAsyncMutation, useErrors } from '../hooks/hook';
 const ConfirmDeleteDialog=lazy(()=>import("../components/dialogs/ConfirmDeleteDialog"))
 
@@ -27,12 +27,14 @@ const chatId=useSearchParams()[0].get("group")
   const myGroups=useMyGroupsQuery("")
    
   const groupDetails=useChatDetailsQuery({chatId,populate:true},{skip:!chatId})
-  console.log(groupDetails)
+ 
 
   const[updateGroup,isLoadingGroupName]=useAsyncMutation(useRenameGroupMutation)
+  const[removeMember,isLoadingRemoveMember]=useAsyncMutation(useRemoveGroupMemberMutation)
+  const[addMember,isLoadingAddMember]=useAsyncMutation(useAddGroupMembersMutation)
   const errors=[{isError:myGroups.isError,error:myGroups.error},
 
-                  {isError:groupDetails?.isError,error:groupDetails?.error}
+                  {isError:groupDetails?.isError,error:groupDetails?.error},
   ]
 useErrors(errors)
 
@@ -62,7 +64,8 @@ useEffect(()=>{
 
 
 
-  const removeMemberHandler=(id)=>{
+  const removeMemberHandler=(userId)=>{
+    removeMember("Removing Member",{chatId,userId})
   }
   const isAddMember=false
   const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false)

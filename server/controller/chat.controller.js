@@ -181,6 +181,7 @@ const addMembers=async(req,res,next)=>{
 
 const removeMember=async(req,res,next)=>{
 try{
+   
   const {userId,chatId}=req.body;
  
   if(!userId || !chatId)
