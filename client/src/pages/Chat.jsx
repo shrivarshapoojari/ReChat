@@ -18,6 +18,7 @@ import { setIsFileMenu } from '../redux/reducers/misc'
 import { removeNewMessagesAlert } from '../redux/reducers/chat'
 import { START_TYPING,STOP_TYPING } from '../constants/events'
 import { TypingLoader } from '../components/layout/Loaders'
+import { useNavigate } from 'react-router-dom'
 const Chat = ({ chatId }) => {
 
 
@@ -207,9 +208,12 @@ useEffect(() => {
 
 
 const allMessages = [...oldMessages, ...messages];
- 
+ const navigate=useNavigate()
 
-
+useEffect(()=>{
+if(!chatDetails?.data?.chat)
+  return navigate("/")
+},[chatDetails.data])
   return chatDetails.isLoading ? <Skeleton /> : (
     <Fragment>
       <Stack

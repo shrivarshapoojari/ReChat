@@ -11,7 +11,7 @@ import AvatarCard from '../components/shared/AvatarCard';
 import { sampleChats, sampleUsers } from '../constants/sampleData';
 import EditIcon from '@mui/icons-material/Edit';
 import UserItem from '../components/shared/UserItem';
-import { useAddGroupMembersMutation, useChatDetailsQuery, useMyGroupsQuery, useRemoveGroupMemberMutation, useRenameGroupMutation } from '../redux/reducers/api/api';
+import { useAddGroupMembersMutation, useChatDetailsQuery, useDeleteChatMutation, useMyGroupsQuery, useRemoveGroupMemberMutation, useRenameGroupMutation } from '../redux/reducers/api/api';
 import { useAsyncMutation, useErrors } from '../hooks/hook';
 import { useDispatch, useSelector } from 'react-redux';
 import { setIsAddMember } from '../redux/reducers/misc';
@@ -36,7 +36,7 @@ const chatId=useSearchParams()[0].get("group")
 
   const[updateGroup,isLoadingGroupName]=useAsyncMutation(useRenameGroupMutation)
   const[removeMember,isLoadingRemoveMember]=useAsyncMutation(useRemoveGroupMemberMutation)
- 
+ const[deleteGroup,isLoadingDeleteGroup]=useAsyncMutation(useDeleteChatMutation)
   const errors=[{isError:myGroups.isError,error:myGroups.error},
 
                   {isError:groupDetails?.isError,error:groupDetails?.error},
@@ -104,6 +104,8 @@ const closeConfirmDeleteHandler=()=>{
     setIsMobileMenuOpen((prev)=>!prev)
   }
   const deleteHandler=()=>{ 
+    deleteGroup("Deleting Group",chatId)
+    navigate("/");
     closeConfirmDeleteHandler();
 
   }

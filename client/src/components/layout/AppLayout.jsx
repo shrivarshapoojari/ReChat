@@ -4,7 +4,7 @@ import Title from '../shared/Title';
 import { Drawer, Grid, Skeleton } from '@mui/material';
 import ChatList from '../specific/ChatList';
 import { sampleChats } from '../../constants/sampleData'
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import Profile from '../specific/Profile';
 import { useMyChatsQuery } from '../../redux/reducers/api/api';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,6 +17,7 @@ import { incrementNotification, setNewMessagesAlert } from '../../redux/reducers
 import { getOrSaveFromStorage } from '../../lib/features';
 const AppLayout = (WrappedComponent) => {
   return (props) => {
+    const navigate=useNavigate();
     const { isLoading, data, isError, error, refetch } = useMyChatsQuery()
     const params = useParams();
     const chatId = params.chatId
@@ -39,6 +40,7 @@ const AppLayout = (WrappedComponent) => {
 
       const refetchListner=useCallback(()=>{
              refetch()
+             navigate("/")
       },[refetch])
 
 
