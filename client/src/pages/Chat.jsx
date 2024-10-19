@@ -211,9 +211,9 @@ const allMessages = [...oldMessages, ...messages];
  const navigate=useNavigate()
 
 useEffect(()=>{
-if(!chatDetails?.data?.chat)
+if(chatDetails.isError)
   return navigate("/")
-},[chatDetails.data])
+},[chatDetails.isError])
   return chatDetails.isLoading ? <Skeleton /> : (
     <Fragment>
       <Stack

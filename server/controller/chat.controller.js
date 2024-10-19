@@ -294,7 +294,14 @@ const leaveGroup=async(req,res,next)=>{
       
 
       chat.members=chat.members.filter((member)=>member.toString()!=req.user.toString());
+    
     const user=await User.findById(req.user,"name")
+    const messageForDB={
+      content:`${user.name} has left the group`,
+      sender:reChatId,
+      chat:chatId
+  }
+  await Message.create(messageForDB);
       await chat.save();
       emitEvent(
         req,

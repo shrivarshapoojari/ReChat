@@ -3,6 +3,7 @@
  import { Box, Stack, Typography } from '@mui/material'
  import {memo} from 'react'
 import AvatarCard from './AvatarCard'
+import {motion} from 'framer-motion'
  const ChatItem = (
 {
 
@@ -28,7 +29,11 @@ import AvatarCard from './AvatarCard'
      
      >
        
-      <div style={
+      <motion.div 
+         initial={{opacity:0,y:"-100%"}}
+          whileInView={{opacity:1,y:0}}
+            transition={{delay:index*0.1}}
+      style={
 
         {
           display: "flex",
@@ -77,7 +82,7 @@ import AvatarCard from './AvatarCard'
   }
 
 
-      </div>
+      </motion.div>
        </Link>
    )
  }
