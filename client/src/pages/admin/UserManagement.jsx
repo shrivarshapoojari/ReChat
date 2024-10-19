@@ -3,7 +3,9 @@ import AdminLayout from '../../components/layout/AdminLayout'
 import Table from '../../components/shared/Table'
 import { dashboarddata } from '../../constants/sampleData';
 import { transformImage } from '../../lib/features';
-import { Avatar } from '@mui/material';
+import { Avatar, Skeleton } from '@mui/material';
+import { useFindAllUsersQuery } from '../../redux/reducers/api/api';
+import { useErrors } from '../../hooks/hook';
 const columns = [
   {
     field: "id",
@@ -49,20 +51,30 @@ const columns = [
 
 
 const UserManagement = () => {
+
+  const {data,isLoading,error,isError}=useFindAllUsersQuery();
+
+ 
+ useErrors([{isError,error}])
   const [rows,setRows]=useState([])
+
+
   useEffect(() => {
      {
+      if(data){
       setRows(
-        dashboarddata.users.map((i) => ({
+        data?.users.map((i) => ({
           ...i,
           id: i._id,
-          avatar: transformImage(i.avatar, 50),
+          avatar:i.avatar,
         }))
+        
       );
     }
-  },[]);
+    }
+  },[data]);
 
-  return (
+  return  isLoading?( <Skeleton/>) : (
     <AdminLayout>
         <Table  heading={"All users"} columns={columns} rows={rows}/>
     </AdminLayout>

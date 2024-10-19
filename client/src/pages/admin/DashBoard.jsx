@@ -1,6 +1,6 @@
 import React from 'react'
 import AdminLayout from '../../components/layout/AdminLayout'
-import { Container } from '@mui/material'
+import { Container, Skeleton } from '@mui/material'
 import { Stack } from '@mui/material'
 import { AdminPanelSettings as AdminPanelIcon } from '@mui/icons-material'
 import Paper from '@mui/material/Paper'
@@ -11,10 +11,21 @@ import { CurveButton, SearchField } from '../../components/styles/StyledComponen
 import NotificationIcon from '@mui/icons-material/Notifications';
 import { Group as GroupIcon, Person as PersonIcon } from '@mui/icons-material'
 import { DoughnutChart, LineChart } from '../../components/specific/Charts'
-
+import { useDashboardStatsQuery } from '../../redux/reducers/api/api'
+import { useErrors } from '../../hooks/hook'
 const DashBoard = () => {
+
+
+   
+    const {data,isLoading,isError,error}=useDashboardStatsQuery();
+   
+     const chats= data?.stats?.totalChatsCount
+     const groups= data?.stats?.groupsCount
+    useErrors([{isError,error}])
+
    const AppBar = (
 
+       
       <Paper elevattion={3}
          sx={{
             padding: "2rem",
@@ -57,14 +68,15 @@ const DashBoard = () => {
       alignItems={"center"}
       margin={"2rem 0"}>
 
-      <Widget title={"Total Users"} value={100} icon={<GroupIcon />} />
-      <Widget title={"Chats"} value={100} icon={<GroupIcon />} />
-      <Widget title={"Messages"} value={100} icon={<GroupIcon />} />
+      <Widget title={"Total Users"} value={data?.stats?.usersCount} icon={<GroupIcon />} />
+      <Widget title={"Chats"} value={data?.stats?.totalChatsCount} icon={<GroupIcon />} />
+      <Widget title={"Messages"} value={data?.stats?.messagesCount} icon={<GroupIcon />} />
 
 
    </Stack>
 
-   return <AdminLayout>
+   return isLoading ? (<Skeleton/>) 
+       : <AdminLayout>
       <Container component={"main"}>
          {AppBar}
 
@@ -94,8 +106,8 @@ const DashBoard = () => {
                }}
             >
                <Typography variant='h5'>Total Users</Typography>
-               <Typography variant='h5'>100</Typography>
-               <LineChart value={[23, 45, 69, 74, 21, 10, 90]} />
+               <Typography variant='h5'>{data?.stats?.usersCount}</Typography>
+               <LineChart value={data?.stats?.messagesChart} />
             </Paper>
 
             <Paper
@@ -112,7 +124,7 @@ const DashBoard = () => {
                }}
             >
                <DoughnutChart labels={["Single Chats", "GroupChats"]}
-                  value={[23, 46]} />
+                  value={[`${chats}`,`${groups}`]} />
 
                <Stack position={"absolute"}
                   direction={"row"}
