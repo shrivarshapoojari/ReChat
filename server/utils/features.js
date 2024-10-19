@@ -41,6 +41,7 @@ const sendToken =(res,user,code,message)=>{
       ).json({
         success:true,
         message,
+        user,
     
       });
 }
