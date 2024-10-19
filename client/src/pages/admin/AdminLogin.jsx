@@ -3,20 +3,29 @@
 import React, { useState } from 'react'
 import { Avatar, Button, Container, IconButton, Paper, Stack, TextField, Typography } from "@mui/material"
 import { useFileHandler, useInputValidation, useStrongPassword } from '6pp'
-
+import { useDispatch, useSelector } from 'react-redux'
 import { usernameValidator } from '../../utils/validators'
+import { adminLogin } from '../../redux/thunks/admin'
 const AdminLogin = () => {
 
-  const handleLogin=()=>{
 
+    const[secretkey,setSecretkey]=useState("")
+const {isAdmin}=useSelector((state)=>state.auth)
+const dispatch=useDispatch()
+  const handleLogin=(e)=>{
+      e.preventDefault();
+      dispatch(adminLogin(secretkey))
+      setSecretkey("")
   }
-  const [isLogin, setIsLogin] = useState(true)
-    const toggleLogin = () => setIsLogin((prev) => !prev)
-    const name = useInputValidation("")
-    const bio = useInputValidation("")
-    const username = useInputValidation("", usernameValidator)
-    const password = useInputValidation("")
-    const avatar = useFileHandler("single")
+  
+ 
+    const handleInput=(e)=>{
+     const {value}=e.target
+    setSecretkey(value)
+   
+    }
+  
+ 
   return (
     <div className='min-h-[100vh] md:flex bg-gradient-to-t from-[#0029ff]  to-[#00c6ff]'>
     {/* Left Section */}
@@ -63,17 +72,9 @@ const AdminLogin = () => {
             >
                 
                     <>
-                        <Typography variant='h5'>Login</Typography>
+                        <Typography variant='h5'> Admin Login</Typography>
                         <form onSubmit={handleLogin}>
-                            <TextField
-                                required
-                                fullWidth
-                                label="Username"
-                                margin='normal'
-                                variant='outlined'
-                                value={username.value}
-                                onChange={username.changeHandler}
-                            />
+                            
                             <TextField
                                 required
                                 fullWidth
@@ -81,8 +82,8 @@ const AdminLogin = () => {
                                 label="Password"
                                 margin='normal'
                                 variant='outlined'
-                                value={password.value}
-                                onChange={password.changeHandler}
+                                value={secretkey}
+                                onChange={handleInput}
                             />
                             <Button
                                 variant='contained'
