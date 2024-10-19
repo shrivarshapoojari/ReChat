@@ -46,9 +46,10 @@ const adminLogin = async (req, res, next) => {
 };
 
 const adminLogout = async (req, res, next) => {
+  
   return res
     .status(200)
-    .cookie("chattu-admin-token", "", {
+    .cookie("rechat-admin-token", "", {
       ...cookieOptions,
       maxAge: 0,
     })

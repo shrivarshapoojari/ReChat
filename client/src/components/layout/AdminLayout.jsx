@@ -1,19 +1,16 @@
-import React from 'react'
-import { Grid, IconButton, Typography,styled } from '@mui/material'
-import { Box } from '@mui/system'
-import MenuIcon from '@mui/icons-material/Menu';
 import Close from '@mui/icons-material/Close';
-import Drawer from '@mui/material/Drawer';
-import { Stack } from '@mui/material';
-import { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
-import {Link as LinkComponent} from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
-import GroupIcon from '@mui/icons-material/Group';
-import MessageIcon from '@mui/icons-material/Message';
 import ExitToApp from '@mui/icons-material/ExitToApp';
-import { Navigate } from 'react-router-dom';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
+import MenuIcon from '@mui/icons-material/Menu';
+import { Grid, IconButton, Stack, Typography, styled } from '@mui/material';
+import Drawer from '@mui/material/Drawer';
+import { Box } from '@mui/system';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link as LinkComponent, useLocation, useNavigate } from 'react-router-dom';
+import { adminLogout } from '../../redux/thunks/admin';
+ 
 const Link = styled(LinkComponent)`
   text-decoration: none;
   border-radius: 2rem;
@@ -25,8 +22,7 @@ const Link = styled(LinkComponent)`
   }
 `;
 
-
-const isAdmin = true;
+ 
 
 
 const  adminTabs=[
@@ -47,12 +43,15 @@ const  adminTabs=[
 
 ]
 
-const logouthandler=()=>{
-   console.log("logout");
-}
+
+
 const SideBar = ({ w = "100%" }) => {
 
    const location = useLocation();
+   const dispatch=useDispatch();
+   const logouthandler=()=>{
+           dispatch(adminLogout())
+   }
 
    return <Stack width={w} direction={"column"} p={"3rem"} spacing={"3rem"}>
       <Typography variant={"h5"} textTransform={"uppercase"}>RECHAT</Typography>
@@ -87,7 +86,10 @@ const SideBar = ({ w = "100%" }) => {
              <Link>
                    <Stack  direction={"row"} alignItems={"center"} spacing={"1rem"}>
                               <ExitToApp/>
-                             <Typography >Logout</Typography>
+                             <Typography  
+                                onClick={logouthandler}
+                             
+                             >Logout</Typography>
                    </Stack>
                </Link>
 
@@ -97,14 +99,18 @@ const SideBar = ({ w = "100%" }) => {
 }
 
 const AdminLayout = ({ children }) => {
-
+ 
+   const {isAdmin}=useSelector((state)=>state.auth)
    const [isMobile, setIsMobile] = useState(false);
-
+        const navigate=useNavigate();
    const handleMobile = () => { setIsMobile(!isMobile) };
    const handleClose = () => { setIsMobile(false) };
-   if(!isAdmin){
-      return   <Navigate to="admin/login"/>
-   }
+   useEffect(()=>{
+      if(!isAdmin){
+         return    navigate("/admin")
+      }
+   },[isAdmin])
+  
 
 
    return (
