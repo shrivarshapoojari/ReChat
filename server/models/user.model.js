@@ -97,6 +97,7 @@ const schema = new Schema({
   // Only store the public key on the server
   publicKey: {
     type: String,
+    required:true
      // Public key in PEM format
   }
 }, {

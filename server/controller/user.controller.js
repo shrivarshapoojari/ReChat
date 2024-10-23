@@ -21,22 +21,22 @@ const storePublicKey = async (req, res) => {
   const { userId, publicKey } = req.body;
 
   try {
-    // Validate request
+    
     if (!userId || !publicKey) {
       return res.status(400).json({ success: false, message: "Missing userId or publicKey" });
     }
 
-    // Find the user by their ID
+   
     const user = await User.findById(userId);
     
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    // Store the public key in the user's record
+     
     user.publicKey = publicKey;
 
-    // Save the updated user record
+    
     await user.save();
 
     return res.status(200).json({ success: true, message: "Public key stored successfully" });
@@ -49,13 +49,14 @@ const storePublicKey = async (req, res) => {
 
 const newUser = async (req, res,next) => {
   try {
-    const { name, username, password, bio } = req.body;
+    const { name, username, password, bio,publicKey } = req.body;
  
    
     if (!name || !username || !password || !bio || !req.file) {
       return res.status(400).json({ success: false, message: "All fields are required" });
     }
-
+   if(!publicKey)
+    return next(new ErrorHandler("Client error",400))
     
     const existingUser = await User.findOne({ username });
     if (existingUser) {
@@ -71,6 +72,7 @@ const newUser = async (req, res,next) => {
         public_id: username,
         url: "htts://www.google.com",
       },
+      publicKey:publicKey
     });
      
              
