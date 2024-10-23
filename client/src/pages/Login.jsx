@@ -29,7 +29,7 @@ const Login = () => {
 
   const dispatch = useDispatch();
 
-const [isLoading,setisLoading]=useState(false)
+
 
 
 
@@ -50,7 +50,6 @@ const [isLoading,setisLoading]=useState(false)
     };
   
     try {
-      setisLoading(true)
       // Use toast.promise to display loading, success, and error states
       const { data } = await toast.promise(
         axios.post(
@@ -69,10 +68,10 @@ const [isLoading,setisLoading]=useState(false)
       );
   
       // Dispatch action after successful login
-      dispatch(userExists(data?.user));
-        setisLoading(false)
+      dispatch(userExists(true));
+  
     } catch (error) {
-       setisLoading(false)
+      
   
       // Graceful error handling with more detailed error message
       if (error.response) {
@@ -219,7 +218,6 @@ const handleSignup = async (e) => {
   // }
 
   try {
-    setisLoading(true)
     const data=await toast.promise(
       axios.post(`${server}/api/v1/user/new`, formData, {
         withCredentials: true,
@@ -235,12 +233,12 @@ const handleSignup = async (e) => {
     );
   
     // Dispatch userExists action upon successful registration
-    dispatch(userExists(data?.user));
-    setisLoading(false)
+     
+    dispatch(userExists(true));
   
   } catch (error) {
     console.error(error);
-   setisLoading(false)
+  
     // Handle axios error more gracefully
     if (error.response) {
       toast.error(error.response.data.message || 'Request failed with error');
@@ -347,7 +345,6 @@ const handleSignup = async (e) => {
                         backgroundPosition: "right",
                       },
                     }}
-                    disabled={isLoading}
                   >
                     Login
                   </Button>
@@ -367,7 +364,6 @@ const handleSignup = async (e) => {
                     }}
                     onClick={() => toggleLogin()}
                     fullWidth
-                      disabled={isLoading}
                   >
                     Register
                   </Button>
@@ -482,7 +478,6 @@ const handleSignup = async (e) => {
                         backgroundPosition: "right",
                       },
                     }}
-                    disabled={isLoading}
                   >
                     Register
                   </Button>
@@ -502,7 +497,6 @@ const handleSignup = async (e) => {
                     }}
                     onClick={() => toggleLogin()}
                     fullWidth
-                    disabled={isLoading}
                   >
                     Login
                   </Button>

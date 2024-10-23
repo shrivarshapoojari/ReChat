@@ -16,6 +16,37 @@ const cookieOptions = {
   httpOnly:true,
   secure:true
 }
+
+const storePublicKey = async (req, res) => {
+  const { userId, publicKey } = req.body;
+
+  try {
+    // Validate request
+    if (!userId || !publicKey) {
+      return res.status(400).json({ success: false, message: "Missing userId or publicKey" });
+    }
+
+    // Find the user by their ID
+    const user = await User.findById(userId);
+    
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // Store the public key in the user's record
+    user.publicKey = publicKey;
+
+    // Save the updated user record
+    await user.save();
+
+    return res.status(200).json({ success: true, message: "Public key stored successfully" });
+
+  } catch (error) {
+    console.error("Error storing public key:", error);
+    return res.status(500).json({ success: false, message: "Server error" });
+  }
+};
+
 const newUser = async (req, res,next) => {
   try {
     const { name, username, password, bio } = req.body;
@@ -354,4 +385,4 @@ const getMyFriends =  async(req, res,next) => {
     return next(new ErrorHandler(error.message,500))
   }
   };
-export { login, newUser,getMyProfile,logout,searchUser,sendRequest,acceptRequest ,getMyNotifications,getMyFriends};
+export { login, newUser,getMyProfile,logout,searchUser,sendRequest,acceptRequest ,getMyNotifications,getMyFriends,storePublicKey};

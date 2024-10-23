@@ -75,7 +75,7 @@ io.on("connection",(socket)=>{
     const user=socket.user
       
     
-    userSocketId.set(user._id.toString(),socket.id)
+    userSocketId.set(user?._id.toString(),socket?.id)
       
      socket.on(NEW_MESSAGE,async({chatId,members,message})=>{
 
