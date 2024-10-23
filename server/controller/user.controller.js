@@ -19,11 +19,11 @@ const cookieOptions = {
 
 const storePublicKey = async (req, res) => {
   const { userId, publicKey } = req.body;
-
+     console.log(req.body)
   try {
     
     if (!userId || !publicKey) {
-      return res.status(400).json({ success: false, message: "Missing userId or publicKey" });
+      return res.status(400).json({ success: false, message: "Internal server error try login again" });
     }
 
    
@@ -39,7 +39,7 @@ const storePublicKey = async (req, res) => {
     
     await user.save();
 
-    return res.status(200).json({ success: true, message: "Public key stored successfully" });
+    return res.status(200).json({ success: true, message: "Login Success" });
 
   } catch (error) {
     console.error("Error storing public key:", error);

@@ -71,6 +71,15 @@ const api = createApi({
       }),
       keepUnusedDataFor: 0,
     }),
+    sendPublicKey: builder.mutation({
+      query: ( data ) => ({
+        url: "user/storePublicKey", 
+        method: "POST",
+        body: data,
+        credentials: "include",
+      }),
+      invalidatesTags: ["User"],
+    }),
 
     sendAttachments: builder.mutation({
       query: (data) => ({
@@ -183,6 +192,7 @@ const api = createApi({
 
 export default api;
 export const {
+  useSendPublicKeyMutation,
   useMyChatsQuery,
   useLazySearchUserQuery,
   useSendFriendRequestMutation,

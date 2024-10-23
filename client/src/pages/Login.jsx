@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+ import {useAsyncMutation} from "../hooks/hook"
 import {
   Avatar,
   Button,
@@ -18,6 +19,7 @@ import { server } from "../constants/config";
 import { useDispatch } from "react-redux";
 import { userExists } from "../redux/reducers/auth";
 import toast from "react-hot-toast";
+import { useSendFriendRequestMutation, useSendPublicKeyMutation } from "../redux/reducers/api/api";
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const toggleLogin = () => setIsLogin((prev) => !prev);
@@ -26,33 +28,34 @@ const Login = () => {
   const username = useInputValidation("", usernameValidator);
   const password = useInputValidation("");
   const avatar = useFileHandler("single");
-
-  const dispatch = useDispatch();
-  async function generateKeyPair() {
-    const keyPair = await window.crypto.subtle.generateKey({
-      name: "RSA-OAEP",
-      modulusLength: 2048,
-      publicExponent: new Uint8Array([1, 0, 1]),
-      hash: "SHA-256"
-    }, true, ["encrypt", "decrypt"]);
   
-    const publicKey = await window.crypto.subtle.exportKey("spki", keyPair.publicKey);
-     
-    const exportedAsString = String.fromCharCode.apply(null, new Uint8Array(publicKey));
-    const publicKeyPem = btoa(exportedAsString);
+  const dispatch = useDispatch();
+const generateKeypair=async ()=>{
+  const keyPair = await window.crypto.subtle.generateKey({
+    name: "RSA-OAEP",
+    modulusLength: 2048,
+    publicExponent: new Uint8Array([1, 0, 1]),
+    hash: "SHA-256"
+  }, true, ["encrypt", "decrypt"]);
+
+  const publicKey = await window.crypto.subtle.exportKey("spki", keyPair.publicKey);
    
-    const privateKey = await window.crypto.subtle.exportKey("pkcs8", keyPair.privateKey);
-    localStorage.setItem('privateKey', privateKey);  
-    return publicKeyPem
-  }
-
-
+  const exportedAsString = String.fromCharCode.apply(null, new Uint8Array(publicKey));
+  const publicKeyPem = btoa(exportedAsString);
+ 
+  const privateKey = await window.crypto.subtle.exportKey("pkcs8", keyPair.privateKey);
+  localStorage.setItem('privateKey', privateKey);  
+  return publicKeyPem
+}
+   const [generator,isLoadingGenerator]=useAsyncMutation(useSendPublicKeyMutation);
+   
+  
 
 
   const handleLogin = async (e) => {
     e.preventDefault();
   
-    // Check if username and password are provided
+     
     if (!username.value || !password.value) {
       toast.error("Please fill all the fields");
       return;
@@ -66,7 +69,8 @@ const Login = () => {
     };
   
     try {
-      // Use toast.promise to display loading, success, and error states
+
+       
       const { data } = await toast.promise(
         axios.post(
           `${server}/api/v1/user/login`,
@@ -82,9 +86,19 @@ const Login = () => {
           error: "Login failed, please check your credentials", // Default error message
         }
       );
-  
-      // Dispatch action after successful login
-      dispatch(userExists(true));
+      console.log(data)
+      const storedPrivateKey = localStorage.getItem('privateKey');
+      if(!storedPrivateKey){
+      console.log("Generating new key pair...");
+    const publicKey=await generateKeypair();
+ 
+  const userId=data.user._id
+   
+ 
+     await generator("Sending key",{userId,publicKey});
+      }
+      
+      dispatch(userExists(data));
   
     } catch (error) {
       
