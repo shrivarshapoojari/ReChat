@@ -30,23 +30,48 @@ const Login = () => {
   const avatar = useFileHandler("single");
   
   const dispatch = useDispatch();
-const generateKeypair=async ()=>{
-  const keyPair = await window.crypto.subtle.generateKey({
-    name: "RSA-OAEP",
-    modulusLength: 2048,
-    publicExponent: new Uint8Array([1, 0, 1]),
-    hash: "SHA-256"
-  }, true, ["encrypt", "decrypt"]);
+  const generateKeypair = async () => {
+    try {
+      // Generate RSA-OAEP key pair
+      const keyPair = await window.crypto.subtle.generateKey(
+        {
+          name: "RSA-OAEP",
+          modulusLength: 2048,
+          publicExponent: new Uint8Array([1, 0, 1]),
+          hash: "SHA-256",
+        },
+        true, // Extractable keys
+        ["encrypt", "decrypt"] // Usages
+      );
+  
+      // Export the public key as spki (Subject Public Key Info)
+      const publicKey = await window.crypto.subtle.exportKey("spki", keyPair.publicKey);
+  
+      // Convert the public key to PEM format
+      const publicKeyPem = convertArrayBufferToPem(publicKey, "PUBLIC KEY");
+  
+      // Export the private key as pkcs8 (Private Key Info)
+      
+      const privateKey = await window.crypto.subtle.exportKey("pkcs8", keyPair.privateKey);
 
-  const publicKey = await window.crypto.subtle.exportKey("spki", keyPair.publicKey);
-   
-  const exportedAsString = String.fromCharCode.apply(null, new Uint8Array(publicKey));
-  const publicKeyPem = btoa(exportedAsString);
- 
-  const privateKey = await window.crypto.subtle.exportKey("pkcs8", keyPair.privateKey);
-  localStorage.setItem('privateKey', privateKey);  
-  return publicKeyPem
-}
+      
+      localStorage.setItem("privateKey", btoa(String.fromCharCode(...new Uint8Array(privateKey))));
+  
+      // Return the public key PEM string
+      return publicKeyPem;
+    } catch (error) {
+      console.error("Error generating key pair:", error);
+    }
+  };
+  
+  // Helper function to convert ArrayBuffer to PEM format
+  function convertArrayBufferToPem(keyBuffer, keyType) {
+    const keyAsString = String.fromCharCode(...new Uint8Array(keyBuffer));
+    const keyAsBase64 = btoa(keyAsString);
+    const pemKey = `-----BEGIN ${keyType}-----\n${keyAsBase64.match(/.{1,64}/g).join("\n")}\n-----END ${keyType}-----`;
+    return pemKey;
+  }
+  
    const [generator,isLoadingGenerator]=useAsyncMutation(useSendPublicKeyMutation);
    
   
@@ -86,7 +111,7 @@ const generateKeypair=async ()=>{
           error: "Login failed, please check your credentials", // Default error message
         }
       );
-      console.log(data)
+    
       const storedPrivateKey = localStorage.getItem('privateKey');
       if(!storedPrivateKey){
       console.log("Generating new key pair...");

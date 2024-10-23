@@ -19,7 +19,7 @@ const cookieOptions = {
 
 const storePublicKey = async (req, res) => {
   const { userId, publicKey } = req.body;
-     console.log(req.body)
+   
   try {
     
     if (!userId || !publicKey) {
@@ -46,6 +46,34 @@ const storePublicKey = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error" });
   }
 };
+
+const getPublicKey = async (req, res) => {
+  
+  try {
+     
+    const userId = req?.query?.userId;
+
+  
+    if (!userId) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    
+    const user = await User.findById(userId);
+
+     
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+ 
+    res.json({ publicKey: user.publicKey });
+  } catch (error) {
+    
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 
 const newUser = async (req, res,next) => {
   try {
@@ -387,4 +415,4 @@ const getMyFriends =  async(req, res,next) => {
     return next(new ErrorHandler(error.message,500))
   }
   };
-export { login, newUser,getMyProfile,logout,searchUser,sendRequest,acceptRequest ,getMyNotifications,getMyFriends,storePublicKey};
+export { login, newUser,getMyProfile,logout,searchUser,sendRequest,acceptRequest ,getMyNotifications,getMyFriends,storePublicKey,getPublicKey};

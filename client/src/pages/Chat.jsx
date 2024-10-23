@@ -7,6 +7,7 @@ import { InputBox } from '../components/styles/StyledComponents'
 import { grayColor } from '../constants/color'
 import FileMenu from '../components/dialogs/FileMenu'
 import Message from '../components/shared/Message'
+ import { server } from '../constants/config'
 
 import { getSocket } from '../socket'
 import { ALERT, NEW_MESSAGE } from '../constants/events'
@@ -19,9 +20,13 @@ import { removeNewMessagesAlert } from '../redux/reducers/chat'
 import { START_TYPING,STOP_TYPING } from '../constants/events'
 import { TypingLoader } from '../components/layout/Loaders'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 const Chat = ({ chatId }) => {
 
 
+
+const privateKey=localStorage.getItem('privateKey')
+ 
 
   const dispatch = useDispatch();
   const containerRef = useRef(null);
@@ -49,10 +54,73 @@ const Chat = ({ chatId }) => {
 
 
   const members = chatDetails?.data?.chat?.members
+   
   const errors = [{ isError: chatDetails?.isError, error: chatDetails?.error },
   { isError: oldMessagesChunk?.isError, error: oldMessagesChunk?.error },
   ]
   useErrors(errors)
+ 
+  const currentUserId = String(user._id);
+  const otherusers = Array.isArray(members)
+        ? members.filter(memberId => String(memberId) !== currentUserId) // Directly compare the string IDs
+        : [];
+ 
+
+
+         
+
+        async function encryptMessage(publicKeyPem, message) {
+          
+          const cleanPem = publicKeyPem
+            .replace(/-----BEGIN PUBLIC KEY-----/g, '')
+            .replace(/-----END PUBLIC KEY-----/g, '')
+            .replace(/\s+/g, ''); // Remove all line breaks and spaces
+        
+          try {
+            // Decode the cleaned Base64 public key
+            const binaryDerString = atob(cleanPem);
+            const binaryDer = new Uint8Array([...binaryDerString].map(char => char.charCodeAt(0)));
+        
+            // Import the public key
+            const cryptoPublicKey = await window.crypto.subtle.importKey(
+              "spki", // Public Key format
+              binaryDer.buffer,
+              {
+                name: "RSA-OAEP",
+                hash: "SHA-256",
+              },
+              true,
+              ["encrypt"]
+            );
+        
+            // Encode the message
+            const encodedMessage = new TextEncoder().encode(message);
+        
+            // Encrypt the message
+            const encryptedMessage = await window.crypto.subtle.encrypt(
+              { name: "RSA-OAEP" },
+              cryptoPublicKey,
+              encodedMessage
+            );
+        
+            // Return the encrypted message as a Base64 string
+            return btoa(String.fromCharCode(...new Uint8Array(encryptedMessage)));
+          } catch (error) {
+            console.error('Error during encryption:', error);
+          }
+        }
+        
+        
+          
+
+
+
+
+
+
+
+
+
 
 
 
@@ -60,15 +128,78 @@ const Chat = ({ chatId }) => {
 
   const socket = getSocket();
   const [message, setMessage] = useState("")
-  const submitHandler = (e) => {
+
+  
+  const submitHandler = async(e) => {
     e.preventDefault();
     if (!message.trim())
       return;
-    socket.emit(NEW_MESSAGE, { chatId, members, message })
+    const userId=otherusers[0]
+    
+    const res = await axios.get(`${server}/api/v1/user/getPublicKey`, {
+      withCredentials: true,  
+      params: {
+        userId: userId, 
+      },
+    });
+       
+    const publicKey=res?.data?.publicKey
+    const encrptedmsg=await encryptMessage(publicKey,message)  
+  
+    socket.emit(NEW_MESSAGE, { chatId, members, message:encrptedmsg })
     setMessage("")
 
 
   }
+
+  const decryptMessage = async (encryptedMessage) => {
+    try {
+      // Retrieve the private key from localStorage and decode it from Base64
+      const privateKeyBase64 = localStorage.getItem("privateKey");
+      console.log("1")
+      const binaryPrivateKey = atob(privateKeyBase64);
+      console.log("2")
+      const privateKeyArrayBuffer = new Uint8Array([...binaryPrivateKey].map(char => char.charCodeAt(0)));
+      console.log("3")
+      // Import the private key for decryption
+      const cryptoPrivateKey = await window.crypto.subtle.importKey(
+        "pkcs8", // Private Key format
+        privateKeyArrayBuffer.buffer,
+        {
+          name: "RSA-OAEP",
+          hash: "SHA-256"
+        },
+        true, // Extractable
+        ["decrypt"]
+      );
+          console.log(cryptoPrivateKey)
+      console.log("4")
+      // Decode the Base64-encoded encrypted message to an ArrayBuffer
+      const encryptedArrayBuffer = new Uint8Array(atob(encryptedMessage).split("").map(char => char.charCodeAt(0))).buffer;
+      console.log("5")
+      // Decrypt the message using the private key
+      const decryptedArrayBuffer = await window.crypto.subtle.decrypt(
+        { name: "RSA-OAEP" },
+        cryptoPrivateKey,
+        encryptedArrayBuffer
+      );
+      console.log("6")
+      // Convert the decrypted ArrayBuffer to a readable string
+      const decryptedMessage = new TextDecoder().decode(decryptedArrayBuffer);
+      console.log("7")
+      console.log("Decrypted message:", decryptedMessage);
+      return decryptedMessage;
+    } catch (error) {
+      console.error("Decryption failed:", error.message || error);
+    }
+  };
+  
+
+
+
+
+
+
 
   useEffect(() => {
     dispatch(removeNewMessagesAlert(chatId))
@@ -84,7 +215,13 @@ const Chat = ({ chatId }) => {
   const newMessageHandler = useCallback((data) => {
     if (data?.chatId !== chatId)
       return
-    setMessages((prev) => [...prev, data?.message])
+     const decryptedMessageContent=decryptMessage(data?.message?.content)
+     const decryptedMessage = {
+      ...data?.message,
+      content: decryptedMessageContent 
+    };
+  
+    setMessages((prev) => [...prev, decryptedMessage]);
   }, [chatId])
 
 
@@ -99,6 +236,10 @@ const Chat = ({ chatId }) => {
       socket.off(NEW_MESSAGE, newMessageHandler)
     }
   }, [socket, newMessageHandler])
+
+
+
+
   useEffect(() => {
     if (bottomRef.current)
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
@@ -209,6 +350,11 @@ useEffect(() => {
 
 const allMessages = [...oldMessages, ...messages];
  const navigate=useNavigate()
+
+
+
+
+
 
 useEffect(()=>{
 if(chatDetails.isError)
