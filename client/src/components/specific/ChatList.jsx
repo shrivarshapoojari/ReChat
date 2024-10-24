@@ -1,6 +1,7 @@
 import React from 'react'
 import { Stack } from '@mui/material'
 import ChatItem from '../shared/ChatItem';
+import { Paper } from '@mui/material';
 const ChatList = (
 
     {
@@ -18,13 +19,18 @@ const ChatList = (
     }
 ) => {
   return (
-    <Stack width={w} direction={"column"}
-      sx={{
-        overflow:"auto",
-        height:"100%",
-         backgroundImage: "linear-gradient(to right, #FFFFFF, #D4DFED)"
-      }}
+    <Paper wdth={w}
+    
+     elevation={9}
+    direction={"column"}
+    sx={{
+      overflow:"auto",
+      height:"100%", 
+       
+    }}
     >
+      
+     
       
       { 
        
@@ -51,7 +57,8 @@ const ChatList = (
     ;
   })
 }
-    </Stack>
+     
+    </Paper>
   )
 }
 

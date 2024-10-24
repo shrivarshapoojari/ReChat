@@ -18,7 +18,7 @@ import { Skeleton, keyframes, styled } from "@mui/material";
    color: "black",
    padding: "1rem",
    '&:hover': {
-     backgroundColor: "rgba(0,0,0,0.1)", // Add quotes around the color value
+     backgroundColor: "rgba(0,0,0,0.1)", 
    
    }
  });
