@@ -41,15 +41,95 @@ const privateKey=localStorage.getItem('privateKey')
   const chatDetails = useChatDetailsQuery({ chatId, skip: !chatId })
 
 
-  const oldMessagesChunk = useGetMessagesQuery({ chatId, page }, { skip: !chatId })
-    
 
+
+
+  const decryptMessage = async (encryptedMessage) => {
+    try {
+      
+      const privateKeyBase64 = localStorage.getItem("privateKey");
+    
+      const binaryPrivateKey = atob(privateKeyBase64);
+    
+      const privateKeyArrayBuffer = new Uint8Array([...binaryPrivateKey].map(char => char.charCodeAt(0)));
+      
+       
+      const cryptoPrivateKey = await window.crypto.subtle.importKey(
+        "pkcs8", 
+        privateKeyArrayBuffer.buffer,
+        {
+          name: "RSA-OAEP",
+          hash: "SHA-256"
+        },
+        true, 
+        ["decrypt"]
+      );
+    
+  
+      const encryptedArrayBuffer = new Uint8Array(atob(encryptedMessage).split("").map(char => char.charCodeAt(0))).buffer;
+    
+     
+      const decryptedArrayBuffer = await window.crypto.subtle.decrypt(
+        { name: "RSA-OAEP" },
+        cryptoPrivateKey,
+        encryptedArrayBuffer
+      );
+   
+      
+      const decryptedMessage = new TextDecoder().decode(decryptedArrayBuffer);
+    
+      console.log("Decrypted message:", decryptedMessage);
+      return decryptedMessage;
+    } catch (error) {
+       console.log(error)
+    }
+  };
+
+
+
+
+
+
+  
+
+  const oldMessagesChunk = useGetMessagesQuery({ chatId, page }, { skip: !chatId })
+   
+  
+  const modifyOldMessage = async () => {
+    if (oldMessagesChunk?.data?.messages) {
+    
+      const modifiedMessages = await Promise.all(
+        oldMessagesChunk.data.messages.map(async (message) => {
+          
+          const decryptedContent = await decryptMessage(message.content);
+          return {
+            ...message,
+            content: decryptedContent,  
+          };
+        })
+      );
+  
+    
+      const modifiedOldMessagesChunk = {
+        ...oldMessagesChunk,   
+        data: {
+          ...oldMessagesChunk.data,   
+          messages: modifiedMessages,  
+        },
+      };
+  
+      return modifiedOldMessagesChunk;  
+    }
+  };
+  const modifiedOldMessagesChunk=modifyOldMessage()
+  console.log(modifiedOldMessagesChunk)
+  
   const { data: oldMessages, setData: setOldMessages } = useInfiniteScrollTop(
     containerRef,
     oldMessagesChunk.data?.totalPages,
     page,
     setPage,
-    oldMessagesChunk.data?.messages
+    modifiedOldMessagesChunk?.data?.messages
   );
 
 
@@ -152,47 +232,7 @@ const privateKey=localStorage.getItem('privateKey')
 
   }
 
-  const decryptMessage = async (encryptedMessage) => {
-    try {
-      // Retrieve the private key from localStorage and decode it from Base64
-      const privateKeyBase64 = localStorage.getItem("privateKey");
-      console.log("1")
-      const binaryPrivateKey = atob(privateKeyBase64);
-      console.log("2")
-      const privateKeyArrayBuffer = new Uint8Array([...binaryPrivateKey].map(char => char.charCodeAt(0)));
-      console.log("3")
-      // Import the private key for decryption
-      const cryptoPrivateKey = await window.crypto.subtle.importKey(
-        "pkcs8", // Private Key format
-        privateKeyArrayBuffer.buffer,
-        {
-          name: "RSA-OAEP",
-          hash: "SHA-256"
-        },
-        true, // Extractable
-        ["decrypt"]
-      );
-          console.log(cryptoPrivateKey)
-      console.log("4")
-      // Decode the Base64-encoded encrypted message to an ArrayBuffer
-      const encryptedArrayBuffer = new Uint8Array(atob(encryptedMessage).split("").map(char => char.charCodeAt(0))).buffer;
-      console.log("5")
-      // Decrypt the message using the private key
-      const decryptedArrayBuffer = await window.crypto.subtle.decrypt(
-        { name: "RSA-OAEP" },
-        cryptoPrivateKey,
-        encryptedArrayBuffer
-      );
-      console.log("6")
-      // Convert the decrypted ArrayBuffer to a readable string
-      const decryptedMessage = new TextDecoder().decode(decryptedArrayBuffer);
-      console.log("7")
-      console.log("Decrypted message:", decryptedMessage);
-      return decryptedMessage;
-    } catch (error) {
-      console.error("Decryption failed:", error.message || error);
-    }
-  };
+  
   
 
 
@@ -212,10 +252,11 @@ const privateKey=localStorage.getItem('privateKey')
   }, [chatId])
 
 
-  const newMessageHandler = useCallback((data) => {
+  const newMessageHandler = useCallback(
+    async(data) => {
     if (data?.chatId !== chatId)
       return
-     const decryptedMessageContent=decryptMessage(data?.message?.content)
+     const decryptedMessageContent=await decryptMessage(data?.message?.content)
      const decryptedMessage = {
       ...data?.message,
       content: decryptedMessageContent 
