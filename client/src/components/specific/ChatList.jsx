@@ -21,7 +21,7 @@ const ChatList = (
   return (
     <Paper wdth={w}
     
-     elevation={9}
+     elevation={10}
     direction={"column"}
     sx={{
       overflow:"auto",
