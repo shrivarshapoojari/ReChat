@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isNewGroup: false,
+  setIsProfile: false,
   isAddMember: false,
   isNotification: false,
   isMobile: false,
@@ -21,6 +22,9 @@ const miscSlice = createSlice({
   reducers: {
     setIsNewGroup: (state, action) => {
       state.isNewGroup = action.payload;
+    },
+    setIsProfile: (state, action) => {
+      state.isProfile = action.payload;
     },
     setIsAddMember: (state, action) => {
       state.isAddMember = action.payload;
@@ -52,6 +56,7 @@ const miscSlice = createSlice({
 export default miscSlice;
 export const {
   setIsNewGroup,
+  setIsProfile,
   setIsAddMember,
   setIsNotification,
   setIsMobile,

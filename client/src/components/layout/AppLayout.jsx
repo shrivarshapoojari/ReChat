@@ -17,7 +17,7 @@ import { incrementNotification, setNewMessagesAlert } from '../../redux/reducers
 import { getOrSaveFromStorage } from '../../lib/features';
 import DeleteChatMenu from '../dialogs/DeleteChatMenu';
 import { useRef } from 'react';
-import ResponsiveAppBar from './NewHeader';
+  
 const AppLayout = (WrappedComponent) => {
   return (props) => {
     const  deleteMenuAnchor=useRef(null);
@@ -120,7 +120,7 @@ const AppLayout = (WrappedComponent) => {
     return (
       <>
         <Title />
-        <ResponsiveAppBar />
+        <Header/>
         <DeleteChatMenu  dispatch={dispatch}  deleteMenuAnchor={deleteMenuAnchor}/>
 
         {
