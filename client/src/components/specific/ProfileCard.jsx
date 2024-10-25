@@ -92,7 +92,7 @@ const ProfileCard = () => {
         {
           loading: 'Updating..',
           success: 'Profile Updated Successfully',
-          error: 'Failed to update...', // Default error message
+          error: 'Failed to update...', 
         }
       );
 
@@ -106,7 +106,7 @@ const ProfileCard = () => {
      {
       console.error(error);
  
-      // Handle axios error more gracefully
+      
       if (error.response)
          {
         toast.error(error.response.data.message || 'Request failed with error');

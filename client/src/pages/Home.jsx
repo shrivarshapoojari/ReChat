@@ -1,16 +1,31 @@
 import React from 'react'
 import AppLayout from '../components/layout/AppLayout'
 import { Typography ,Box} from '@mui/material';
-import { grayColor } from '../constants/color';
+ 
 
 const Home = () => {
   return (
-    <Box
+    <div className='flex w-full min-h-[93vh] '>
+    <div className="hidden md:flex md:w-full items-center justify-center  bg-gradient-to-t from-[#0029ff] to-[#00c6ff] text-white p-8">
+    <div className="text-center">
+      {/* Logo Image for Medium Screens and Above */}
+      <img
+        src="/logo.svg"
+        alt="Logo"
+        className="mx-auto mb-8" // Centered and add margin bottom
+        style={{ maxWidth: "150px" }} // Limit the size of the logo
+      />
+      <Typography variant="h4" fontWeight="bold">
+        ReChat : Conversations Reimagined !
+      </Typography>
+      <Typography variant="body1" mt={2}>
+        Experience chat like never before with Rechat’s smart, user-focused
+        features designed just for you
+      </Typography>
       
-    
-    height={"100%"}>
-     <Typography p={"2rem"} variant='h5' textAlign={"center"} >Select a friend to chat</Typography>
-     </Box>
+    </div>
+  </div>
+  </div>
   )
 }
 
