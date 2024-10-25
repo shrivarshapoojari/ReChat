@@ -96,78 +96,6 @@ const [isLoading,setisLoading]=useState(false)
 
 
 
-
-
-//   const handleLogin = async (e) => {
-//     e.preventDefault();
-//     const config = {
-//       withCredentials: true,
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//     };
-// try{
-//   if(!username.value || !password.value)
-//     {
-//       toast.error("Please fill all the fields")
-//     }
-//  console.log("username",username.value)
-//  console.log("password",password.value)
-
-
-//    const {data}= await axios.post(
-//       `${server}/api/v1/user/login`,
-//       {
-//         username: username.value,
-//         password: password.value,
-//       },
-//       config
-//     );
-//     dispatch(userExists(true))
-//     toast.success("Logged in")
-// }catch(e)
-// {
-//     console.log(e)
-//     toast.error(e.response.data.message)
-// }
-//   };
-//   const handleSignup = async(e) => {
-//     e.preventDefault();
-//     console.log(username.value)
-//     console.log(name.value)
-//     console.log(password.value)
-//     console.log(avatar.file)
-//     if(!name.value || !bio.value || !username.value || !password.value || !avatar.file)
-//     {
-//       toast.error("Please fill all the fields")
-//       return ;
-//     }
-    
-//     const formData=new FormData();
-//     formData.append("name",name.value)
-//     formData.append("bio",bio.value)
-//     formData.append("username",username.value)
-//     formData.append("password",password.value)
-//     formData.append("avatar",avatar.file) 
-//     try
-//     {
-//       toast.promise("Hang on .. Onboarding in a second")
-//       const data =await axios.post(`${server}/api/v1/user/new`,formData,{
-//     },{
-//       withCredentials:true,
-//       headers:{
-//         "Content-Type":"multipart/form-data"
-//       } 
-//     })
-//     dispatch(userExists(true))
-//     toast.success("Registered Successfully")
-//   }catch(e)
-//   {
-//     console.log(e)
-//     toast.error(e.response.data.message)
-//   }
-// }
-
 const handleSignup = async (e) => {
   e.preventDefault();
 
@@ -184,40 +112,9 @@ const handleSignup = async (e) => {
   formData.append("username", username.value);
   formData.append("password", password.value);
   formData.append("avatar", avatar.file);
-
+ 
   
-
-  // try {
-  //  const data= await toast.promise(
-  //     axios.post(`${server}/api/v1/user/new`, formData, {
-  //       withCredentials: true,
-  //       headers: {
-  //         "Content-Type": "multipart/form-data",
-  //       },
-  //     }),
-  //     {
-  //       pending: 'Onboarding in progress...',
-  //       success: 'Registered Successfully 👌',
-  //       error: 'Registration failed, please try again', // Default error message
-  //     },
-  //     dispatch(userExists(true)
-  //   );
-  // } catch (error) {
-  //   console.error(error);
-  
-  //   // Handle axios error more gracefully
-  //   if (error.response) {
-  //     // Server responded with a status other than 200 range
-  //     toast.error(error.response.data.message || 'Request failed with error');
-  //   } else if (error.request) {
-  //     // Request made but no response received
-  //     toast.error('No response received from the server');
-  //   } else {
-  //     // Any other error that occurred while setting up the request
-  //     toast.error('An unexpected error occurred');
-  //   }
-  // }
-
+ 
   try {
     setisLoading(true)
     const data=await toast.promise(
@@ -233,9 +130,9 @@ const handleSignup = async (e) => {
         error: 'Registration failed, please try again', // Default error message
       }
     );
-  
+     
     // Dispatch userExists action upon successful registration
-    dispatch(userExists(data?.user));
+    dispatch(userExists(data?.data?.user));
     setisLoading(false)
   
   } catch (error) {

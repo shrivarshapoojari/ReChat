@@ -220,14 +220,14 @@ if(chatDetails.isError)
         ref={containerRef}
 
         boxSizing={"border-box"}
-        padding={"1rem"}
+        padding={"2rem"}
         spacing={"1rem"}
-
+        width={"100%"}
         height={"90%"}
         sx={{
           overflowX: "hidden",
           overflowY: "auto",
-          backgroundImage: "linear-gradient(to right, #FFFFFF, #D4DFED)"
+           
         }}
       >
 

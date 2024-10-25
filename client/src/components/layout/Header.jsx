@@ -14,12 +14,13 @@ import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { userNotExist } from '../../redux/reducers/auth'
 import axios from 'axios'
-import { setIsMobile, setIsNotification, setIsSearch } from '../../redux/reducers/misc'
+import { setIsMobile, setIsNotification, setIsProfile, setIsSearch } from '../../redux/reducers/misc'
 const Search = React.lazy(() => import('../specific/Search'));
 const NewGroup = React.lazy(() => import('../specific/NewGroup'));
 const Notifications = React.lazy(() => import('../specific/Notifications'));
 import { setIsNewGroup } from '../../redux/reducers/misc'
- 
+ import {Avatar} from '@mui/material'
+import ProfileCard from '../specific/ProfileCard'
 const Header = () => {
   const dispatch = useDispatch();
 
@@ -27,7 +28,7 @@ const Header = () => {
    
   const { isNotification } = useSelector((state) => state.misc)
 
-  const { isSearch,isNewGroup } = useSelector((state) => state.misc)
+  const { isSearch,isNewGroup ,isProfile} = useSelector((state) => state.misc)
   
 
   const navigate = useNavigate();
@@ -61,8 +62,16 @@ const Header = () => {
       toast.error(error?.response?.data?.message || "Something went wrong")
     }
 
+    
 
   }
+
+
+  const openProfileHandler=()=>{
+       
+    dispatch( setIsProfile(true))
+  }
+  const {user}=useSelector((state)=>state.auth)
   return (
     <>
       <Box
@@ -97,7 +106,7 @@ const Header = () => {
 
 
             </Box>
-
+             
             <Box sx={{ flexGrow: 1 }} />
             <Box>
               <Tooltip title="Search">
@@ -123,6 +132,13 @@ const Header = () => {
                   
                 </IconButton>
               </Tooltip>
+
+              <Tooltip title="Profile">
+                <IconButton color='inherit' size="large" onClick={openProfileHandler}>
+                   <Avatar  src={user?.avatar?.url}/> 
+                </IconButton>
+              </Tooltip>
+
               <Tooltip title="Logout">
                 <IconButton color='inherit' size="large" onClick={logoutHandler}>
                   <PowerSettingsNewIcon />
@@ -152,6 +168,13 @@ const Header = () => {
         isNotification && (
           <Suspense fallback={<Backdrop open />}>
             <Notifications />
+          </ Suspense>
+        )
+      }
+      {
+        isProfile && (
+          <Suspense fallback={<Backdrop open />}>
+             <ProfileCard/>
           </ Suspense>
         )
       }

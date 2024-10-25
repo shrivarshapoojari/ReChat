@@ -39,13 +39,16 @@ import {motion} from 'framer-motion'
           display: "flex",
           alignItems: "center",
           padding: "1rem",
-          backgroundColor: sameSender ? "black" : "unset",
-          borderBottom: "1px solid #f0f0f0",
+          backgroundColor: sameSender ? "#E2DFD2" : "white",
+          borderBottom: "0.1px solid black",
           cursor: "pointer",
-          justifyContent: "space-between",
-          color: sameSender ? "white" : "black",
+          justifyContent: "flex-start",
+         
+          // color: sameSender ? "white" : "black",
+          color: "black",
           gap: "1rem",
           position: "relative",
+          
 
 
         }
@@ -53,7 +56,12 @@ import {motion} from 'framer-motion'
         <AvatarCard avatar={avatar} />
          
         <Stack>
-             <Typography variant="h6">{name}</Typography>
+             <Typography variant="h6"
+             sx={{
+              marginLeft:"1rem"
+             }}
+             
+             >{name}</Typography>
               
              {
                 newMessageAlert && (

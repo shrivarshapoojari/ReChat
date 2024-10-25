@@ -17,6 +17,7 @@ import { incrementNotification, setNewMessagesAlert } from '../../redux/reducers
 import { getOrSaveFromStorage } from '../../lib/features';
 import DeleteChatMenu from '../dialogs/DeleteChatMenu';
 import { useRef } from 'react';
+  
 const AppLayout = (WrappedComponent) => {
   return (props) => {
     const  deleteMenuAnchor=useRef(null);
@@ -119,7 +120,7 @@ const AppLayout = (WrappedComponent) => {
     return (
       <>
         <Title />
-        <Header />
+        <Header/>
         <DeleteChatMenu  dispatch={dispatch}  deleteMenuAnchor={deleteMenuAnchor}/>
 
         {
@@ -138,12 +139,13 @@ const AppLayout = (WrappedComponent) => {
               </Drawer>
             )
         }
-        <Grid container height={"calc(100vh - 4rem)"} >
+    <Grid container height={"calc(100vh - 4rem)"} >
 
           <Grid
             item
             sm={4}
-            md={3}
+            md={4}
+            lg={4}
             sx={{
               display: { xs: 'none', sm: 'block' },
             }}
@@ -171,27 +173,28 @@ const AppLayout = (WrappedComponent) => {
 
 
           </Grid>
-          <Grid item xs={12} sm={8} md={5} lg={6} height={"100%"}>
+
+          <Grid item xs={12} sm={8} md={8} lg={8} height={"100%"}>
 
             <WrappedComponent {...props} chatId={chatId} />
 
           </Grid>
-          <Grid item
-            md={4} lg={3}
-            height={"100%"}
-            sx={{
+                                    {/* <Grid item
+                                      md={4} lg={3}
+                                      height={"100%"}
+                                      sx={{
 
 
-              display: { xs: 'none', md: 'block' },
-              padding: "2rem",
-              bgcolor: "#000000"
-            }}
-          >
+                                        display: { xs: 'none', md: 'block' },
+                                        padding: "2rem",
+                                        bgcolor: "#000000"
+                                      }}
+                                    >
 
-            <Profile user={user} />
-          </Grid>
+                                      <Profile user={user} />
+                                    </Grid> */}
 
-        </Grid>
+      </Grid>
 
       </>
     );

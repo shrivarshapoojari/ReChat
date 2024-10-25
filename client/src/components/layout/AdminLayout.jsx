@@ -53,7 +53,7 @@ const SideBar = ({ w = "100%" }) => {
            dispatch(adminLogout())
    }
 
-   return <Stack width={w} direction={"column"} p={"3rem"} spacing={"3rem"}>
+   return <Stack width={w} direction={"column"} p={"3rem"} spacing={"3rem"} >
       <Typography variant={"h5"} textTransform={"uppercase"}>RECHAT</Typography>
       <Stack spacing={"1rem"}>
 
