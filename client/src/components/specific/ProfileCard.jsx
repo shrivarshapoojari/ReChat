@@ -8,15 +8,19 @@ import {
   IconButton,
   TextField,
   Button,
-  Snackbar,
-  Alert,
   styled,
-  Dialog
+  Dialog,
+  Snackbar
 } from "@mui/material";
 import { FiEdit2, FiCamera } from "react-icons/fi";
-import { useDispatch, useSelector } from "react-redux";
-import { useIsPresent } from "framer-motion";
+import { useSelector, useDispatch } from "react-redux";
 import { setIsProfile } from "../../redux/reducers/misc";
+import { useFileHandler, useInputValidation } from "6pp";
+import { usernameValidator } from "../../utils/validators";
+import toast from "react-hot-toast";
+import { userExists } from "../../redux/reducers/auth";
+import axios from "axios";
+import { server } from "../../constants/config";
 
 const ProfileWrapper = styled(Card)(({ theme }) => ({
   maxWidth: 400,
@@ -26,7 +30,7 @@ const ProfileWrapper = styled(Card)(({ theme }) => ({
   "@media (max-width: 600px)": {
     margin: "16px"
   },
-  padding:"2rem"
+  padding: "2rem"
 }));
 
 const AvatarWrapper = styled(Box)({
@@ -46,217 +50,207 @@ const StyledAvatar = styled(Avatar)({
   }
 });
 
-const CameraIconWrapper = styled(Box)({
-  position: "absolute",
-  bottom: 0,
-  right: "32%",
-  backgroundColor: "#fff",
-  borderRadius: "50%",
-  padding: 8,
-  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)"
-});
-
-const EditableField = styled(Box)({
-  display: "flex",
-  alignItems: "center",
-  marginBottom: 16
-});
-
 const ProfileCard = () => {
+  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
   const [editMode, setEditMode] = useState({
     name: false,
     username: false,
-    bio: false
+    bio: false,
+    avatar: false
   });
+  const closeHandler = () => dispatch(setIsProfile(false));
+  const avatar = useFileHandler("single");
+ 
+  const name = useInputValidation(user?.name || "");
+  const username = useInputValidation(user?.username || "", usernameValidator);
+  const bio = useInputValidation(user?.bio || "");
 
-  const {user}=useSelector((state)=>state.auth)
-  console.log(user)
-  const [profile, setProfile] = useState({
-    name: user?.name,
-    username: user?.username,
-    bio:  user?.bio,
-    avatar:  user?.avatar?.url
-  });
+  const handleEdit = (field) => setEditMode({ ...editMode, [field]: true });
 
-  const [tempProfile, setTempProfile] = useState({ ...profile });
-  const [errors, setErrors] = useState({});
-  
-
-  const handleEdit = (field) => {
-    setEditMode({ ...editMode, [field]: true });
-    setTempProfile({ ...profile });
-  };
-
-  const handleChange = (field, value) => {
-    setTempProfile({ ...tempProfile, [field]: value });
-    validateField(field, value);
-  };
-
-  const validateField = (field, value) => {
-    const newErrors = { ...errors };
-    switch (field) {
-      case "name":
-        if (value.length < 2) newErrors.name = "Name must be at least 2 characters";
-        else delete newErrors.name;
-        break;
-      case "username":
-        if (!/^[a-zA-Z0-9_]+$/.test(value)) {
-          newErrors.username = "Username can only contain letters, numbers, and underscores";
-        } else delete newErrors.username;
-        break;
-      case "bio":
-        if (value.length > 150) newErrors.bio = "Bio cannot exceed 150 characters";
-        else delete newErrors.bio;
-        break;
-      default:
-        break;
-    }
-    setErrors(newErrors);
-  };
-
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setTempProfile({ ...tempProfile, avatar: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleUpdate = () => {
-    if (Object.keys(errors).length === 0) {
-      setProfile(tempProfile);
-      setEditMode({ name: false, username: false, bio: false });
+  const handleUpdate = async () => {
+   
      
+  
+    
+    const formData = new FormData();
+    formData.append("name", name.value);
+    formData.append("username", username.value);
+    formData.append("bio", bio.value);
+    formData.append("avatar", avatar.file);
+    
+    try 
+    {
+  
+      const data=await toast.promise(
+        axios.post(`${server}/api/v1/user/update`, formData, {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }),
+        {
+          loading: 'Updating..',
+          success: 'Profile Updated Successfully',
+          error: 'Failed to update...', // Default error message
+        }
+      );
+
+        
+   
+      dispatch(userExists(data?.data?.user));
+      
+    
+    } 
+    catch (error)
+     {
+      console.error(error);
+ 
+      // Handle axios error more gracefully
+      if (error.response)
+         {
+        toast.error(error.response.data.message || 'Request failed with error');
+      } 
+      else if (error.request) 
+        {
+        toast.error('No response received from the server');
+      } else 
+      {
+        toast.error('An unexpected error occurred');
+      }
     }
+    
+  finally
+    {
+      closeHandler();
+      setEditMode({ name: false, username: false, bio: false, avatar: false });
+    }
+     
+   
+   
   };
 
   const handleCancel = () => {
-    setEditMode({ name: false, username: false, bio: false });
-    setTempProfile({ ...profile });
-    setErrors({});
+    setEditMode({ name: false, username: false, bio: false, avatar: false });
+    name.reset(user?.name || "");
+    username.reset(user?.username || "");
+    bio.reset(user?.bio || "");
+    avatar.clear();
   };
 
-  const dispatch=useDispatch();
-  const {isProfile}=useSelector((state)=>state.misc)
-const closeHandler=()=>{
-dispatch(setIsProfile(false))
-}
+ 
+
   return (
-
-<Dialog open={isProfile} onClose={closeHandler}>
-    <ProfileWrapper>
-      <CardContent>
-        <AvatarWrapper>
-          <input
-            type="file"
-            accept="image/*"
-            style={{ display: "none" }}
-            id="avatar-upload"
-            onChange={handleFileUpload}
-            aria-label="Upload profile picture"
-          />
-          <label htmlFor="avatar-upload">
-            <StyledAvatar src={tempProfile.avatar} alt={profile.name} />
-            <CameraIconWrapper>
-              <FiCamera size={20} />
-            </CameraIconWrapper>
-          </label>
-        </AvatarWrapper>
-
-        <EditableField>
-          {editMode.name ? (
-            <TextField
-              fullWidth
-              value={tempProfile.name}
-              onChange={(e) => handleChange("name", e.target.value)}
-              error={!!errors.name}
-              helperText={errors.name}
-              aria-label="Edit name"
+    <Dialog open={true} onClose={closeHandler}>
+      <ProfileWrapper>
+        <CardContent>
+          <AvatarWrapper>
+            <input
+              type="file"
+              accept="image/*"
+              style={{ display: "none" }}
+              id="avatar-upload"
+              onChange={avatar.changeHandler}
+              onClick={() => handleEdit("avatar")}
+              aria-label="Upload profile picture"
             />
-          ) : (
-            <>
-              <Typography variant="h6" sx={{ flexGrow: 1 }}>
-                {profile.name}
-              </Typography>
-              <IconButton onClick={() => handleEdit("name")} aria-label="Edit name">
-                <FiEdit2 />
+            <label htmlFor="avatar-upload">
+              <StyledAvatar src={avatar.preview || user?.avatar?.url} />
+              <IconButton component="span">
+                <FiCamera size={20} />
               </IconButton>
-            </>
+            </label>
+          </AvatarWrapper>
+          {avatar.error && (
+            <Typography color="error" variant="caption">
+              {avatar.error}
+            </Typography>
           )}
-        </EditableField>
 
-        <EditableField>
-          {editMode.username ? (
-            <TextField
-              fullWidth
-              value={tempProfile.username}
-              onChange={(e) => handleChange("username", e.target.value)}
-              error={!!errors.username}
-              helperText={errors.username}
-              aria-label="Edit username"
-            />
-          ) : (
-            <>
-              <Typography variant="body1" sx={{ flexGrow: 1 }}>
-                @{profile.username}
-              </Typography>
-              <IconButton onClick={() => handleEdit("username")} aria-label="Edit username">
-                <FiEdit2 />
-              </IconButton>
-            </>
-          )}
-        </EditableField>
-
-        <EditableField>
-          {editMode.bio ? (
-            <TextField
-              fullWidth
-              multiline
-              rows={3}
-              value={tempProfile.bio}
-              onChange={(e) => handleChange("bio", e.target.value)}
-              error={!!errors.bio}
-              helperText={errors.bio}
-              aria-label="Edit bio"
-            />
-          ) : (
-            <>
-              <Typography variant="body2" sx={{ flexGrow: 1 }}>
-                {profile.bio}
-              </Typography>
-              <IconButton onClick={() => handleEdit("bio")} aria-label="Edit bio">
-                <FiEdit2 />
-              </IconButton>
-            </>
-          )}
-        </EditableField>
-
-        {(editMode.name || editMode.username || editMode.bio) && (
-          <Box sx={{ display: "flex", gap: 2, justifyContent: "flex-end", mt: 2 }}>
-            <Button
-              variant="outlined"
-              onClick={handleCancel}
-              aria-label="Cancel changes"
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleUpdate}
-              disabled={Object.keys(errors).length > 0}
-              aria-label="Update profile"
-            >
-              Update
-            </Button>
+          <Box display="flex" alignItems="center" mb={2}>
+            {editMode.name ? (
+              <TextField
+                fullWidth
+                value={name.value}
+                onChange={name.changeHandler}
+                error={!!name.error}
+                helperText={name.error}
+                aria-label="Edit name"
+              />
+            ) : (
+              <>
+                <Typography variant="h6" sx={{ flexGrow: 1 }}>
+                  {user?.name}
+                </Typography>
+                <IconButton onClick={() => handleEdit("name")} aria-label="Edit name">
+                  <FiEdit2 />
+                </IconButton>
+              </>
+            )}
           </Box>
-        )}
 
-        
-      </CardContent>
-    </ProfileWrapper>
+          <Box display="flex" alignItems="center" mb={2}>
+            {editMode.username ? (
+              <TextField
+                fullWidth
+                value={username.value}
+                onChange={username.changeHandler}
+                error={!!username.error}
+                helperText={username.error}
+                aria-label="Edit username"
+              />
+            ) : (
+              <>
+                <Typography variant="body1" sx={{ flexGrow: 1 }}>
+                  {user?.username}
+                </Typography>
+                <IconButton onClick={() => handleEdit("username")} aria-label="Edit username">
+                  <FiEdit2 />
+                </IconButton>
+              </>
+            )}
+          </Box>
+
+          <Box display="flex" alignItems="center" mb={2}>
+            {editMode.bio ? (
+              <TextField
+                fullWidth
+                multiline
+                rows={3}
+                value={bio.value}
+                onChange={bio.changeHandler}
+                error={!!bio.error}
+                helperText={bio.error}
+                aria-label="Edit bio"
+              />
+            ) : (
+              <>
+                <Typography variant="body2" sx={{ flexGrow: 1 }}>
+                  {user?.bio}
+                </Typography>
+                <IconButton onClick={() => handleEdit("bio")} aria-label="Edit bio">
+                  <FiEdit2 />
+                </IconButton>
+              </>
+            )}
+          </Box>
+
+          {(editMode.name || editMode.username || editMode.bio || editMode.avatar) && (
+            <Box display="flex" gap={2} justifyContent="flex-end" mt={2}>
+              <Button variant="outlined" onClick={handleCancel} aria-label="Cancel changes">
+                Cancel
+              </Button>
+              <Button
+                variant="contained"
+                onClick={handleUpdate}
+                aria-label="Update profile"
+              >
+                Update
+              </Button>
+            </Box>
+          )}
+        </CardContent>
+      </ProfileWrapper>
     </Dialog>
   );
 };

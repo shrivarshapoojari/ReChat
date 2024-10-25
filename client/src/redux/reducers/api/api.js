@@ -22,6 +22,19 @@ const api = createApi({
       }),
       providesTags: ["User"],
     }),
+  updateProfile: builder.mutation({
+      query: (data) => ({
+        url: `user/update`,
+        method: "POST",
+        credentials: "include",
+        body: data,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+
+      }),
+      invalidatesTags: ["User"],
+    }),
 
     sendFriendRequest: builder.mutation({
       query: (data) => ({
@@ -184,6 +197,7 @@ const api = createApi({
 export default api;
 export const {
   useMyChatsQuery,
+  useUpdateProfileMutation,
   useLazySearchUserQuery,
   useSendFriendRequestMutation,
   useGetNotificationsQuery,
