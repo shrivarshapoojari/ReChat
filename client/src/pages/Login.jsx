@@ -202,7 +202,27 @@ const handleSignup = async (e) => {
           >
             {isLogin ? (
               <>
-                <Typography variant="h5">Login</Typography>
+                 <Stack direction={"row"}
+                    sx={{
+                      gap:"0.5rem",
+                      alignItems: "center",
+                       
+                      
+                    }}
+                 >
+                 <img
+            src="/logoSmall.svg"
+            alt="Logo"
+            className="mx-auto mb-8" // Centered and add margin bottom
+            style={{height:"60px",
+              width:"60px",
+              borderRadius:"50%", 
+              marginTop:"2rem",
+
+            }} // Limit the size of the logo
+          />
+                <Typography variant="h5">Login to Rechat</Typography>
+                </Stack>
                 <form onSubmit={handleLogin}>
                   <TextField
                     required
@@ -272,7 +292,28 @@ const handleSignup = async (e) => {
               </>
             ) : (
               <>
-                <Typography variant="h5">Register</Typography>
+                 <Stack direction={"row"}
+                    sx={{
+                      marginTop:"-2rem",
+                      gap:"0.5rem",
+                      alignItems: "center",
+                       
+                      
+                    }}
+                 >
+                 <img
+            src="/logoSmall.svg"
+            alt="Logo"
+            className="mx-auto mb-8" // Centered and add margin bottom
+            style={{height:"60px",
+              width:"60px",
+              borderRadius:"50%", 
+              marginTop:"2rem",
+
+            }} // Limit the size of the logo
+          />
+                <Typography variant="h5">Register to Rechat</Typography>
+                </Stack>
                 <form
                   style={{ width: "100%", marginTop: "1rem" }}
                   onSubmit={handleSignup}
