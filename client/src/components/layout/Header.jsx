@@ -21,6 +21,7 @@ const Notifications = React.lazy(() => import('../specific/Notifications'));
 import { setIsNewGroup } from '../../redux/reducers/misc'
  import {Avatar} from '@mui/material'
 import ProfileCard from '../specific/ProfileCard'
+import {Stack} from '@mui/material'
 const Header = () => {
   const dispatch = useDispatch();
 
@@ -82,19 +83,35 @@ const Header = () => {
       >
         <AppBar position='static'
           sx={{
-            bgcolor: blue
+            bgcolor: blue,
+        
           }}
         >
           <Toolbar>
+           
 
-            <Typography
-              variant='h6'
-              sx={
-                {
-                  display: { xs: 'none', sm: 'block' },
-                }
-              }
-            >Rechat</Typography>
+          <Stack direction={"row"}
+                    sx={{
+                      gap:"1rem",
+                      alignItems: "center",
+                    
+                      
+                    }}
+                 >
+                 <img
+            src="/rechatheader.png"
+            alt="Logo"
+            className="mx-auto" // Centered and add margin bottom
+            style={{height:"60px",
+              width:"60px",
+              borderRadius:"50%", 
+             marginTop:"0.1rem",
+            
+
+            }} // Limit the size of the logo
+          />
+                <Typography variant="h5"> Rechat</Typography>
+                </Stack>
             <Box
               sx={{
                 display: { xs: 'block', sm: 'none' },
