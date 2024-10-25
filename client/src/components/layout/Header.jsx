@@ -89,6 +89,17 @@ const Header = () => {
         >
           <Toolbar>
            
+          <Box
+              sx={{
+                display: { xs: 'block', sm: 'none' },
+              }}
+            >
+              <IconButton color='inherit' onClick={handleMobile}>
+                <MenuIcon />
+              </IconButton>
+
+
+            </Box>
 
           <Stack direction={"row"}
                     sx={{
@@ -110,19 +121,13 @@ const Header = () => {
 
             }} // Limit the size of the logo
           />
-                <Typography variant="h5"> Rechat</Typography>
+                <Typography variant="h5"
+                sx={{
+                  display: { xs: 'none', sm: 'block' },
+                }}
+                > Rechat</Typography>
                 </Stack>
-            <Box
-              sx={{
-                display: { xs: 'block', sm: 'none' },
-              }}
-            >
-              <IconButton color='inherit' onClick={handleMobile}>
-                <MenuIcon />
-              </IconButton>
-
-
-            </Box>
+            
              
             <Box sx={{ flexGrow: 1 }} />
             <Box>
