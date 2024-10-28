@@ -47,6 +47,68 @@ const newGroupChat = async (req, res, next) => {
     }
 };
 
+ 
+const getChatHeader= async(req,res,next)=>{
+  try{
+    const userId=req.user;
+    const chatId=req.params.id;
+    
+    const chat=await Chat.findById(chatId).populate("members","name avatar")
+    
+    if(!chat)
+    {
+      return next(new ErrorHandler("Chat not found",404))
+    }
+    if(chat.groupChat)
+    {
+        return res.status(200).json({
+          chatName:chat.name,
+          members:chat.members
+        })
+    }
+    else{
+      const otherMember=chat.members.find(member=>member._id.toString()!=userId.toString())
+      console.log(otherMember)
+      return res.status(200).json({
+        chatName:otherMember.name,
+        members:[otherMember]})
+
+    }
+        
+      
+
+    // const transformedChats = chats.map(({ _id, name, members, groupChat }) => {
+    //   const otherMember = getOtherMember(members, req.user);
+
+    //   return {
+    //     _id,
+    //     groupChat,
+    //     avatar: groupChat
+    //       ? members.slice(0, 3).map(({ avatar }) => avatar?.url)
+    //       : [otherMember?.avatar?.url],
+    //     name: groupChat ? name : otherMember.name,
+    //     members: members.reduce((prev, curr) => {
+    //       if (curr._id.toString() !== req.user.toString()) {
+    //         prev.push(curr._id);
+    //       }
+    //       return prev;
+    //     }, []),
+    //   };
+    // });
+
+    // return res.status(200).json({
+    //   success: true,
+    //   chats: transformedChats,
+    // });
+      
+
+  } catch(error)
+  {
+    return next(new ErrorHandler(error.message,500))
+  }
+ 
+
+}
 const getMyChats = async (req, res) => {
     try {
       const chats = await Chat.find({ members: req.user }).populate(
@@ -634,4 +696,4 @@ const getMessages = async (req, res, next) => {
 
 
 
-export { newGroupChat, getMyChats,getMyGroups,addMembers,removeMember,leaveGroup,sendAttachments,getChatDetails,renameGroup,deleteChat,getMessages};
+export { getChatHeader,newGroupChat, getMyChats,getMyGroups,addMembers,removeMember,leaveGroup,sendAttachments,getChatDetails,renameGroup,deleteChat,getMessages};

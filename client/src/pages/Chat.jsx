@@ -19,10 +19,11 @@ import { removeNewMessagesAlert } from '../redux/reducers/chat'
 import { START_TYPING,STOP_TYPING } from '../constants/events'
 import { TypingLoader } from '../components/layout/Loaders'
 import { useNavigate } from 'react-router-dom'
-const Chat = ({ chatId }) => {
-
-
-
+import { useLocation } from 'react-router-dom'
+import ChatHeader from '../components/layout/ChatHeader'
+const Chat = ({chatId}) => {
+ 
+  
   const dispatch = useDispatch();
   const containerRef = useRef(null);
   const bottomRef = useRef(null);
@@ -34,8 +35,8 @@ const Chat = ({ chatId }) => {
   const user = useSelector((state) => state?.auth?.user)
 
   const chatDetails = useChatDetailsQuery({ chatId, skip: !chatId })
-
-
+   
+  
   const oldMessagesChunk = useGetMessagesQuery({ chatId, page }, { skip: !chatId })
     
 
@@ -216,6 +217,7 @@ if(chatDetails.isError)
 },[chatDetails.isError])
   return chatDetails.isLoading ? <Skeleton /> : (
     <Fragment>
+      <ChatHeader/>
       <Stack
         ref={containerRef}
 
@@ -223,7 +225,7 @@ if(chatDetails.isError)
         padding={"2rem"}
         spacing={"1rem"}
         width={"100%"}
-        height={"90%"}
+        height={"80%"}
         sx={{
           overflowX: "hidden",
           overflowY: "auto",

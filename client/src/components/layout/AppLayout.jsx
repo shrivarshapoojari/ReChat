@@ -23,10 +23,11 @@ const AppLayout = (WrappedComponent) => {
     const  deleteMenuAnchor=useRef(null);
     const navigate=useNavigate();
     const { isLoading, data, isError, error, refetch } = useMyChatsQuery()
+    
     const params = useParams();
     const chatId = params.chatId
     const dispatch = useDispatch();
-
+  
     const socket = getSocket()
     const { newMessagesAlert } = useSelector((state) => state.chat)
 
@@ -38,7 +39,7 @@ const AppLayout = (WrappedComponent) => {
 
     }, [chatId]);
     const newRequestHandler = useCallback(() => {
-      console.log("New request")
+     
       dispatch(incrementNotification())
     }, []);
 
@@ -102,7 +103,7 @@ const AppLayout = (WrappedComponent) => {
        
       dispatch(setSelectedDeleteChat({chatId,groupChat}))
       deleteMenuAnchor.current=e.currentTarget;
-      console.log("Delete chat")
+       
     }
 
 
@@ -179,21 +180,7 @@ const AppLayout = (WrappedComponent) => {
             <WrappedComponent {...props} chatId={chatId} />
 
           </Grid>
-                                    {/* <Grid item
-                                      md={4} lg={3}
-                                      height={"100%"}
-                                      sx={{
-
-
-                                        display: { xs: 'none', md: 'block' },
-                                        padding: "2rem",
-                                        bgcolor: "#000000"
-                                      }}
-                                    >
-
-                                      <Profile user={user} />
-                                    </Grid> */}
-
+                                     
       </Grid>
 
       </>

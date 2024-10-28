@@ -18,10 +18,17 @@ import {motion} from 'framer-motion'
   handleDeleteChat,
 }
  ) => {
-    
+     
   
    return (
-     < Link to={`/chat/${_id}`} onContextMenu={(e)=>handleDeleteChat(e,_id,groupChat)}
+     < Link to={`/chat/${_id}`} 
+           
+     onContextMenu={(e)=>handleDeleteChat(e,_id,groupChat) 
+     
+    }
+
+     
+
        sx={{
         padding: "0",
         
