@@ -7,7 +7,7 @@ import {Avatar} from '@mui/material'
 import {IconButton} from '@mui/material'
 import { useChatHeaderQuery } from '../../redux/reducers/api/api'
 import { useState } from 'react'
- 
+ import GroupsIcon from '@mui/icons-material/Groups';
 const ChatHeader = ({chatId}) => {
  
   const {data,isLoading,isError,Error}= useChatHeaderQuery({chatId})
@@ -42,16 +42,18 @@ const ChatHeader = ({chatId}) => {
         </Box>
         <Box>
           <IconButton color="primary">
-            {/* <VideoCallIcon /> */}
-            h1
+            {
+              data?.members?.length > 1 && <GroupsIcon />
+              
+            }
+             
+       
           </IconButton>
           <IconButton color="primary">
-            {/* <CallIcon /> */}
-            2
+           
           </IconButton>
           <IconButton color="primary">
-            {/* <SearchIcon /> */}
-            3
+           
           </IconButton>
         </Box>
       </Toolbar>
