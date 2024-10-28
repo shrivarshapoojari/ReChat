@@ -141,11 +141,7 @@ const Header = () => {
                   <GroupAddIcon />
                 </IconButton>
               </Tooltip>
-              <Tooltip title="Manage Groups">
-                <IconButton color='inherit' size="large" onClick={navigateToGroup}>
-                  <GroupsIcon />
-                </IconButton>
-              </Tooltip>
+               
               <Tooltip title="Notifications">
                 <IconButton color='inherit' size="large" onClick={openNotification}>
                   {notificationCount >0 ?<Badge badgeContent={notificationCount} color="error"><NotificationsIcon/></Badge>

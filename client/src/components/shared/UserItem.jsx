@@ -4,7 +4,7 @@ import { Avatar, IconButton, ListItem, Stack, Typography } from '@mui/material'
 import React from 'react'
 import {memo} from 'react'
 import { transformImage } from '../../lib/features';
-const UserItem = ({user,handler,handlerIsLoading ,styling={},isAdded=false} ) => {
+const UserItem = ({user,handler,handlerIsLoading ,styling={},isAdded=false,isGroupInfo=false} ) => {
 
     const {name,_id,avatar} = user
    
@@ -33,7 +33,11 @@ const UserItem = ({user,handler,handlerIsLoading ,styling={},isAdded=false} ) =>
                }}
             >{name}
             </Typography>
-             <IconButton
+            
+            
+            
+        {    
+        !isGroupInfo && <IconButton
                  size='small'
                  sx={{
 
@@ -46,11 +50,14 @@ const UserItem = ({user,handler,handlerIsLoading ,styling={},isAdded=false} ) =>
              
              onClick={()=>handler(_id)}  >
                {
-                  isAdded ?<RemoveCircleOutlineIcon/> :  <Add/>
+                     isAdded ?<RemoveCircleOutlineIcon/> :  <Add/>
                }
                
 
              </IconButton>
+}
+
+
          </Stack>
      </ListItem>
   )

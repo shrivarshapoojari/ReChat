@@ -177,7 +177,7 @@ useEffect(() => {
 const alertListener = useCallback(
  
   (data) => {
-    console.log(data)
+   
   
     if (data.chatId !== chatId) return;
     const messageForAlert = {
@@ -214,6 +214,7 @@ const allMessages = [...oldMessages, ...messages];
 useEffect(()=>{
 if(chatDetails.isError)
   return navigate("/")
+ 
 },[chatDetails.isError])
   return chatDetails.isLoading ? <Skeleton /> : (
     <Fragment>

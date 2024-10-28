@@ -5,7 +5,7 @@ import toast, {Toaster} from "react-hot-toast"
 const Home = lazy(() => import('./pages/Home'));
 const Login = lazy(() => import('./pages/Login'))
 const Chat = lazy(() => import('./pages/Chat'))
-const Groups = lazy(() => import('./pages/Groups'))
+ 
 import ProtectRoute from './components/auth/ProtectRoute';
 import { LayoutLoader } from './components/layout/Loaders';
 import { useDispatch, useSelector } from "react-redux"
@@ -70,7 +70,7 @@ const App = () => {
             }>
             <Route path="/" element={<Home />} />
             <Route path="/chat/:chatId" element={<Chat />} />
-            <Route path="/groups" element={<Groups />} />
+            
           </Route>
           <Route path="/login"
             element={

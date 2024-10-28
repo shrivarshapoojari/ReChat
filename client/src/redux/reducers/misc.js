@@ -8,6 +8,7 @@ const initialState = {
   isMobile: false,
   isSearch: false,
   isFileMenu: false,
+  isManageGroup: false,
   isDeleteMenu: false,
   uploadingLoader: false,
   selectedDeleteChat: {
@@ -22,6 +23,9 @@ const miscSlice = createSlice({
   reducers: {
     setIsNewGroup: (state, action) => {
       state.isNewGroup = action.payload;
+    },
+    setIsManageGroup: (state, action) => {
+      state.isManageGroup= action.payload;
     },
     setIsProfile: (state, action) => {
       state.isProfile = action.payload;
@@ -55,6 +59,7 @@ const miscSlice = createSlice({
 
 export default miscSlice;
 export const {
+  setIsManageGroup,
   setIsNewGroup,
   setIsProfile,
   setIsAddMember,

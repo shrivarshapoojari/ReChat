@@ -1,38 +1,43 @@
+
 import { Add, Delete, Done, Menu as MenuIcon } from '@mui/icons-material';
 import EditIcon from '@mui/icons-material/Edit';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-import { Backdrop, Box, Button, Drawer, Grid, IconButton, Stack, TextField, Tooltip, Typography } from '@mui/material';
-import React, { lazy, memo, Suspense, useEffect, useState } from 'react';
+import { Backdrop, Box, Button, Grid, IconButton, Skeleton, Stack, TextField, Tooltip, Typography } from '@mui/material';
+import React, { lazy, Suspense, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { LayoutLoader } from '../components/layout/Loaders';
-import AvatarCard from '../components/shared/AvatarCard';
+import { useNavigate, useParams } from 'react-router-dom';
 import UserItem from '../components/shared/UserItem';
-import { Link } from '../components/styles/StyledComponents';
 import { useAsyncMutation, useErrors } from '../hooks/hook';
 import { useChatDetailsQuery, useDeleteChatMutation, useMyGroupsQuery, useRemoveGroupMemberMutation, useRenameGroupMutation } from '../redux/reducers/api/api';
-import { setIsAddMember } from '../redux/reducers/misc';
-import { Paper } from '@mui/material';
-import Header from '../components/layout/Header';
-export const bgGradient = "linear-gradient(rgb(255 225 209), rgb(249 159 159))";
+import { setIsAddMember, setIsManageGroup } from '../redux/reducers/misc';
+import {Dialog} from '@mui/material'
+import {Paper} from '@mui/material'
+import { useLocation } from 'react-router-dom';
 const ConfirmDeleteDialog = lazy(() => import("../components/dialogs/ConfirmDeleteDialog"))
 
 const AddMemberDialog = lazy(() => import("../components/dialogs/AddMemberDialog"))
-const Groups = () => {
 
+const ManageGroup = ({isGroupAdmin}) => {
+   
 
+  
+  
   const { isAddMember } = useSelector((state) => state.misc)
   const dispatch = useDispatch();
-  const chatId = useSearchParams()[0].get("group")
-  const navigate = useNavigate();
+  
   const navigateBack = () => {
-    navigate("/")
-  }
+     dispatch(setIsManageGroup(false))
 
+  }
+  
+  const params = useParams();
+  const chatId = params.chatId
+   
+const {isManageGroup}=useSelector((state)=>state.misc)
   const myGroups = useMyGroupsQuery("")
 
   const groupDetails = useChatDetailsQuery({ chatId, populate: true }, { skip: !chatId })
-
+ 
 
   const [updateGroup, isLoadingGroupName] = useAsyncMutation(useRenameGroupMutation)
   const [removeMember, isLoadingRemoveMember] = useAsyncMutation(useRemoveGroupMemberMutation)
@@ -41,7 +46,9 @@ const Groups = () => {
 
   { isError: groupDetails?.isError, error: groupDetails?.error },
   ]
+  
   useErrors(errors)
+  
 
   const [members, setMembers] = useState([]);
   useEffect(() => {
@@ -69,7 +76,11 @@ const Groups = () => {
 
 
   const removeMemberHandler = (userId) => {
+   
     removeMember("Removing Member", { chatId, userId })
+     
+      
+    
   }
 
   const [confirmDeleteDialog, setConfirmDeleteDialog] = useState(false)
@@ -104,7 +115,7 @@ const Groups = () => {
   }
   const deleteHandler = () => {
     deleteGroup("Deleting Group", chatId)
-    navigate("/");
+   dispatch(setIsManageGroup(false))
     closeConfirmDeleteHandler();
 
   }
@@ -160,7 +171,11 @@ const Groups = () => {
         {groupName}
       </Typography>
       <IconButton onClick={updateGroupNameHandler} disabled={isLoadingGroupName}>
-        <EditIcon />
+          { 
+            isGroupAdmin && (
+              <EditIcon />)
+
+          }
       </IconButton>
     </>}
   </Stack>
@@ -184,198 +199,84 @@ const Groups = () => {
   </Stack>
 
 
-
-  return  myGroups.isLoading ? <LayoutLoader /> :(
-    <>
-    <Header/>
-    <Grid container maxHeight={"80vh"}>
-      <Grid
-        item
-
-        sx={
-          {
-            display: {
-              xs: "none",
-              sm: "block"
-            }
-
-          }
-        }
-
-        sm={4}
-
-      >
-        <Paper
-          elevation={5}
-          maxHeight={"80vh"}
-        >
-          <GroupList myGroups={myGroups?.data?.groups} chatId={chatId} />
-        </Paper>
-      </Grid>
-
-      <Grid item sm={8} xs={12}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          position: "relative",
-          padding: "1rem 3rem",
-          alignItems: "center"
-        }}
-      >
-
-        {IconBtns}
-          <Typography variant='h4' margin={"0.2rem"}>Manage Groups</Typography>
-        {
-          groupName && <>
-
-
-            {GroupName}
-            <Typography margin={"2rem"}
-              alignSelf={"flex-start"}
-              variant='h5'
-
-            >
-              Members
-            </Typography>
-            <Stack
-              maxWidth={"45rem"}
-              width={"100%"}
-              boxSizing={"border-box"}
-              padding={{
-                sm: "1rem",
-                xs: "0",
-                md: "1rem 4rem "
-              }}
-              spacing={"2rem"}
-
-              height={"50vh"}
-              overflow={"auto"}
-            >
-              {/**Members */}
-              {
-
-                members.map((user) => (
-
-                  <UserItem
-                    key={user._id}
-                    user={user}
-                    isAdded={true}
-                    handler={removeMemberHandler} styling={
-                      {
-                        boxShadow: "0 0 0.5rem rgba(0,0,0,0.2)",
-                        padding: "1rem",
-                        borderRadius: "1rem"
-                      }
-
-                    } />
-                ))
-              }
-            </Stack>
-            {ButtonGroup}
-          </>
-        }
-      </Grid>
-
-      {
-        confirmDeleteDialog && <Suspense fallback={<Backdrop open />}>
-          <ConfirmDeleteDialog open={confirmDeleteDialog} handleClose={closeConfirmDeleteHandler} deleteHandler={deleteHandler} />
-        </Suspense>
-      }
-
-      {
-        isAddMember && <Suspense fallback={<Backdrop open />}>
-          <AddMemberDialog chatId={chatId} />
-        </Suspense>
-      }
-      <Drawer open={isMobileMenuOpen} onClose={handleMobileClose}
-        sx={{
-
-          display: {
-            xs: "block",
-            sm: "none"
-          }
-        }}
-      >
-        <GroupList w={"50vw"} myGroups={myGroups?.data?.groups} chatId={chatId} />
-
-      </Drawer>
-
-    </Grid>
-    </>
-  )
+const closeHandler=()=>{
+  dispatch(setIsManageGroup(false))
 }
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-const GroupList = ({ w = "100%", myGroups = [], chatId }) => (
-  <Stack
-    width={w}
-    sx={{
-
-      height: "100vh",
-      overflow: "auto",
-    }}
-  >
-    {myGroups.length > 0 ? (
-      myGroups.map((group) => (
-        <GroupListItem group={group} chatId={chatId} key={group._id} />
-      ))
-    ) : (
-      <Typography textAlign={"center"} padding="1rem">
-        No groups
-      </Typography>
-    )}
-  </Stack>
-);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const GroupListItem = memo(({ group, chatId }) => {
-  const { name, avatar, _id } = group;
-
-  return (
-    <Link
-      to={`?group=${_id}`}
-      onClick={(e) => {
-        if (chatId === _id) e.preventDefault();
-      }}
+  return  isLoadingGroupName ?<Skeleton/> :(
+    <Dialog open={isManageGroup} onClose={closeHandler}  maxWidth="md">
+    <Paper 
+      elevation={3}
+      sx={{ padding: '2rem', position: 'relative', borderRadius: '12px' }}
     >
-      <Stack direction={"row"} spacing={"1rem"} alignItems={"center"}
-
+      <Stack 
+        spacing={2} 
+        alignItems="center"
+        sx={{ width: '100%', position: 'relative' ,height:'80vh' }}
       >
-        <AvatarCard avatar={avatar}
+        {IconBtns}
+        <Typography variant="h4" margin="0.2rem">
+         {isGroupAdmin ? "Manage Group" : "Group Info"}
+        </Typography>
 
-        />
-        <Typography>{name}</Typography>
+        {groupName && (
+          <>
+            {GroupName}
+            <Typography margin="2rem" alignSelf="flex-start" variant="h5">
+              Members
+            </Typography>
+            <Stack
+              maxWidth="45rem"
+              width="100%"
+              boxSizing="border-box"
+              padding={{ sm: '1rem', xs: '0', md: '1rem 4rem' }}
+              spacing="2rem"
+              height="50vh"
+              overflow="auto"
+            >
+              {members.map((user) => (
+                <UserItem
+                  key={user._id}
+                  user={user}
+                  isAdded={true}
+                  isGroupInfo={!isGroupAdmin}
+                  handler={ isGroupAdmin ?removeMemberHandler:()=>{}}
+                  styling={{
+                    boxShadow: '0 0 0.5rem rgba(0,0,0,0.2)',
+                    padding: '1rem',
+                    borderRadius: '1rem',
+                  }}
+                />
+              ))}
+            </Stack>
+            { isGroupAdmin && ButtonGroup}
+          </>
+        )}
+
+        {confirmDeleteDialog && (
+          <Suspense fallback={<Backdrop open />}>
+            <ConfirmDeleteDialog 
+              open={confirmDeleteDialog}
+              handleClose={closeConfirmDeleteHandler}
+              deleteHandler={deleteHandler}
+            />
+          </Suspense>
+        )}
+
+        {isAddMember && (
+          <Suspense fallback={<Backdrop open />}>
+            <AddMemberDialog chatId={chatId} />
+          </Suspense>
+        )}
       </Stack>
-    </Link>
+    </Paper>
+  </Dialog>
   );
-});
 
 
-export default Groups
+ 
+};
+
+export default ManageGroup;
