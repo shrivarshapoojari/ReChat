@@ -45,7 +45,7 @@ const AppLayout = (WrappedComponent) => {
 
       const refetchListner=useCallback(()=>{
              refetch()
-             navigate("/")
+            //  navigate("/")
       },[refetch])
 
 
