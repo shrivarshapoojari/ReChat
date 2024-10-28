@@ -64,7 +64,8 @@ const getChatHeader= async(req,res,next)=>{
         return res.status(200).json({
           chatName:chat.name,
           members:chat.members,
-           
+          creator:chat.creator
+          
 
         })
     }

@@ -19,7 +19,7 @@ const ChatHeader = ({ chatId }) => {
     if (data) {
       setChatName(data.chatName);
       setAvatar(data.members[0].avatar.url);
-       setIsGroupAdmin(currentUser.toString() === data?.creator.toString())
+       setIsGroupAdmin(currentUser?.toString() === data?.creator?.toString())
     }
   }, [chatId, data]);
   
