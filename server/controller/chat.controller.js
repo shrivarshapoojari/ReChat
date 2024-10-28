@@ -63,15 +63,19 @@ const getChatHeader= async(req,res,next)=>{
     {
         return res.status(200).json({
           chatName:chat.name,
-          members:chat.members
+          members:chat.members,
+           
+
         })
     }
     else{
       const otherMember=chat.members.find(member=>member._id.toString()!=userId.toString())
-      console.log(otherMember)
+    
       return res.status(200).json({
         chatName:otherMember.name,
-        members:[otherMember]})
+        members:[otherMember],
+         
+      })
 
     }
         

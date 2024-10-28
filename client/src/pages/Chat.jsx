@@ -217,7 +217,7 @@ if(chatDetails.isError)
 },[chatDetails.isError])
   return chatDetails.isLoading ? <Skeleton /> : (
     <Fragment>
-      <ChatHeader/>
+      <ChatHeader chatId={chatId}/>
       <Stack
         ref={containerRef}
 

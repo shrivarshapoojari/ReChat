@@ -15,6 +15,14 @@ const api = createApi({
       providesTags: ["Chat"],
     }),
 
+    chatHeader: builder.query({
+      query: ({chatId}) => ({
+        url: `chats/getHeader/${chatId}`,
+        credentials: "include",
+      }),
+     
+    }),
+
     searchUser: builder.query({
       query: (name) => ({
         url: `user/search?name=${name}`,
@@ -214,6 +222,7 @@ export const {
   useDeleteChatMutation,
   useLeaveGroupMutation,
   useDashboardStatsQuery,
-  useFindAllUsersQuery
+  useFindAllUsersQuery,
+  useChatHeaderQuery,
  
 } = api;

@@ -1,23 +1,43 @@
-import React from 'react'
-import { AppBar } from '@mui/material'
+import React, { useEffect } from 'react'
+import { AppBar, Skeleton } from '@mui/material'
 import { Toolbar } from '@mui/material'
 import { Box } from '@mui/material'
 import {Typography} from '@mui/material'
 import {Avatar} from '@mui/material'
 import {IconButton} from '@mui/material'
+import { useChatHeaderQuery } from '../../redux/reducers/api/api'
+import { useState } from 'react'
+ 
+const ChatHeader = ({chatId}) => {
+ 
+  const {data,isLoading,isError,Error}= useChatHeaderQuery({chatId})
+  const[chatName,setChatName]=useState('')
+  const[avatar,setAvatar]=useState(null)
+ 
+  useEffect(()=>{
 
-const ChatHeader = () => {
-  return (
+    if(data){
+    setChatName(data.chatName)
+      setAvatar(data.members[0].avatar.url)
+    }
+
+  },[chatId,data])
+
+   
+  return isLoading ? <Skeleton/>:(
     
              <AppBar position="static" color="default" sx={{ boxShadow: 'none', padding: '0 16px' }}>
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar alt="User Name" src="/path/to/image.jpg" />
+          <Avatar src={avatar} alt='User' />
           <Box sx={{ ml: 2 }}>
-            <Typography variant="h6">Varshitha</Typography>
+            <Typography variant="h6">{chatName}</Typography>
             <Typography variant="body2" color="textSecondary">
-              last seen yesterday at 23:40
-            </Typography>
+  {data?.members?.length > 1 && 
+    (data.members.slice(0, 3).map((member) => member.name).join(', ') + 
+    (data.members.length > 3 ? ', ...' : ''))}
+</Typography>
+
           </Box>
         </Box>
         <Box>
