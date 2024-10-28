@@ -17,9 +17,10 @@ const ConfirmDeleteDialog = lazy(() => import("../components/dialogs/ConfirmDele
 
 const AddMemberDialog = lazy(() => import("../components/dialogs/AddMemberDialog"))
 
-const ManageGroup = () => {
-  const location = useLocation(); 
+const ManageGroup = ({isGroupAdmin}) => {
+   
 
+  
   
   const { isAddMember } = useSelector((state) => state.misc)
   const dispatch = useDispatch();
@@ -170,7 +171,11 @@ const {isManageGroup}=useSelector((state)=>state.misc)
         {groupName}
       </Typography>
       <IconButton onClick={updateGroupNameHandler} disabled={isLoadingGroupName}>
-        <EditIcon />
+          { 
+            isGroupAdmin && (
+              <EditIcon />)
+
+          }
       </IconButton>
     </>}
   </Stack>
@@ -213,7 +218,7 @@ const closeHandler=()=>{
       >
         {IconBtns}
         <Typography variant="h4" margin="0.2rem">
-          Manage Group
+         {isGroupAdmin ? "Manage Group" : "Group Info"}
         </Typography>
 
         {groupName && (
@@ -236,7 +241,8 @@ const closeHandler=()=>{
                   key={user._id}
                   user={user}
                   isAdded={true}
-                  handler={removeMemberHandler}
+                  isGroupInfo={!isGroupAdmin}
+                  handler={ isGroupAdmin ?removeMemberHandler:()=>{}}
                   styling={{
                     boxShadow: '0 0 0.5rem rgba(0,0,0,0.2)',
                     padding: '1rem',
@@ -245,7 +251,7 @@ const closeHandler=()=>{
                 />
               ))}
             </Stack>
-            {ButtonGroup}
+            { isGroupAdmin && ButtonGroup}
           </>
         )}
 

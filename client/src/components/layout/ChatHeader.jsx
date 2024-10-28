@@ -4,6 +4,7 @@ import { useChatHeaderQuery } from '../../redux/reducers/api/api';
 import GroupsIcon from '@mui/icons-material/Groups';
 import { useSelector, useDispatch } from 'react-redux';
 import { setIsManageGroup } from '../../redux/reducers/misc';
+import InfoIcon from '@mui/icons-material/Info';
 import ManageGroup from '../../pages/ManageGroup';
 
 const ChatHeader = ({ chatId }) => {
@@ -13,18 +14,25 @@ const ChatHeader = ({ chatId }) => {
   const [chatName, setChatName] = useState('');
   const [avatar, setAvatar] = useState(null);
   const dispatch = useDispatch();
-
+   const [isGroupAdmin, setIsGroupAdmin] = useState(false);
   useEffect(() => {
     if (data) {
       setChatName(data.chatName);
       setAvatar(data.members[0].avatar.url);
+       setIsGroupAdmin(currentUser.toString() === data?.creator.toString())
     }
   }, [chatId, data]);
+  
 
   const handleManageGroup = () => {
     dispatch(setIsManageGroup(true));
   };
+const showGroupMembers=()=>{
 
+}
+
+ 
+   
   return (
     <>
       {isLoading ? (
@@ -46,11 +54,18 @@ const ChatHeader = ({ chatId }) => {
             <Box>
               <IconButton color="primary"onClick={handleManageGroup}>
                 {data?.members?.length > 1 &&
-                  currentUser.toString() === data?.creator.toString() && (
+                 isGroupAdmin && (
                     <GroupsIcon  />
                   )}
-              </IconButton>
-              <IconButton color="primary" />
+                 
+                 </IconButton>
+              
+              <IconButton color="primary" onClick={handleManageGroup} >
+              {data?.members?.length > 1 &&
+                  !isGroupAdmin && (
+                    <InfoIcon/>
+                  )}
+                  </IconButton>
               <IconButton color="primary" />
             </Box>
           </Toolbar>
@@ -59,7 +74,7 @@ const ChatHeader = ({ chatId }) => {
 
       {isManageGroup && (
         <Suspense fallback={<Backdrop open />}>
-          <ManageGroup chatId={chatId}  />
+          <ManageGroup chatId={chatId}   isGroupAdmin={isGroupAdmin} />
         </Suspense>
       )}
     </>
