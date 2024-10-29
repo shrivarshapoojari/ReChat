@@ -142,8 +142,9 @@ const {isManageGroup}=useSelector((state)=>state.misc)
       <IconButton
         sx={{
           position: "absolute",
-          top: "1rem",
-          left: "1rem",
+          top:  {md:"1rem",xs:"-2.5rem"},
+          left: {md:"1rem",xs:"-1.9rem"},
+          
           bgcolor: "rgba(0,0,0,0.8)",
           color: "white",
           ":hover": {
@@ -206,10 +207,14 @@ const closeHandler=()=>{
 
 
   return  isLoadingGroupName ?<Skeleton/> :(
-    <Dialog open={isManageGroup} onClose={closeHandler}  maxWidth="md">
+    <Dialog open={isManageGroup} onClose={closeHandler}  maxWidth="md"
+     
+    >
     <Paper 
       elevation={3}
-      sx={{ padding: '2rem', position: 'relative', borderRadius: '12px' }}
+      sx={{ padding: '2rem', position: 'relative',
+         background: "white"
+       }}
     >
       <Stack 
         spacing={2} 

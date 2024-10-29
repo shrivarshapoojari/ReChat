@@ -59,7 +59,11 @@ closeHandler();
   const groupName=useInputValidation("")
   return (
     <Dialog open={isNewGroup} onClose={closeHandler}>
-      <Stack p={{ xs: "1rem", sm: "2rem" }} width={"25rem"} spacing={"2rem"}>
+      <Stack p={{ xs: "1rem", sm: "2rem" }} 
+       sx={{
+        width: { md: "25rem", sm: "12rem" },
+       }}
+       >
         <DialogTitle textAlign={"center"} variant={"h4"}>New Group</DialogTitle>
         <TextField label={"Group Name"}  value={groupName.value} onChange={groupName.changeHandler}/>
         <Typography variant='body1' > Members</Typography>  

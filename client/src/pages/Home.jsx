@@ -6,8 +6,8 @@ import { Typography ,Box} from '@mui/material';
 const Home = () => {
   return (
     <div className='flex w-full min-h-[93vh] '>
-    <div className=" md:flex md:w-full items-center justify-center  bg-gradient-to-t from-[#0029ff] to-[#00c6ff] text-white p-8">
-    <div className="text-center">
+    <div className=" flex w-full items-center justify-center  bg-gradient-to-t from-[#0029ff] to-[#00c6ff] text-white p-8 ">
+    <div className="text-center ">
        
       <img
         src="/logo.svg"

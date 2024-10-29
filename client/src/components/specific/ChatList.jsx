@@ -15,7 +15,7 @@ const ChatList = (
                 count:0
             }
         ],
-        handleDeleteChat
+       
     }
 ) => {
   return (
@@ -51,7 +51,7 @@ const ChatList = (
     key={_id}
     groupChat={groupChat}
     sameSender={_id == chatId}
-    handleDeleteChat={handleDeleteChat}
+     
     
     />
     ;

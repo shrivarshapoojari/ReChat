@@ -63,8 +63,14 @@ const Search = () => {
       dispatch(setIsSearch(false))
     }
   return (
-  <Dialog open={isSearch} onClose={searchCloseHandler} >
-        <Stack p={"2rem"} direction={"column"} width={"25rem"}>
+  <Dialog open={isSearch} onClose={searchCloseHandler}  >
+        <Stack p={"2rem"} direction={"column"} 
+        sx=
+        {{
+             width:  { sm:"10rem", md:"25rem"},
+        }}
+       >
+
                 <DialogTitle  textAlign={"center"}>Find Friends</DialogTitle>
                 <TextField   label="" value={search.value} onChange={search.changeHandler}
                   variant="outlined"
