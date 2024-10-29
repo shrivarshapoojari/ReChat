@@ -23,16 +23,14 @@ const ChatHeader = ({ chatId }) => {
   const [avatar, setAvatar] = useState(null);
   const dispatch = useDispatch();
    const [isGroupAdmin, setIsGroupAdmin] = useState(false);
-   const[isGroup,setisGroup]=useState(false);
+    
    const navigate=useNavigate();
   useEffect(() => {
     if (data) {
       setChatName(data.chatName);
       setAvatar(data.members[0].avatar.url);
        setIsGroupAdmin(currentUser?.toString() === data?.creator?.toString())
-       if(data.members.length>1){
-         setisGroup(true)
-       }
+        
     }
   }, [chatId, data]);
   
@@ -77,7 +75,7 @@ const ChatHeader = ({ chatId }) => {
               <Box sx={{ ml: 2 }}>
                 <Typography variant="h6">{chatName}</Typography>
                 <Typography variant="body2" color="textSecondary">
-                  {isGroup &&
+                  {data?.members?.length>1 &&
                     (data.members.slice(0, 3).map((member) => member.name).join(', ') +
                       (data.members.length > 3 ? ', ...' : ''))}
                 </Typography>
@@ -92,13 +90,13 @@ const ChatHeader = ({ chatId }) => {
   color="primary" 
   onClick={handleManageGroup}
 >
-  {isGroup && (
+  {data?.members?.length>1 && (
     isGroupAdmin ? <GroupsIcon /> : <InfoIcon />
   )}
 </IconButton>
 
 <IconButton color="primary">
-  {isGroup ? (
+  {data?.members?.length>1 ? (
     <Tooltip title="Leave Group">
       <ExitToAppIcon onClick={leaveGroupHandler}/>
     </Tooltip>
