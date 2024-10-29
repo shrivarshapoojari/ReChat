@@ -246,7 +246,7 @@ if(chatDetails.isError)
         <div ref={bottomRef} />
       </Stack>
 
-      <form
+      {/* <form
         style={{
           height: "10%",
 
@@ -299,7 +299,100 @@ if(chatDetails.isError)
 
       </form>
 
-      <FileMenu anchorE1={fileMenuAnchor} chatId={chatId} />
+
+
+
+      <FileMenu anchorE1={fileMenuAnchor} chatId={chatId} /> */}
+
+
+
+
+
+
+
+<form
+  onSubmit={submitHandler}
+  style={{
+    height: "10%",
+    padding: "0.5rem",
+    borderRadius: "8px",
+    // backgroundColor: "#f1f2f6",
+    // boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
+  }}
+>
+  <Stack
+    direction="row"
+    height="100%"
+    alignItems="center"
+    spacing={2}
+    sx={{
+      padding: "0.5rem 1rem",
+      borderRadius: "20px",
+      backgroundColor: "white",
+      // boxShadow: "0px 2px 10px rgba(0, 0, 0, 0.1)",
+    }}
+  >
+    <IconButton
+      sx={{
+        color: "#888",
+        rotate: "30deg",
+        transition: "transform 0.3s",
+        "&:hover": {
+          color: "#007bff",
+          transform: "scale(1.1)",
+        },
+      }}
+      onClick={handleFileOpen}
+    >
+      <AttachFileOutlined />
+    </IconButton>
+
+    <InputBox
+      placeholder="Type messages here..."
+      value={message}
+      onChange={messageChangeHandler}
+      style={{
+        flexGrow: 1,
+        padding: "0.5rem 1rem",
+        borderRadius: "20px",
+        backgroundColor: "#f9f9f9",
+        boxShadow: "inset 0px 1px 4px rgba(0, 0, 0, 0.1)",
+        // border: "1px solid #ddd",
+        color: "#333", // Set a visible text color
+        fontSize: "1rem", // Ensure text is readable
+      }}
+    />
+
+    <IconButton
+      type="submit"
+      sx={{
+        backgroundColor: "#007bff",
+        color: "white",
+        borderRadius: "50%",
+        transition: "background-color 0.3s",
+        "&:hover": {
+          backgroundColor: "#0056b3",
+        },
+      }}
+    >
+      <Send />
+    </IconButton>
+  </Stack>
+
+  {/* File Menu */}
+  <FileMenu anchorE1={fileMenuAnchor} chatId={chatId} />
+</form>
+
+
+
+
+
+
+
+
+
+
+ 
     </Fragment>
   )
 }
