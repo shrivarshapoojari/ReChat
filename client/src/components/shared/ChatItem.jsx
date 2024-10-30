@@ -23,9 +23,7 @@ import {motion} from 'framer-motion'
    return (
      < Link to={`/chat/${_id}`} 
            
-     onContextMenu={(e)=>handleDeleteChat(e,_id,groupChat) 
      
-    }
 
      
 
@@ -51,7 +49,7 @@ import {motion} from 'framer-motion'
           cursor: "pointer",
           justifyContent: "flex-start",
          
-          // color: sameSender ? "white" : "black",
+         
           color: "black",
           gap: "1rem",
           position: "relative",
@@ -70,12 +68,20 @@ import {motion} from 'framer-motion'
              
              >{name}</Typography>
               
-             {
-                newMessageAlert && (
-                  <Typography>
-                     {newMessageAlert.count} New Messages
-                  </Typography>
-                )
+             { newMessageAlert &&
+                 <Typography
+                 sx={{
+                   backgroundColor: '#4CAF50', // Green background
+                   color: 'white', // White text
+                   borderRadius: '1rem', // Fully rounded
+                   padding: '0.2rem 0.6rem', // Padding for badge style
+                   fontSize: '0.8rem', // Smaller font size for badge
+                   marginTop: '0.3rem', // Space between name and badge
+                   display: 'inline-block', // Inline-block to wrap content
+                 }}
+               >
+                 {newMessageAlert.count} New Messages
+               </Typography>
              }
         </Stack>
       { isOnline && (
