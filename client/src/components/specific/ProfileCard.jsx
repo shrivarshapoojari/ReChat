@@ -463,27 +463,7 @@ const ProfileCard = () => {
             </Box>
 
             {/* Bio Section */}
-            <Box display="flex" alignItems="center" justifyContent="space-between">
-              {editMode.bio ? (
-                <StyledTextField
-                  fullWidth
-                  multiline
-                  rows={3}
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  aria-label="Edit bio"
-                />
-              ) : (
-                <>
-                  <Typography variant="body2" sx={{ textAlign: "center", color: "text.secondary" }}>
-                    {user?.bio || "No bio available"}
-                  </Typography>
-                  <IconButton onClick={() => handleEdit("bio")} aria-label="Edit bio">
-                    <FiEdit2 />
-                  </IconButton>
-                </>
-              )}
-            </Box>
+             
 
             {/* Action Buttons */}
             {(editMode.name || editMode.username || editMode.bio || editMode.avatar) && (

@@ -24,15 +24,15 @@ const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const toggleLogin = () => setIsLogin((prev) => !prev);
   const name = useInputValidation("");
-  const bio = useInputValidation("");
+ 
   const username = useInputValidation("", usernameValidator);
   const password = useInputValidation("");
+  const email = useInputValidation("");
   const avatar = useFileHandler("single");
   const [otp, setOtp] = useState(""); 
   const [isOtp,setIsotp]=useState(false)
-  const handleChange = (newValue) => {
-    setOtp(newValue)
-  }
+  const [userData,setUserData]=useState(null)
+  
   const dispatch = useDispatch();
 
 const [isLoading,setisLoading]=useState(false)
@@ -106,7 +106,7 @@ const handleSignup = async (e) => {
   e.preventDefault();
 
   // Check if any required field is missing
-  if (!name.value || !bio.value || !username.value || !password.value || !avatar.file) {
+  if (!name.value  || !username.value || !password.value || !avatar.file) {
     toast.error("Please fill all the fields");
     return;
   }
@@ -115,37 +115,55 @@ const handleSignup = async (e) => {
   // Prepare form data
   const formData = new FormData();
   formData.append("name", name.value);
-  formData.append("bio", bio.value);
+  formData.append("email", email.value);
   formData.append("username", username.value);
   formData.append("password", password.value);
   formData.append("avatar", avatar.file);
- 
-  
+ setUserData(formData)
+  setIsotp(true)
  
   try {
     setisLoading(true)
-    const data=await toast.promise(
-      axios.post(`${server}/api/v1/user/new`, formData, {
+     
+    await toast.promise(
+      axios.post(`${server}/api/v1/user/sendOtp`, {email:email.value}, {
         withCredentials: true,
         headers: {
-          "Content-Type": "multipart/form-data",
+          "Content-Type": "application/json",
         },
       }),
       {
-        loading: 'Onboarding in progress...',
-        success: 'Registered Successfully 👌',
-        error: 'Registration failed, please try again', // Default error message
-      }
-    );
+        loading: 'Sending OTP...',
+        success: 'OTP sent successfully 👌',
+        error: 'Failed to send OTP, please try again', // Default error message
+      });
+    
+
+       
+   
+    // const data=await toast.promise(
+    //   axios.post(`${server}/api/v1/user/new`, formData, {
+    //     withCredentials: true,
+    //     headers: {
+    //       "Content-Type": "multipart/form-data",
+    //     },
+    //   }),
+    //   {
+    //     loading: 'Onboarding in progress...',
+    //     success: 'Registered Successfully 👌',
+    //     error: 'Registration failed, please try again', // Default error message
+    //   }
+    // );
      
+    // console.log(data)
     // Dispatch userExists action upon successful registration
-    dispatch(userExists(data?.data?.user));
+    // dispatch(userExists(data?.data?.user));
     setisLoading(false)
   
   } catch (error) {
     console.error(error);
    setisLoading(false)
-    // Handle axios error more gracefully
+    
     if (error.response) {
       toast.error(error.response.data.message || 'Request failed with error');
     } else if (error.request) {
@@ -190,9 +208,9 @@ const handleSignup = async (e) => {
 
       {/* Right Section */}
      
-     {isOtp ?<OtpComponent/>:
+     {isOtp ?(<OtpComponent data={userData}/>):
 
-      <div className="w-full md:w-1/2 flex items-center justify-center ">
+     ( <div className="w-full md:w-1/2 flex items-center justify-center ">
         <Container
           component={"main"}
           maxWidth="xs"
@@ -311,7 +329,7 @@ const handleSignup = async (e) => {
                       marginTop:"-2rem",
                       gap:"0.5rem",
                       alignItems: "center",
-                       
+                     
                       
                     }}
                  >
@@ -332,7 +350,9 @@ const handleSignup = async (e) => {
                   style={{ width: "100%", marginTop: "1rem" }}
                   onSubmit={handleSignup}
                 >
-                  <Stack position={"relative"} width={"10rem"} margin={"auto"}>
+                  <Stack position={"relative"} width={"10rem"} margin={"auto"}
+                  
+                   >
                     <Avatar
                       sx={{
                         width: "10rem",
@@ -389,20 +409,17 @@ const handleSignup = async (e) => {
                     value={username.value}
                     onChange={username.changeHandler}
                   />
-                  {username.error && (
-                    <Typography color="error" variant="caption">
-                      {username.error}
-                    </Typography>
-                  )}
                   <TextField
                     required
                     fullWidth
-                    label="Bio"
+                    label="Email"
                     margin="normal"
                     variant="outlined"
-                    value={bio.value}
-                    onChange={bio.changeHandler}
+                    value={email.value}
+                    onChange={email.changeHandler}
                   />
+                  
+                 
                   <TextField
                     required
                     fullWidth
@@ -463,7 +480,7 @@ const handleSignup = async (e) => {
             )}
           </Paper>
         </Container>
-      </div>
+      </div>)
 }
     </div>
 

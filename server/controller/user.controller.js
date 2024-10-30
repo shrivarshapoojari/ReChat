@@ -9,12 +9,78 @@ import fs from "fs/promises";
 import { NEW_REQUEST } from "../constants/events.js";
 import { REFETCH_CHATS } from "../constants/events.js";
 import { getOtherMember } from "../lib/helper.js";
-
+import Otp from "../models/Otp.model.js";
+import crypto from "crypto"
+import sendEmail from "../utils/sendMail.js";
 const cookieOptions = {
   maxAge: 0,
   sameSite: "none",
   httpOnly: true,
   secure: true,
+};
+
+const sendOtp=async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) {
+      return res.status(400).json({ success: false, message: 'Email is required' });
+  }
+
+  const otp = crypto.randomInt(1000, 9999).toString();
+  const expiresAt = new Date(Date.now() + 1 * 60 * 1000);  
+
+  try {
+       
+      await Otp.create({ email, otp, expiresAt });
+        console.log(otp)
+ 
+      const subject ="Verify your account with RECHAT"
+     
+     
+      const message =`Your one time password for registering with RECHAT is  ${otp}`
+      
+     
+     
+     
+        sendEmail(email,subject,message);
+       
+      
+       
+
+      
+      res.status(200).json({ success: true, message: 'OTP sent to email' });
+  } catch (error) {
+      res.status(500).json({ success: false, message: 'Failed to send OTP', error });
+  }
+};
+
+
+ const verifyOtp=async (req, res) => {
+  const { email, otp } = req.body;
+   console.log(email)
+   console.log(otp);
+  if (!email || !otp) {
+      return res.status(400).json({ success: false, message: 'Email and OTP are required' });
+  }
+
+  try {
+      const storedOtp = await Otp.findOne({ email, otp });
+
+      if (!storedOtp) {
+          return res.status(400).json({ success: false, message: 'Invalid OTP' });
+      }
+
+      if (storedOtp.expiresAt < new Date()) {
+          return res.status(400).json({ success: false, message: 'OTP has expired' });
+      }
+
+       
+      await Otp.deleteOne({ _id: storedOtp._id });
+
+      res.status(200).json({ success: true, message: 'OTP verified successfully' });
+  } catch (error) {
+      res.status(500).json({ success: false, message: 'Failed to verify OTP', error });
+  }
 };
 
 const updateProfile = async (req, res, next) => {
@@ -67,10 +133,11 @@ const updateProfile = async (req, res, next) => {
 };
 
 const newUser = async (req, res, next) => {
+ 
   try {
-    const { name, username, password, bio } = req.body;
+    const { name, username, password } = req.body;
 
-    if (!name || !username || !password || !bio || !req.file) {
+    if (!name || !username || !password || !req.file) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required" });
@@ -87,8 +154,8 @@ const newUser = async (req, res, next) => {
       name: name,
       username: username,
       password: password,
-      bio: bio,
-      avatar: {
+      bio:"hi",
+avatar: {
         public_id: username,
         url: "htts://www.google.com",
       },
@@ -116,11 +183,11 @@ const newUser = async (req, res, next) => {
       }
     }
 
-    // Create a new user
+  
 
     sendToken(res, user, 201, "User Created");
   } catch (error) {
-    console.error(error);
+    console.log(error);
     return next(new ErrorHandler(error.message, 500));
   }
 };
@@ -370,4 +437,6 @@ export {
   getMyNotifications,
   getMyFriends,
   updateProfile,
+  verifyOtp,
+  sendOtp
 };
