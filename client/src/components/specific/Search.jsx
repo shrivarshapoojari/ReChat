@@ -163,24 +163,39 @@ const Search = () => {
   }
 
   return (
-    <Dialog open={isSearch} onClose={searchCloseHandler} maxWidth="md" PaperProps={{
+    <Dialog open={isSearch} onClose={searchCloseHandler}   
+    PaperProps={{
       sx: {
+        padding: { xs: "1.5rem", sm: "2rem" },
         borderRadius: "15px",
         background: "linear-gradient(135deg, #f1f2f6, #dfe4ea)",
-        boxShadow: "0px 5px 20px rgba(0,0,0,0.2)"
+        boxShadow: "0px 5px 20px rgba(0,0,0,0.2)",
+        width: { md: "25rem", xs: "30rem" }
       }
-    }}>
-      <Stack p={"2rem"} direction={"column"} spacing={2} sx={{ width: { sm: "15rem", md: "30rem" } }}>
+    }}
+    >
+      <Stack p={"2rem"} direction={"column"} spacing={2} 
+      
+      sx=
+      {{ 
+        width:"100%"
+        
+        
+        }}
+      
+      >
         <DialogTitle textAlign={"center"} sx={{ color: "#007bff", fontWeight: "bold" }}>
           Find Friends
         </DialogTitle>
         <TextField
           placeholder="Search for friends..."
+
           value={search.value}
           onChange={search.changeHandler}
           variant="outlined"
           size="small"
           sx={{
+          width: "100%",
             "& .MuiOutlinedInput-root": {
               borderRadius: "20px",
               backgroundColor: "#fff",
@@ -199,6 +214,7 @@ const Search = () => {
         <List sx={{
           maxHeight: "200px",
           overflowY: "auto",
+          width:"100%",
           "& .MuiListItem-root": {
             padding: "0.5rem 1rem",
             margin: "0.5rem 0",
