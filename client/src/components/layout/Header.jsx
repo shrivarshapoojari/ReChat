@@ -67,6 +67,7 @@ const Header = () => {
 
   }
 
+  
 
   const openProfileHandler=()=>{
        
@@ -100,12 +101,14 @@ const Header = () => {
 
 
             </Box>
+            
 
-          <Stack direction={"row"}
+          {/* <Stack direction={"row"}
+           onClick={() => navigate('/')}
                     sx={{
                       gap:"1rem",
                       alignItems: "center",
-                    
+                    cursor:"pointer"
                       
                     }}
                  >
@@ -119,7 +122,10 @@ const Header = () => {
              marginTop:"0.1rem",
             
 
-            }} // Limit the size of the logo
+            }} 
+            
+           
+            // Limit the size of the logo
           />
                 <Typography variant="h5"
                 sx={{
@@ -127,7 +133,53 @@ const Header = () => {
                 }}
                 > Rechat</Typography>
                 </Stack>
-            
+             */}
+
+
+
+
+<Stack
+  direction="row"
+  onClick={() => navigate('/')}
+  sx={{
+    gap: '1rem',
+    alignItems: 'center',
+    cursor: 'pointer',
+    transition: 'transform 0.2s, box-shadow 0.2s', // Smooth transition
+    '&:hover': {
+      transform: 'scale(1.05)', // Slightly larger on hover
+      boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.2)', // Soft shadow on hover
+    },
+    '&:active': {
+      transform: 'scale(0.95)', // Slightly shrink on click
+    },
+  }}
+>
+  <img
+    src="/rechatheader.png"
+    alt="Logo"
+    style={{
+      height: '60px',
+      width: '60px',
+      borderRadius: '50%',
+      marginTop: '0.1rem',
+      transition: 'transform 0.2s', // Smooth transition for the image
+    }}
+  />
+  <Typography
+    variant="h5"
+    sx={{
+      display: { xs: 'none', sm: 'block' },
+      transition: 'color 0.3s', // Smooth transition for text
+      '&:hover': {
+        color: '#e3f2fd', // Color change on hover
+      },
+    }}
+  >
+    Rechat
+  </Typography>
+</Stack>
+
              
             <Box sx={{ flexGrow: 1 }} />
             <Box>
