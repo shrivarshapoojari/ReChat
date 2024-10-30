@@ -234,7 +234,7 @@ const ChatList = ({
               borderColor: 'rgba(0, 0, 0, 0.1)', // subtle border on hover
             },
             '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline': {
-              borderColor: 'white', // white border on focus
+              borderColor: 'black', // white border on focus
             },
             '& input': {
               fontSize: '1rem', // larger font size for readability

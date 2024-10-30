@@ -18,6 +18,8 @@ import { server } from "../constants/config";
 import { useDispatch } from "react-redux";
 import { userExists } from "../redux/reducers/auth";
 import toast from "react-hot-toast";
+import { MuiOtpInput } from 'mui-one-time-password-input'
+import OtpComponent from "./Otp";
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const toggleLogin = () => setIsLogin((prev) => !prev);
@@ -26,7 +28,11 @@ const Login = () => {
   const username = useInputValidation("", usernameValidator);
   const password = useInputValidation("");
   const avatar = useFileHandler("single");
-
+  const [otp, setOtp] = useState(""); 
+  const [isOtp,setIsotp]=useState(false)
+  const handleChange = (newValue) => {
+    setOtp(newValue)
+  }
   const dispatch = useDispatch();
 
 const [isLoading,setisLoading]=useState(false)
@@ -104,6 +110,7 @@ const handleSignup = async (e) => {
     toast.error("Please fill all the fields");
     return;
   }
+  
 
   // Prepare form data
   const formData = new FormData();
@@ -150,10 +157,13 @@ const handleSignup = async (e) => {
   
   
 };
+  
+  
 
   return (
     <div className="min-h-[100vh] md:flex bg-gradient-to-t from-[#0029ff]  to-[#00c6ff]">
       {/* Left Section */}
+  
       <div className="hidden md:flex md:w-1/2 items-center justify-center  bg-gradient-to-t from-[#0029ff] to-[#00c6ff] text-white p-8">
         <div className="text-center">
           {/* Logo Image for Medium Screens and Above */}
@@ -173,12 +183,15 @@ const handleSignup = async (e) => {
           <Typography variant="body2" mt={2} color="yellow">
             {isLogin
               ? "Hit the login to get started"
-              : "Register mow to get started"}
+              : " Sign Up get started"}
           </Typography>
         </div>
       </div>
 
       {/* Right Section */}
+     
+     {isOtp ?<OtpComponent/>:
+
       <div className="w-full md:w-1/2 flex items-center justify-center ">
         <Container
           component={"main"}
@@ -188,6 +201,7 @@ const handleSignup = async (e) => {
             alignItems: "center",
             justifyContent: "center",
             padding: "1rem",
+             
           }}
         >
           <Paper
@@ -219,7 +233,7 @@ const handleSignup = async (e) => {
               borderRadius:"50%", 
               marginTop:"2rem",
 
-            }} // Limit the size of the logo
+            }}  
           />
                 <Typography variant="h5">Login to Rechat</Typography>
                 </Stack>
@@ -450,7 +464,9 @@ const handleSignup = async (e) => {
           </Paper>
         </Container>
       </div>
+}
     </div>
+
   );
 };
 
