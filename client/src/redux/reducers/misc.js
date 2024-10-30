@@ -9,7 +9,7 @@ const initialState = {
   isSearch: false,
   isFileMenu: false,
   isManageGroup: false,
-  
+  notClicked:true,
   uploadingLoader: false,
    
 };
@@ -46,6 +46,9 @@ const miscSlice = createSlice({
     setUploadingLoader: (state, action) => {
       state.uploadingLoader = action.payload;
     },
+    setnotClicked: (state, action) => {
+      state.notClicked = action.payload;
+    },
     
   },
 });
@@ -60,7 +63,7 @@ export const {
   setIsMobile,
   setIsSearch,
   setIsFileMenu,
-   
+   setnotClicked,
   setUploadingLoader,
   
 } = miscSlice.actions;

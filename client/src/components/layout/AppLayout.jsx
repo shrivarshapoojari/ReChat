@@ -102,7 +102,7 @@ const AppLayout = (WrappedComponent) => {
       getOrSaveFromStorage({ key: NEW_MESSAGE_ALERT, value: newMessagesAlert })
     }, [newMessagesAlert])
 
-
+   const{notClicked}=useSelector((state)=>state.misc)
 
 
     return (
@@ -114,7 +114,7 @@ const AppLayout = (WrappedComponent) => {
         {
           isLoading ? <Skeleton />
             : (
-              <Drawer open={isMobile} onClose={handleMobileClose}>
+              <Drawer open={isMobile && notClicked} onClose={handleMobileClose}>
                 <ChatList
                   w='70vw'
 

@@ -14,7 +14,7 @@ import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { userNotExist } from '../../redux/reducers/auth'
 import axios from 'axios'
-import { setIsMobile, setIsNotification, setIsProfile, setIsSearch } from '../../redux/reducers/misc'
+import { setIsMobile, setIsNotification, setIsProfile, setIsSearch, setnotClicked } from '../../redux/reducers/misc'
 const Search = React.lazy(() => import('../specific/Search'));
 const NewGroup = React.lazy(() => import('../specific/NewGroup'));
 const Notifications = React.lazy(() => import('../specific/Notifications'));
@@ -36,6 +36,7 @@ const Header = () => {
   const handleMobile = () => {
 
     dispatch(setIsMobile(true))
+    dispatch(setnotClicked(true))
 
 
   }

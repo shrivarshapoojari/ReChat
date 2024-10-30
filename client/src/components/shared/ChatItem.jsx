@@ -4,25 +4,30 @@
  import {memo} from 'react'
 import AvatarCard from './AvatarCard'
 import {motion} from 'framer-motion'
+import { useDispatch } from 'react-redux'
+import { setnotClicked } from '../../redux/reducers/misc'
+
  const ChatItem = (
 {
 
   avatar=[],
   name,
   _id,
-  groupChat=false,
+ 
   sameSender,
   isOnline,
   newMessageAlert,
   index=0,
-  handleDeleteChat,
+  
 }
  ) => {
      
+  const dispatch = useDispatch();
   
+
    return (
      < Link to={`/chat/${_id}`} 
-           
+           onClick={()=>   dispatch(setnotClicked(false)) }  
      
 
      
