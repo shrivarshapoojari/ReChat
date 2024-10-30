@@ -10,10 +10,17 @@ import {
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { useTheme } from "@mui/material/styles";
 import axios from "axios";
-const OtpComponent = ({data}) => {
+import toast from "react-hot-toast";
+import { server } from "../constants/config";
+import { useDispatch } from "react-redux";
+import { userExists } from "../redux/reducers/auth";
+import { setIsOtp } from "../redux/reducers/misc";
+const OtpComponent = ({data,email}) => {
+  
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(60); // Timer starts from 60 seconds
   const theme = useTheme();
+const dispatch=useDispatch();
 
   // Handle OTP input change
   const handleChange = (value) => setOtp(value);
@@ -28,8 +35,46 @@ const OtpComponent = ({data}) => {
 
   const verifyOtp = async() => {
 
+   const otpStatus= await toast.promise(
+      axios.post(`${server}/api/v1/user/verifyOtp`, {email:email,otp:otp}, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      {
+        loading: 'Verifying...',
+        success: 'Verified successfully👌',
+        error: 'Failed to Verify, Please try again', // Default error message
+      });
+      console.log(otpStatus)
+      if(otpStatus.data)
+      {
+        
+    const userData=await toast.promise(
+      axios.post(`${server}/api/v1/user/new`, data, {
+        withCredentials: true,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }),
+      {
+        loading: 'Onboarding in progress...',
+        success: 'Registered Successfully 👌',
+        error: 'Registration failed, please try again', // Default error message
+      }
+    );
+     
+    console.log(userData)
+    
+    dispatch(userExists(userData?.data?.user));
+      }
+  }
+  const handleResendOtp = async() => {
+    setOtp("");
+    setTimer(60); // Reset the timer to 60 seconds
     await toast.promise(
-      axios.post(`${server}/api/v1/user/sendOtp`, {email:email.value}, {
+      axios.post(`${server}/api/v1/user/sendOtp`, {email:email}, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
@@ -40,11 +85,6 @@ const OtpComponent = ({data}) => {
         success: 'OTP sent successfully 👌',
         error: 'Failed to send OTP, please try again', // Default error message
       });
-  }
-  const handleResendOtp = () => {
-    setOtp("");
-    setTimer(60); // Reset the timer to 60 seconds
-    onResendOtp();
   };
 
   return (
@@ -143,11 +183,19 @@ const OtpComponent = ({data}) => {
           >
             Resend OTP
           </Button>
-
+                         <Typography variant="body2" color="textSecondary"
+                           sx={{
+                            marginTop: "0.5rem",
+                            cursor: "pointer",
+                           }}
+                           onClick={() => dispatch(setIsOtp(false))}
+                         >
+                           Change email?
+                         </Typography>
           <Button
             variant="contained"
             color="primary"
-            onClick={() => onVerifyOtp(otp)}
+            onClick={verifyOtp}
             fullWidth
             sx={{
               mt: 2,

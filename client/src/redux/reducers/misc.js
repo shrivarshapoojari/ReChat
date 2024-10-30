@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   isNewGroup: false,
-  setIsProfile: false,
+  isProfile: false,
   isAddMember: false,
   isNotification: false,
   isMobile: false,
@@ -10,6 +10,7 @@ const initialState = {
   isFileMenu: false,
   isManageGroup: false,
   notClicked:true,
+  isOtp:false,
   uploadingLoader: false,
    
 };
@@ -49,6 +50,9 @@ const miscSlice = createSlice({
     setnotClicked: (state, action) => {
       state.notClicked = action.payload;
     },
+    setIsOtp: (state, action) => {
+      state.isOtp = action.payload;
+    },
     
   },
 });
@@ -65,5 +69,6 @@ export const {
   setIsFileMenu,
    setnotClicked,
   setUploadingLoader,
+  setIsOtp
   
 } = miscSlice.actions;

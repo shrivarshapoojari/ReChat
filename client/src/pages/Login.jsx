@@ -9,6 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useSelector } from "react-redux";
 import { CameraAlt as CameraAltIcon } from "@mui/icons-material";
 import { VisuallyHiddenInput } from "../components/styles/StyledComponents";
 import { useFileHandler, useInputValidation, useStrongPassword } from "6pp";
@@ -18,19 +19,21 @@ import { server } from "../constants/config";
 import { useDispatch } from "react-redux";
 import { userExists } from "../redux/reducers/auth";
 import toast from "react-hot-toast";
-import { MuiOtpInput } from 'mui-one-time-password-input'
+
 import OtpComponent from "./Otp";
+import { setIsOtp } from "../redux/reducers/misc";
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const toggleLogin = () => setIsLogin((prev) => !prev);
   const name = useInputValidation("");
+  const{isOtp}=useSelector((state)=>state.misc)
  
   const username = useInputValidation("", usernameValidator);
   const password = useInputValidation("");
   const email = useInputValidation("");
   const avatar = useFileHandler("single");
   const [otp, setOtp] = useState(""); 
-  const [isOtp,setIsotp]=useState(false)
+ 
   const [userData,setUserData]=useState(null)
   
   const dispatch = useDispatch();
@@ -120,10 +123,10 @@ const handleSignup = async (e) => {
   formData.append("password", password.value);
   formData.append("avatar", avatar.file);
  setUserData(formData)
-  setIsotp(true)
+   dispatch(setIsOtp(true))
  
   try {
-    setisLoading(true)
+     
      
     await toast.promise(
       axios.post(`${server}/api/v1/user/sendOtp`, {email:email.value}, {
@@ -140,25 +143,7 @@ const handleSignup = async (e) => {
     
 
        
-   
-    // const data=await toast.promise(
-    //   axios.post(`${server}/api/v1/user/new`, formData, {
-    //     withCredentials: true,
-    //     headers: {
-    //       "Content-Type": "multipart/form-data",
-    //     },
-    //   }),
-    //   {
-    //     loading: 'Onboarding in progress...',
-    //     success: 'Registered Successfully 👌',
-    //     error: 'Registration failed, please try again', // Default error message
-    //   }
-    // );
-     
-    // console.log(data)
-    // Dispatch userExists action upon successful registration
-    // dispatch(userExists(data?.data?.user));
-    setisLoading(false)
+    
   
   } catch (error) {
     console.error(error);
@@ -208,7 +193,7 @@ const handleSignup = async (e) => {
 
       {/* Right Section */}
      
-     {isOtp ?(<OtpComponent data={userData}/>):
+     {isOtp ?(<OtpComponent data={userData} email={email.value}/>):
 
      ( <div className="w-full md:w-1/2 flex items-center justify-center ">
         <Container

@@ -32,7 +32,7 @@ const sendOtp=async (req, res) => {
   try {
        
       await Otp.create({ email, otp, expiresAt });
-        console.log(otp)
+         
  
       const subject ="Verify your account with RECHAT"
      
@@ -135,9 +135,9 @@ const updateProfile = async (req, res, next) => {
 const newUser = async (req, res, next) => {
  
   try {
-    const { name, username, password } = req.body;
+    const { name, username, password,email } = req.body;
 
-    if (!name || !username || !password || !req.file) {
+    if (!name || !username || !password || !req.file || !email) {
       return res
         .status(400)
         .json({ success: false, message: "All fields are required" });
@@ -154,7 +154,7 @@ const newUser = async (req, res, next) => {
       name: name,
       username: username,
       password: password,
-      bio:"hi",
+      email:email,
 avatar: {
         public_id: username,
         url: "htts://www.google.com",
