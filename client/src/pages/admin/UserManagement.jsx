@@ -1,11 +1,9 @@
-import React, { useEffect, useState } from 'react'
-import AdminLayout from '../../components/layout/AdminLayout'
-import Table from '../../components/shared/Table'
-import { dashboarddata } from '../../constants/sampleData';
-import { transformImage } from '../../lib/features';
 import { Avatar, Skeleton } from '@mui/material';
-import { useFindAllUsersQuery } from '../../redux/reducers/api/api';
+import React, { useEffect, useState } from 'react';
+import AdminLayout from '../../components/layout/AdminLayout';
+import Table from '../../components/shared/Table';
 import { useErrors } from '../../hooks/hook';
+import { useFindAllUsersQuery } from '../../redux/reducers/api/api';
 const columns = [
   {
     field: "id",
