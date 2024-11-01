@@ -11,4 +11,4 @@ otpSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
  
 
-export const Otp=mongoose.models.User || model("User",schema);
+export const Otp=mongoose.models.Otp || model("Otp",schema);
