@@ -11,13 +11,14 @@ const app=express.Router();
 
 app.post("/login", login);
 app.post("/forgot",forgotPassword );
+app.get("/logout",logout);
 app.post("/sendotp",sendOtp)
 app.post("/verifyotp",verifyOtp)
 app.post("/new",multerUpload.single("avatar"),newUser)
 app.get("/me",isAuthentificated,getMyProfile)
 app.use(isAuthentificated);
 app.post("/update",multerUpload.single("avatar"),updateProfile)
-app.get("/logout",logout);
+
 app.get("/search",searchUser)
 
 app.put("/sendrequest",sendRequest)
