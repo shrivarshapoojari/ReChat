@@ -19,7 +19,7 @@ import { server } from "../constants/config";
 import { useDispatch } from "react-redux";
 import { userExists } from "../redux/reducers/auth";
 import toast from "react-hot-toast";
-
+import {Box} from "@mui/material";
 import OtpComponent from "./Otp";
 import { setIsOtp } from "../redux/reducers/misc";
 const Login = () => {
@@ -40,7 +40,9 @@ const Login = () => {
 
 const [isLoading,setisLoading]=useState(false)
 
-
+const handleForgotPassword=()=>{
+  
+}
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -219,7 +221,7 @@ const handleSignup = async (e) => {
           >
             {isLogin ? (
               <>
-                 <Stack direction={"row"}
+                 {/* <Stack direction={"row"}
                     sx={{
                       gap:"0.5rem",
                       alignItems: "center",
@@ -305,8 +307,117 @@ const handleSignup = async (e) => {
                   >
                     Register
                   </Button>
-                </form>
+                </form> */}
+
+
+<Stack direction="row" sx={{ gap: "0.5rem", alignItems: "center" }}>
+  <img
+    src="/logoSmall.svg"
+    alt="Logo"
+    className="mx-auto mb-8"
+    style={{
+      height: "60px",
+      width: "60px",
+      borderRadius: "50%",
+      marginTop: "2rem",
+    }}
+  />
+  <Typography variant="h5">Login to Rechat</Typography>
+</Stack>
+
+<form onSubmit={handleLogin}>
+  <TextField
+    required
+    fullWidth
+    label="Username"
+    margin="normal"
+    variant="outlined"
+    value={username.value}
+    onChange={username.changeHandler}
+  />
+  <TextField
+    required
+    fullWidth
+    type="password"
+    label="Password"
+    margin="normal"
+    variant="outlined"
+    value={password.value}
+    onChange={password.changeHandler}
+  />
+
+  {/* Login button and Forgot Password link */}
+  <Box sx={{ position: "relative" }}>
+    <Button
+      variant="contained"
+      color="primary"
+      type="submit"
+      fullWidth
+      sx={{
+        mt: "2rem",
+        py: "0.5rem",
+        backgroundImage: "linear-gradient(to right, #56CCF2, #2F80ED)",
+        color: "white",
+        borderRadius: "0.375rem",
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.5)",
+        transition: "background-position 0.3s ease-in-out",
+        backgroundSize: "200% 200%",
+        backgroundPosition: "left",
+        fontWeight: "bold",
+        "&:hover": {
+          backgroundPosition: "right",
+        },
+      }}
+      disabled={isLoading}
+    >
+      Login
+    </Button>
+    {/* Forgot Password Link */}
+    <Typography
+      variant="body2"
+      sx={{
+        position: "absolute",
+        top:  "0.7rem",
+        right: "0.2rem",
+        transform: "translateY(-50%)",
+        color: "#2F80ED",
+        fontWeight: "500",
+        cursor: "pointer",
+        "&:hover": {
+          textDecoration: "underline",
+        },
+      }}
+      onClick={handleForgotPassword} // Replace with your forgot password handler
+    >
+      Forgot Password?
+    </Typography>
+  </Box>
+
+  <Typography textAlign="center" m="1rem">
+    OR
+  </Typography>
+  <Button
+    variant="outlined"
+    sx={{
+      marginTop: "0.2rem",
+      "&:hover": {
+        background: "linear-gradient(to right, #56CCF2, #2F80ED)",
+        color: "white",
+        borderColor: "transparent",
+      },
+    }}
+    onClick={() => toggleLogin()}
+    fullWidth
+    disabled={isLoading}
+  >
+    Register
+  </Button>
+</form>
+
               </>
+
+
+
             ) : (
               <>
                  <Stack direction={"row"}
