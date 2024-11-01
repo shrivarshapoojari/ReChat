@@ -6,8 +6,7 @@ const schema= new Schema({
   expiresAt: { type: Date, required: true }
 });
 
- 
-otpSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+ schema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
  
 
