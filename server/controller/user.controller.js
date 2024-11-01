@@ -18,9 +18,33 @@ const cookieOptions = {
   httpOnly: true,
   secure: true,
 };
+const changePassword=async(req,res,next)=>{
+  const {email,password}=req.body;
+  if(!email)
+    return next(new ErrorHandler("Email is required",400))
+  if(!password)
+    return next(new ErrorHandler("Password is required",400))
+  try{
+
+    const user =await User.findOne({email:email}).select(+password)
+    if(!user)
+      return next(new ErrorHandler("This account doesnt exist",400))
+
+     user.password=password
+     await user.save();
+
+     return res.status(200).json({
+      success:true,
+      message:"Password changed successfully"
+     })
+  }catch(error){
+              return next(new ErrorHandler(error.message,500))
+  }
+}
 
 const sendOtp=async (req, res) => {
-  const { email } = req.body;
+  const { email ,subject,message} = req.body;
+ 
 
   if (!email) {
       return res.status(400).json({ success: false, message: 'Email is required' });
@@ -34,15 +58,16 @@ const sendOtp=async (req, res) => {
       await Otp.create({ email, otp, expiresAt });
          
  
-      const subject ="Verify your account with RECHAT"
+      
      
      
-      const message =`Your one time password for registering with RECHAT is  ${otp}`
+      const fullMessage = `${message} ${otp}`;
+
       
      
      
      
-        sendEmail(email,subject,message);
+        sendEmail(email,subject,fullMessage);
        
       
        

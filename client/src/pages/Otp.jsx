@@ -33,6 +33,10 @@ const dispatch=useDispatch();
     }
   }, [timer]);
 
+    const subject= "Verify your account with RECHAT";
+    const message="Your OTP  for verifying your account with RECHAT is: ";
+
+
   const verifyOtp = async() => {
 
    const otpStatus= await toast.promise(
@@ -74,7 +78,7 @@ const dispatch=useDispatch();
     setOtp("");
     setTimer(60); // Reset the timer to 60 seconds
     await toast.promise(
-      axios.post(`${server}/api/v1/user/sendOtp`, {email:email}, {
+      axios.post(`${server}/api/v1/user/sendOtp`, {email:email,subject:subject,message:message}, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
