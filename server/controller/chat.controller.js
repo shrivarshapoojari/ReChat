@@ -7,7 +7,7 @@ import { User } from '../models/user.model.js';
 import { Message } from '../models/message.model.js';
 import { uploadFilesToCloudinary } from '../utils/features.js';
 import { NEW_MESSAGE } from '../constants/events.js';
-const reChatId="671290503f1e1f83fdb29bed"
+const reChatId="6724e043c70a25cc301c807a"
 const newGroupChat = async (req, res, next) => {
     try {
         const { name, members } = req.body;
