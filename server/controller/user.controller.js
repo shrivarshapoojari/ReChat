@@ -47,13 +47,18 @@ const forgotPassword=async(req,res,next)=>{
 const sendOtp=async (req, res) => {
   const { email ,subject,message} = req.body;
     
-
+    
   if (!email) {
       return res.status(400).json({ success: false, message: 'Email is required' });
   }
+  const  oldOtp=Otp.findOne({email})
+  if(oldOtp)
+  {
+     await Otp.delete({email})
+  }
 
   const otp = crypto.randomInt(1000, 9999).toString();
-  const expiresAt = new Date(Date.now() + 1 * 60 * 1000);  
+  const expiresAt = new Date(Date.now() + 2 * 60 * 1000);  
 
   try {
        

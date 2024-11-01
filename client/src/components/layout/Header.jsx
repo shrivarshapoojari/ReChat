@@ -167,6 +167,7 @@ const Header = () => {
       marginTop: '0.1rem',
       transition: 'transform 0.2s', // Smooth transition for the image
     }}
+    
   />
   <Typography
     variant="h5"
