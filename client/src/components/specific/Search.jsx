@@ -113,7 +113,8 @@ import React, { useEffect, useState } from 'react'
 import { useInputValidation } from '6pp'
 import SearchIcon from '@mui/icons-material/Search'
 import UserItem from '../shared/UserItem'
-import { sampleUsers } from '../../constants/sampleData'
+
+
 import { useSelector, useDispatch } from 'react-redux'
 import { setIsSearch } from '../../redux/reducers/misc'
 import { useLazySearchUserQuery, useSendFriendRequestMutation } from '../../redux/reducers/api/api'

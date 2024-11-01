@@ -1,7 +1,7 @@
 import React from 'react'
 import { Button, Dialog, Stack, Typography } from '@mui/material'
 import { DialogTitle } from '@mui/material'
-import { sampleUsers } from '../../constants/sampleData'
+ 
 import UserItem from '../shared/UserItem'
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
