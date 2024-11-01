@@ -3,7 +3,8 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { NEW_MESSAGE_ALERT, NEW_REQUEST, REFETCH_CHATS } from '../../constants/events';
-import { sampleChats } from '../../constants/sampleData';
+
+
 import { useErrors } from '../../hooks/hook';
 import { getOrSaveFromStorage } from '../../lib/features';
 import { useMyChatsQuery } from '../../redux/reducers/api/api';
@@ -142,7 +143,7 @@ const AppLayout = (WrappedComponent) => {
 
             {
               isLoading ? <Skeleton /> : <ChatList
-                chats={data?.chats || sampleChats}
+                chats={data?.chats}
                 chatId={chatId}
               
                 newMessagesAlert={newMessagesAlert}
