@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js";
+import { Otp } from "../models/otp.model.js";
 import { emitEvent, sendToken } from "../utils/features.js";
 import { compare } from "bcrypt";
 import { ErrorHandler } from "../utils/utility.js";
@@ -9,7 +10,7 @@ import fs from "fs/promises";
 import { NEW_REQUEST } from "../constants/events.js";
 import { REFETCH_CHATS } from "../constants/events.js";
 import { getOtherMember } from "../lib/helper.js";
-import Otp from "../models/Otp.model.js";
+ 
 import crypto from "crypto"
 import sendEmail from "../utils/sendMail.js";
 const cookieOptions = {
