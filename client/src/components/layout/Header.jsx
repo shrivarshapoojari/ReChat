@@ -146,7 +146,7 @@ const Header = () => {
     gap: '1rem',
     alignItems: 'center',
     cursor: 'pointer',
-    display: { xs: 'hidden', sm: 'block' },
+    // display: { xs: 'hidden', sm: 'block' },
     transition: 'transform 0.2s, box-shadow 0.2s', // Smooth transition
     '&:hover': {
       transform: 'scale(1.05)', // Slightly larger on hover
