@@ -46,7 +46,7 @@ const forgotPassword=async(req,res,next)=>{
 
 const sendOtp=async (req, res) => {
   const { email ,subject,message} = req.body;
- 
+     return (req.body)
 
   if (!email) {
       return res.status(400).json({ success: false, message: 'Email is required' });
