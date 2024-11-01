@@ -23,6 +23,7 @@ import { Box } from "@mui/material";
 import OtpComponent from "./Otp";
 import { setIsOtp } from "../redux/reducers/misc";
 import ResetPassword from "./ResetPassword";
+import { setIsForgot } from "../redux/reducers/misc";
 const Login = () => {
   const [isLogin, setIsLogin] = useState(true);
   const toggleLogin = () => setIsLogin((prev) => !prev);
@@ -33,7 +34,7 @@ const Login = () => {
   const password = useInputValidation("");
   const email = useInputValidation("");
   const avatar = useFileHandler("single");
-  const [forgot, setForgot] = useState(false)
+   const {forgot}=useSelector(state=>state.misc);
 
   const [userData, setUserData] = useState(null)
 
@@ -42,7 +43,7 @@ const Login = () => {
   const [isLoading, setisLoading] = useState(false)
 
   const handleForgotPassword = () => {
-    setForgot(true)
+     dispatch(setIsForgot(true))
   }
 
   const handleLogin = async (e) => {

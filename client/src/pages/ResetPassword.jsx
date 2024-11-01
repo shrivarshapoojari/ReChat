@@ -14,8 +14,9 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { server } from "../constants/config";
 import { useDispatch } from "react-redux";
-import { setIsOtp } from "../redux/reducers/misc";
-
+ 
+import { setIsForgot } from "../redux/reducers/misc";
+import { useNavigate } from "react-router-dom";
 const ResetPassword = () => {
   const [step, setStep] = useState("email"); // Step state to control different stages
   const [email, setEmail] = useState("");
@@ -29,6 +30,7 @@ const ResetPassword = () => {
   const message="Your OTP for changing password is : "
   // Handle OTP input change
   const handleOtpChange = (value) => setOtp(value);
+  const navigate=useNavigate();
 
  
   useEffect(() => {
@@ -38,7 +40,7 @@ const ResetPassword = () => {
     }
   }, [timer, step]);
 
-  // Send OTP to email
+ 
   const handleSendOtp = async () => {
     setTimer(60);
     setOtp("");
@@ -58,10 +60,10 @@ const ResetPassword = () => {
     setStep("otp");
   };
 
-  // Verify OTP
+ 
   const verifyOtp = async () => {
     const otpStatus = await toast.promise(
-      axios.post(`${server}/api/v1/user/verifyOtp`, { email, otp }, {
+      axios.post(`${server}/api/v1/user/verifyOtp`, { email:email, otp:otp }, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +87,7 @@ const ResetPassword = () => {
       return;
     }
     await toast.promise(
-      axios.post(`${server}/api/v1/user/changePassword`, { email:email, password:newPassword }, {
+      axios.post(`${server}/api/v1/user/forgot`, { email:email, password:newPassword }, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
@@ -97,6 +99,9 @@ const ResetPassword = () => {
         error: "Failed to change password, please try again",
       }
     );
+    dispatch(setIsForgot(false));
+    toast.success("Please login with new password");
+    navigate("/login");
     
   };
 
@@ -106,7 +111,7 @@ const ResetPassword = () => {
     setTimer(60);
     await toast.promise(
       axios.post(`${server}/api/v1/user/sendOtp`, {email:email,subject:subject,message:message }, {
-        withCredentials: true,
+       
         headers: {
           "Content-Type": "application/json",
         },

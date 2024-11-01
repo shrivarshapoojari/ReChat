@@ -11,6 +11,7 @@ const initialState = {
   isManageGroup: false,
   notClicked:true,
   isOtp:false,
+  forgot: false,
   uploadingLoader: false,
    
 };
@@ -21,6 +22,9 @@ const miscSlice = createSlice({
   reducers: {
     setIsNewGroup: (state, action) => {
       state.isNewGroup = action.payload;
+    },
+    setIsForgot: (state, action) => {
+      state.forgot = action.payload;
     },
     setIsManageGroup: (state, action) => {
       state.isManageGroup= action.payload;
@@ -69,6 +73,7 @@ export const {
   setIsFileMenu,
    setnotClicked,
   setUploadingLoader,
-  setIsOtp
+  setIsOtp,
+  setIsForgot
   
 } = miscSlice.actions;

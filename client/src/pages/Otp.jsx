@@ -51,7 +51,7 @@ const dispatch=useDispatch();
         success: 'Verified successfully👌',
         error: 'Failed to Verify, Please try again', // Default error message
       });
-      console.log(otpStatus)
+ 
       if(otpStatus.data)
       {
         
@@ -69,7 +69,7 @@ const dispatch=useDispatch();
       }
     );
      
-    console.log(userData)
+     dispatch(setIsOtp(false));
     
     dispatch(userExists(userData?.data?.user));
       }

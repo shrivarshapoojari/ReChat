@@ -18,7 +18,8 @@ const cookieOptions = {
   httpOnly: true,
   secure: true,
 };
-const changePassword=async(req,res,next)=>{
+const forgotPassword=async(req,res,next)=>{
+ 
   const {email,password}=req.body;
   if(!email)
     return next(new ErrorHandler("Email is required",400))
@@ -26,7 +27,7 @@ const changePassword=async(req,res,next)=>{
     return next(new ErrorHandler("Password is required",400))
   try{
 
-    const user =await User.findOne({email:email}).select(+password)
+    const user =await User.findOne({email:email})
     if(!user)
       return next(new ErrorHandler("This account doesnt exist",400))
 
@@ -75,6 +76,7 @@ const sendOtp=async (req, res) => {
       
       res.status(200).json({ success: true, message: 'OTP sent to email' });
   } catch (error) {
+   
       res.status(500).json({ success: false, message: 'Failed to send OTP', error });
   }
 };
@@ -82,8 +84,7 @@ const sendOtp=async (req, res) => {
 
  const verifyOtp=async (req, res) => {
   const { email, otp } = req.body;
-   console.log(email)
-   console.log(otp);
+   
   if (!email || !otp) {
       return res.status(400).json({ success: false, message: 'Email and OTP are required' });
   }
@@ -212,7 +213,7 @@ avatar: {
 
     sendToken(res, user, 201, "User Created");
   } catch (error) {
-    console.log(error);
+    
     return next(new ErrorHandler(error.message, 500));
   }
 };
@@ -463,5 +464,6 @@ export {
   getMyFriends,
   updateProfile,
   verifyOtp,
-  sendOtp
+  sendOtp,
+  forgotPassword,
 };
