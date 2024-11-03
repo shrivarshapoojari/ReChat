@@ -54,7 +54,7 @@ const sendOtp=async (req, res) => {
   const  oldOtp=Otp.findOne({email})
   if(oldOtp)
   {
-     await Otp.delete({email})
+     await Otp.deleteOne({email})
   }
 
   const otp = crypto.randomInt(1000, 9999).toString();
