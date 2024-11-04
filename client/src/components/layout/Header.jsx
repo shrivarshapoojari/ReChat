@@ -1,30 +1,37 @@
+import { Menu as MenuIcon, Search as SearchIcon, MoreVert as MoreVertIcon } from '@mui/icons-material'
+import GroupAddIcon from '@mui/icons-material/GroupAdd'
+import NotificationsIcon from '@mui/icons-material/Notifications'
+import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew'
+import { AppBar, Avatar, Backdrop, Badge, Box, IconButton, Stack, Toolbar, Tooltip, Typography,Popover } from '@mui/material'
+import axios from 'axios'
 import React, { Suspense } from 'react'
-import { AppBar, Backdrop, Badge, Box, Icon, IconButton, Menu, Toolbar, Tooltip } from '@mui/material'
-import { Typography } from '@mui/material'
-import { blue } from '../../constants/color'
-import { Menu as MenuIcon, Search as SearchICon } from '@mui/icons-material'
-import GroupAddIcon from '@mui/icons-material/GroupAdd';
-import GroupsIcon from '@mui/icons-material/Groups';
-import { useNavigate } from "react-router-dom";
-import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import { useState } from 'react';
-import { server } from '../../constants/config'
 import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from "react-router-dom"
+import { blue } from '../../constants/color'
+import { server } from '../../constants/config'
 import { userNotExist } from '../../redux/reducers/auth'
-import axios from 'axios'
-import { setIsMobile, setIsNotification, setIsProfile, setIsSearch, setnotClicked } from '../../redux/reducers/misc'
+import { setIsMobile, setIsNewGroup, setIsNotification, setIsProfile, setIsSearch, setnotClicked } from '../../redux/reducers/misc'
+import ProfileCard from '../specific/ProfileCard'
+import { useMediaQuery } from '@mui/material'
+import { useState } from 'react'
 const Search = React.lazy(() => import('../specific/Search'));
 const NewGroup = React.lazy(() => import('../specific/NewGroup'));
 const Notifications = React.lazy(() => import('../specific/Notifications'));
-import { setIsNewGroup } from '../../redux/reducers/misc'
- import {Avatar} from '@mui/material'
-import ProfileCard from '../specific/ProfileCard'
-import {Stack} from '@mui/material'
+
 const Header = () => {
   const dispatch = useDispatch();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const handleMoreOptionsClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
+  const handleMoreOptionsClose = () => {
+    setAnchorEl(null);
+  };
+  const open = Boolean(anchorEl);
+  const isSmallScreen = useMediaQuery('(max-width:420px)');
+  
   const {notificationCount}=useSelector((state)=>state.chat)
    
   const { isNotification } = useSelector((state) => state.misc)
@@ -68,7 +75,7 @@ const Header = () => {
 
   }
 
-  
+   
 
   const openProfileHandler=()=>{
        
@@ -104,38 +111,7 @@ const Header = () => {
             </Box>
             
 
-          {/* <Stack direction={"row"}
-           onClick={() => navigate('/')}
-                    sx={{
-                      gap:"1rem",
-                      alignItems: "center",
-                    cursor:"pointer"
-                      
-                    }}
-                 >
-                 <img
-            src="/rechatheader.png"
-            alt="Logo"
-            className="mx-auto" // Centered and add margin bottom
-            style={{height:"60px",
-              width:"60px",
-              borderRadius:"50%", 
-             marginTop:"0.1rem",
-            
-
-            }} 
-            
-           
-            // Limit the size of the logo
-          />
-                <Typography variant="h5"
-                sx={{
-                  display: { xs: 'none', sm: 'block' },
-                }}
-                > Rechat</Typography>
-                </Stack>
-             */}
-
+          
 
 
 
@@ -146,7 +122,7 @@ const Header = () => {
     gap: '1rem',
     alignItems: 'center',
     cursor: 'pointer',
-    // display: { xs: 'hidden', sm: 'block' },
+     
     transition: 'transform 0.2s, box-shadow 0.2s', // Smooth transition
     '&:hover': {
       transform: 'scale(1.05)', // Slightly larger on hover
@@ -172,10 +148,10 @@ const Header = () => {
   <Typography
     variant="h5"
     sx={{
-      display: { xs: 'none', sm: 'block' },
-      transition: 'color 0.3s', // Smooth transition for text
+     display: { xs: 'none', sm: 'block' },
+      transition: 'color 0.3s',  
       '&:hover': {
-        color: '#e3f2fd', // Color change on hover
+        color: '#e3f2fd',  
       },
     }}
   >
@@ -186,17 +162,29 @@ const Header = () => {
              
             <Box sx={{ flexGrow: 1 }} />
             <Box>
+             
+             
+             {
+              !isSmallScreen && (
               <Tooltip title="Search">
                 <IconButton color='inherit' size="large" onClick={openSearch}>
-                  <SearchICon />
+                  <SearchIcon />
                 </IconButton>
               </Tooltip>
+              )
+}                  {
+
+                  !isSmallScreen &&
               <Tooltip title="New Group">
                 <IconButton color='inherit' size="large" onClick={openNewGroup}>
                   <GroupAddIcon />
                 </IconButton>
               </Tooltip>
-               
+}
+
+               {
+
+               !isSmallScreen &&
               <Tooltip title="Notifications">
                 <IconButton color='inherit' size="large" onClick={openNotification}>
                   {notificationCount >0 ?<Badge badgeContent={notificationCount} color="error"><NotificationsIcon/></Badge>
@@ -205,19 +193,65 @@ const Header = () => {
                   
                 </IconButton>
               </Tooltip>
-
+}
               <Tooltip title="Profile">
                 <IconButton color='inherit' size="large" onClick={openProfileHandler}>
                    <Avatar  src={user?.avatar?.url}/> 
                 </IconButton>
               </Tooltip>
 
+             {
+              
+             isSmallScreen &&
+              <IconButton color="inherit" onClick={handleMoreOptionsClick}>
+                <MoreVertIcon />
+              </IconButton>
+}
+              
+              {
+                isSmallScreen &&
+              <Popover
+                open={open}
+                anchorEl={anchorEl}
+                onClose={handleMoreOptionsClose}
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+              >
+                <Box p={1} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                  <Tooltip title="Search">
+                    <IconButton color="inherit" onClick={openSearch}>
+                      <SearchIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="New Group">
+                    <IconButton color="inherit" onClick={openNewGroup}>
+                      <GroupAddIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Notifications">
+                    <IconButton color="inherit" onClick={openNotification}>
+                      <Badge badgeContent={notificationCount} color="error">
+                        <NotificationsIcon />
+                      </Badge>
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Logout">
+                    <IconButton color="inherit" onClick={logoutHandler}>
+                      <PowerSettingsNewIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </Popover>
+}
+{
+  !isSmallScreen &&
+
               <Tooltip title="Logout">
                 <IconButton color='inherit' size="large" onClick={logoutHandler}>
                   <PowerSettingsNewIcon />
                 </IconButton>
               </Tooltip>
-
+}
             </Box>
           </Toolbar>
         </AppBar>
@@ -258,3 +292,204 @@ const Header = () => {
 }
 
 export default Header
+
+
+
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import { Menu as MenuIcon, Search as SearchIcon, MoreVert as MoreVertIcon } from '@mui/icons-material';
+// import GroupAddIcon from '@mui/icons-material/GroupAdd';
+// import NotificationsIcon from '@mui/icons-material/Notifications';
+// import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
+// import { AppBar, Avatar, Badge, Box, IconButton, Popover, Stack, Toolbar, Tooltip, Typography } from '@mui/material';
+// import React, { useState } from 'react';
+// import { useDispatch, useSelector } from 'react-redux';
+// import { useNavigate } from 'react-router-dom';
+// import { blue } from '../../constants/color';
+// import { setIsMobile, setIsNewGroup, setIsNotification, setIsProfile, setIsSearch } from '../../redux/reducers/misc';
+// import ProfileCard from '../specific/ProfileCard';
+
+// const Header = () => {
+//   const dispatch = useDispatch();
+//   const navigate = useNavigate();
+//   const [anchorEl, setAnchorEl] = useState(null);
+
+//   const { notificationCount } = useSelector((state) => state.chat);
+//   const { isSearch, isNewGroup, isNotification, isProfile } = useSelector((state) => state.misc);
+//   const { user } = useSelector((state) => state.auth);
+
+//   const openSearch = () => dispatch(setIsSearch(true));
+//   const openNewGroup = () => dispatch(setIsNewGroup(true));
+//   const openNotification = () => dispatch(setIsNotification(true));
+//   const openProfileHandler = () => dispatch(setIsProfile(true));
+
+//   const handleMoreOptionsClick = (event) => {
+//     setAnchorEl(event.currentTarget);
+//   };
+
+//   const handleMoreOptionsClose = () => {
+//     setAnchorEl(null);
+//   };
+
+//   const logoutHandler = async () => {
+//     try {
+//       // Log out logic here
+//       dispatch(userNotExist());
+//       toast.success("Logged out successfully");
+//     } catch (error) {
+//       toast.error("Something went wrong");
+//     }
+//   };
+
+//   const open = Boolean(anchorEl);
+//   const isMobile = window.innerWidth < 420;
+//     console.log(isMobile)
+//   return (
+//     <Box sx={{ flexGrow: 1 }} height="4rem">
+//       <AppBar position="static" sx={{ bgcolor: blue }}>
+//         <Toolbar>
+//           {isMobile ? (
+//             <>
+//               {/* Mobile View */}
+//               <IconButton color="inherit" onClick={() => dispatch(setIsMobile(true))}>
+//                 <MenuIcon />
+//               </IconButton>
+
+//               <Stack direction="row" onClick={() => navigate('/')} sx={{ cursor: 'pointer', alignItems: 'center' }}>
+//                 <img src="/rechatheader.png" alt="Logo" style={{ height: '40px', width: '40px', borderRadius: '50%' }} />
+//               </Stack>
+
+//               <Box sx={{ flexGrow: 1 }} />
+
+//               <Tooltip title="Profile">
+//                 <IconButton color="inherit" onClick={openProfileHandler}>
+//                   <Avatar src={user?.avatar?.url} />
+//                 </IconButton>
+//               </Tooltip>
+
+//               <IconButton color="inherit" onClick={handleMoreOptionsClick}>
+//                 <MoreVertIcon />
+//               </IconButton>
+
+//               {/* Popover for More Options in Mobile View */}
+//               <Popover
+//                 open={open}
+//                 anchorEl={anchorEl}
+//                 onClose={handleMoreOptionsClose}
+//                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+//                 transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+//               >
+//                 <Box p={1}>
+//                   <Tooltip title="Search">
+//                     <IconButton color="inherit" onClick={openSearch}>
+//                       <SearchIcon />
+//                     </IconButton>
+//                   </Tooltip>
+//                   <Tooltip title="New Group">
+//                     <IconButton color="inherit" onClick={openNewGroup}>
+//                       <GroupAddIcon />
+//                     </IconButton>
+//                   </Tooltip>
+//                   <Tooltip title="Notifications">
+//                     <IconButton color="inherit" onClick={openNotification}>
+//                       <Badge badgeContent={notificationCount} color="error">
+//                         <NotificationsIcon />
+//                       </Badge>
+//                     </IconButton>
+//                   </Tooltip>
+//                   <Tooltip title="Logout">
+//                     <IconButton color="inherit" onClick={logoutHandler}>
+//                       <PowerSettingsNewIcon />
+//                     </IconButton>
+//                   </Tooltip>
+//                 </Box>
+//               </Popover>
+//             </>
+//           ) : (
+//             // Desktop View
+//             <>
+//               <IconButton color="inherit" onClick={() => dispatch(setIsMobile(true))}>
+//                 <MenuIcon />
+//               </IconButton>
+
+//               <Stack direction="row" onClick={() => navigate('/')} sx={{ cursor: 'pointer', alignItems: 'center' }}>
+//                 <img src="/rechatheader.png" alt="Logo" style={{ height: '40px', width: '40px', borderRadius: '50%' }} />
+//                 <Typography variant="h5" sx={{ ml: 1, display: { xs: 'none', sm: 'block' } }}>
+//                   Rechat
+//                 </Typography>
+//               </Stack>
+
+//               <Box sx={{ flexGrow: 1 }} />
+
+//               <Tooltip title="Search">
+//                 <IconButton color="inherit" onClick={openSearch}>
+//                   <SearchIcon />
+//                 </IconButton>
+//               </Tooltip>
+//               <Tooltip title="New Group">
+//                 <IconButton color="inherit" onClick={openNewGroup}>
+//                   <GroupAddIcon />
+//                 </IconButton>
+//               </Tooltip>
+//               <Tooltip title="Notifications">
+//                 <IconButton color="inherit" onClick={openNotification}>
+//                   <Badge badgeContent={notificationCount} color="error">
+//                     <NotificationsIcon />
+//                   </Badge>
+//                 </IconButton>
+//               </Tooltip>
+
+//               <Tooltip title="Profile">
+//                 <IconButton color="inherit" onClick={openProfileHandler}>
+//                   <Avatar src={user?.avatar?.url} />
+//                 </IconButton>
+//               </Tooltip>
+
+//               <Tooltip title="Logout">
+//                 <IconButton color="inherit" onClick={logoutHandler}>
+//                   <PowerSettingsNewIcon />
+//                 </IconButton>
+//               </Tooltip>
+//             </>
+//           )}
+//         </Toolbar>
+//       </AppBar>
+//     </Box>
+//   );
+// };
+
+// export default Header;
+
+
+
+
+
+ 
