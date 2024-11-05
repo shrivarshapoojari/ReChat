@@ -48,7 +48,7 @@ const dispatch=useDispatch();
       }),
       {
         loading: 'Verifying...',
-        success: 'Verified successfully👌',
+        success: 'Verified successfully',
         error: 'Failed to Verify, Please try again', // Default error message
       });
  
@@ -64,7 +64,7 @@ const dispatch=useDispatch();
       }),
       {
         loading: 'Onboarding in progress...',
-        success: 'Registered Successfully 👌',
+        success: 'Registered Successfully ',
         error: 'Registration failed, please try again', // Default error message
       }
     );
