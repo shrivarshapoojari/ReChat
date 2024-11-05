@@ -7,7 +7,8 @@ import RenderAttachment from './RenderAttachment'
 
 const Message = ({ message, user }) => {
     const { sender, content, attachments = [], createdAt } = message
-    const sameSender = sender._id === user._id
+  
+    const sameSender = sender?._id === user?._id
     const timeAgo = moment(createdAt).fromNow()
     const [avatar, setAvatar] = useState(sender?.name?.charAt(0)?.toUpperCase())
 
@@ -33,9 +34,9 @@ const Message = ({ message, user }) => {
                 <Avatar
                     alt={sender?.name}
                     sx={{ mr: 2, bgcolor: "blue" }}
-                    src={avatar.startsWith("http") ? avatar : undefined}
+                    src={avatar?.startsWith("http") ? avatar : undefined}
                 >
-                    {!avatar.startsWith("http") && avatar}
+                    {!avatar?.startsWith("http") && avatar}
                 </Avatar>
             )}
 
@@ -56,7 +57,7 @@ const Message = ({ message, user }) => {
             >
                 {!sameSender && (
                     <Typography color="#333" fontWeight="600" variant="caption">
-                        {sender.name}
+                        {sender?.name}
                     </Typography>
                 )}
                 {content && (

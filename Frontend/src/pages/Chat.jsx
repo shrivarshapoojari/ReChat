@@ -181,10 +181,9 @@ const Chat = ({ chatId }) => {
       if (data.chatId !== chatId) return;
       const messageForAlert = {
         content: data.message,
-        sender: {
-          _id: "djasdhajksdhasdsadasdas",
-          name: "Admin",
-        },
+          sender:{
+            name:"RECHAT"
+          },
         chat: chatId,
         createdAt: new Date().toISOString(),
       };
