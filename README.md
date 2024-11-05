@@ -43,7 +43,8 @@ Installation
 
 ### Step 1: Clone the Repository
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   git clone [https://github.com/shrivarshapoojari/ReChat.git](https://github.com/shrivarshapoojari/ReChat.git)  cd ReChat   `
+       git clone [https://github.com/shrivarshapoojari/ReChat.git](https://github.com/shrivarshapoojari/ReChat.git)  
+       cd ReChat   `
 
 ### Step 2: Install Dependencies
 
@@ -51,19 +52,26 @@ Navigate to each directory (Frontend and Backend) and install the necessary npm 
 
 #### Frontend
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   cd Frontend  npm install   `
+ ``` cd  Frontend ```
+ 
+  
+```   npm install   ```
 
 #### Backend
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   cd ../Backend  npm install   `
+  ```  cd ../Backend  ```
+  
+   ``` npm install   ```
 
 ### Step 3: Run the Application
 
-1.  cd Backend npm run dev
+1. ``` cd Backend ```
+     ```  npm run dev ```
     
     *   Backend server will run on port 3000.
         
-2.  cd ../frontend npm run dev
+3.  ``` cd ../frontend ```
+        ``` npm run dev```
     
     *   Frontend server will run on port 5173.
         
@@ -73,4 +81,4 @@ Accessing the Application
 
 After running both servers, you can access **ReChat** in your browser at:
 
-Plain textANTLR4BashCC#CSSCoffeeScriptCMakeDartDjangoDockerEJSErlangGitGoGraphQLGroovyHTMLJavaJavaScriptJSONJSXKotlinLaTeXLessLuaMakefileMarkdownMATLABMarkupObjective-CPerlPHPPowerShell.propertiesProtocol BuffersPythonRRubySass (Sass)Sass (Scss)SchemeSQLShellSwiftSVGTSXTypeScriptWebAssemblyYAMLXML`   http://localhost:5173   `
+ ```  http://localhost:5173   ```
