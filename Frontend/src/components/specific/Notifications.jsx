@@ -52,7 +52,7 @@ const Notifications = () => {
     
     >
       <Stack p={{ xs: '1rem', sm: '2rem' }} maxWidth="25rem" spacing={2}>
-        <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.5rem' }}>Friend Requests</DialogTitle>
+        <DialogTitle sx={{ textAlign: 'center', fontWeight: 'bold', fontSize: '1.5rem' ,color: "#007bff"}}>Friend Requests</DialogTitle>
         
         {isLoading ? (
           <Skeleton variant="rectangular" width="100%" height={100} />

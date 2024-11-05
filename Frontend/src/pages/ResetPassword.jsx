@@ -53,7 +53,7 @@ const ResetPassword = () => {
       }),
       {
         loading: "Sending OTP...",
-        success: "OTP sent successfully 👌",
+        success: "OTP sent successfully ",
         error: "Failed to send OTP, please try again",
       }
     );
@@ -71,7 +71,7 @@ const ResetPassword = () => {
       }),
       {
         loading: "Verifying...",
-        success: "Verified successfully 👌",
+        success: "Verified successfully",
         error: "Failed to Verify, Please try again",
       }
     );
@@ -95,7 +95,7 @@ const ResetPassword = () => {
       }),
       {
         loading: "Changing password...",
-        success: "Password changed successfully 👌",
+        success: "Password changed successfully ",
         error: "Failed to change password, please try again",
       }
     );
@@ -118,7 +118,7 @@ const ResetPassword = () => {
       }),
       {
         loading: "Sending OTP...",
-        success: "OTP sent successfully 👌",
+        success: "OTP sent successfully ",
         error: "Failed to send OTP, please try again",
       }
     );

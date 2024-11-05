@@ -187,7 +187,7 @@ const Login = () => {
             ReChat : Conversations Reimagined !
           </Typography>
           <Typography variant="body1" mt={2}>
-            Experience chat like never before with Rechat’s smart, user-focused
+            Experience chat like never before with Rechat’s user-focused
             features designed just for you
           </Typography>
           <Typography variant="body2" mt={2} color="yellow">
