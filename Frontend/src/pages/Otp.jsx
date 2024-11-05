@@ -86,7 +86,7 @@ const dispatch=useDispatch();
       }),
       {
         loading: 'Sending OTP...',
-        success: 'OTP sent successfully 👌',
+        success: 'OTP sent successfully',
         error: 'Failed to send OTP, please try again', // Default error message
       });
   };
