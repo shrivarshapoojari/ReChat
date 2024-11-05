@@ -1,6 +1,7 @@
 ReChat - Real-Time Chat Application
 ===================================
-
+Link :
+    ```  https://rechaat.vercel.app/ ```
 Welcome to **ReChat**, a real-time chat application designed to offer a seamless and intuitive messaging experience using WebSockets. This README provides instructions for setting up and running both the frontend and backend components of the application.
 
 Overview
