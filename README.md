@@ -1,7 +1,6 @@
 ReChat - Real-Time Chat Application
 ===================================
-Link :
-    ```  https://rechaat.vercel.app/ ```
+  Link :     ```  https://rechaat.vercel.app/ ```  
 Welcome to **ReChat**, a real-time chat application designed to offer a seamless and intuitive messaging experience using WebSockets. This README provides instructions for setting up and running both the frontend and backend components of the application.
 
 Overview
@@ -67,12 +66,14 @@ Navigate to each directory (Frontend and Backend) and install the necessary npm 
 ### Step 3: Run the Application
 
 1. ``` cd Backend ```
-     ```  npm run dev ```
+   
+       ```  npm run dev ```  
     
     *   Backend server will run on port 3000.
         
-3.  ``` cd ../frontend ```
-        ``` npm run dev```
+3.  ``` cd ../Frontend ```
+   
+          ``` npm run dev```  
     
     *   Frontend server will run on port 5173.
         
