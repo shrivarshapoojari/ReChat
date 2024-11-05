@@ -76,7 +76,7 @@ const Login = () => {
         ),
         {
           loading: "Logging in...",
-          success: "Logged in successfully 👌",
+          success: "Logged in successfully ",
           error: "Login failed, please check your credentials", // Default error message
         }
       );

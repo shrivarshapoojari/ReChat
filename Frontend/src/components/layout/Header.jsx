@@ -170,7 +170,7 @@ const Header = () => {
              
              {
               !isSmallScreen && (
-              <Tooltip title="Search">
+              <Tooltip title="Find Friends">
                 <IconButton color='inherit' size="large" onClick={openSearch}>
                   <SearchIcon />
                 </IconButton>
