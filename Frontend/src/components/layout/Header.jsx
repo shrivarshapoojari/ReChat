@@ -54,9 +54,11 @@ const Header = () => {
   }
   const openNewGroup = () => {
     dispatch(setIsNewGroup(true))
+    handleMoreOptionsClose();
   }
   const openNotification = () => {
     dispatch(setIsNotification(true))
+    handleMoreOptionsClose();
   }
  
 
@@ -72,7 +74,7 @@ const Header = () => {
       console.log(error)
       toast.error(error?.response?.data?.message || "Something went wrong")
     }
-
+    handleMoreOptionsClose();
     
 
   }
@@ -187,7 +189,7 @@ const Header = () => {
                {
 
                !isSmallScreen &&
-              <Tooltip title="Notifications">
+              <Tooltip title="Friend Requests">
                 <IconButton color='inherit' size="large" onClick={openNotification}>
                   {notificationCount >0 ?<Badge badgeContent={notificationCount} color="error"><NotificationsIcon/></Badge>
                   : <NotificationsIcon/>
@@ -219,10 +221,15 @@ const Header = () => {
                 anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                 transformOrigin={{ vertical: 'top', horizontal: 'right' }}
                 sx={{
-                  marginLeft:"0.5rem"
+                  marginLeft:"0.5rem",
+                  
                 }}
               >
-                <Box p={1} sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                <Box p={1} sx={{ display: 'flex', flexDirection: 'column', gap: 1, 
+                     elevation: 5,
+                }}
+                   
+                >
                   <Tooltip title="Search">
                     <Stack direction="row" >
                     <IconButton color="inherit" onClick={openSearch}
@@ -247,7 +254,7 @@ const Header = () => {
                     </IconButton>
                     </Stack>
                   </Tooltip>
-                  <Tooltip title="Notifications">
+                  <Tooltip title="Friend Requests">
                     <Stack direction="row" >
                     <IconButton color="inherit" onClick={openNotification}>
                       <Badge badgeContent={notificationCount} color="error">

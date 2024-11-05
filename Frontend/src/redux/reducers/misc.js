@@ -13,6 +13,7 @@ const initialState = {
   isOtp:false,
   forgot: false,
   uploadingLoader: false,
+  userTyping: false,
    
 };
 
@@ -57,6 +58,9 @@ const miscSlice = createSlice({
     setIsOtp: (state, action) => {
       state.isOtp = action.payload;
     },
+    setUserTyping: (state, action) => {
+      state.userTyping = action.payload;
+    },
     
   },
 });
@@ -74,6 +78,7 @@ export const {
    setnotClicked,
   setUploadingLoader,
   setIsOtp,
-  setIsForgot
+  setIsForgot,
+  setUserTyping
   
 } = miscSlice.actions;

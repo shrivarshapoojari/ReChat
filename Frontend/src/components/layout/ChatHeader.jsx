@@ -34,7 +34,8 @@ const ChatHeader = ({ chatId }) => {
     }
   }, [chatId, data]);
   
-
+const {userTyping}=useSelector((state)=>state.misc)
+ 
   const handleManageGroup = () => {
     dispatch(setIsManageGroup(true));
   };
@@ -74,11 +75,24 @@ const ChatHeader = ({ chatId }) => {
               <Avatar src={avatar} alt="User" />
               <Box sx={{ ml: 2 }}>
                 <Typography variant="h6">{chatName}</Typography>
-                <Typography variant="body2" color="textSecondary">
+                  
+              {
+               
+                userTyping && <Typography variant="body1"
+                sx={{ 
+                  background: 'linear-gradient(45deg, #3a8dff, #5ab9ff, #89d9ff)',
+                  backgroundClip: 'text',
+                  color: 'transparent',
+                  animation: 'typingColor 2s infinite linear',
+                }}
+                >Typing...</Typography>
+              }   
+                 
+                {!userTyping && <Typography variant="body2" color="textSecondary">
                   {data?.members?.length>1 &&
                     (data.members.slice(0, 3).map((member) => member.name).join(', ') +
                       (data.members.length > 3 ? ', ...' : ''))}
-                </Typography>
+                </Typography>}
               </Box>
             </Box>
             <Box>
