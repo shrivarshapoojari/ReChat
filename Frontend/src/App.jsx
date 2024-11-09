@@ -44,7 +44,7 @@ const App = () => {
     };
   
     const getUserData = async () => {
-      const result = await fetchUser(); // Await the result of fetchUser
+      const result = await fetchUser(); 
        
       if (result) {
           dispatch(userExists(result.user));
@@ -52,7 +52,7 @@ const App = () => {
         dispatch(userNotExist());
         
       }
-        // Check the fetched data
+       
     };
   
     getUserData(); // Call the async function inside useEffect

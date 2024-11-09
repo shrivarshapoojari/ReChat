@@ -113,10 +113,26 @@ const Login = () => {
     e.preventDefault();
 
     // Check if any required field is missing
-    if (!name.value || !username.value || !password.value || !avatar.file) {
-      toast.error("Please fill all the fields");
+    if (!name.value) {
+      toast.error("Please fill in the name");
       return;
     }
+    
+    if (!username.value) {
+      toast.error("Please fill in the username");
+      return;
+    }
+    
+    if (!password.value) {
+      toast.error("Please fill in the password");
+      return;
+    }
+    
+    if (!avatar.file) {
+      toast.error("Please upload an avatar");
+      return;
+    }
+    
 
 
     // Prepare form data
