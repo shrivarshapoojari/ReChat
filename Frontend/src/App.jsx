@@ -22,7 +22,7 @@ const App = () => {
   const dispatch = useDispatch()
   const { user, loader } = useSelector((state) => state.auth)
   
-  
+  const {isAdmin}=useSelector((state)=>state.auth)
 
 
 
@@ -78,12 +78,24 @@ const App = () => {
                 <Login />
               </ProtectRoute>
             } />
-
+            
 
           <Route path="/admin" element={<AdminLogin />} />
-          <Route path="/admin/dashboard" element={<DashBoard />} />
-          <Route path="/admin/users-management" element={<UserManagement />} />
+          
+        
+          
+          <Route path="/admin/dashboard" element={   <ProtectRoute user={isAdmin} redirect='/admin'>
+          <DashBoard />
+        </ProtectRoute>
 
+          
+          } />
+         
+        <Route path="/admin/users-management" element={
+           <ProtectRoute user={isAdmin} redirect='/admin'>
+            <UserManagement />
+           </ProtectRoute>
+          } />
           <Route path="*" element={<h1>Notfound</h1>} />
         </Routes>
       </Suspense>
