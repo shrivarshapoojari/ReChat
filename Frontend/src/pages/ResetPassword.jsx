@@ -42,6 +42,7 @@ const ResetPassword = () => {
 
  
   const handleSendOtp = async () => {
+    if (!email) return toast.error("Please enter email");
     setTimer(60);
     setOtp("");
     await toast.promise(
@@ -62,6 +63,7 @@ const ResetPassword = () => {
 
  
   const verifyOtp = async () => {
+    if (!otp) return toast.error("Please enter OTP");
     const otpStatus = await toast.promise(
       axios.post(`${server}/api/v1/user/verifyOtp`, { email:email, otp:otp }, {
         withCredentials: true,

@@ -38,7 +38,8 @@ const dispatch=useDispatch();
 
 
   const verifyOtp = async() => {
-
+    if(!otp) return toast.error("Please enter OTP");
+    if(!email) return toast.error("Please enter email");
    const otpStatus= await toast.promise(
       axios.post(`${server}/api/v1/user/verifyOtp`, {email:email,otp:otp}, {
         withCredentials: true,
