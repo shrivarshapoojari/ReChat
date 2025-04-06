@@ -51,7 +51,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 app.use(cors(
     {
-        origin:["http://localhost:5173","http://localhost:3000","https://rechaat.vercel.app"],
+        origin:["http://localhost:5173","http://localhost:3000","https://rechaat.vercel.app","https://rechat.shrivarshapoojary.in"],
         credentials:true,
     }
 ))
