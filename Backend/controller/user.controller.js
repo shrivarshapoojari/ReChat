@@ -46,45 +46,52 @@ const forgotPassword=async(req,res,next)=>{
 
 const sendOtp=async (req, res) => {
   const { email ,subject,message} = req.body;
-    
+  
+  console.log(`🔐 [${new Date().toISOString()}] OTP Request received:`);
+  console.log(`🔐 Email: ${email}`);
+  console.log(`🔐 Subject: ${subject}`);
+  console.log(`🔐 Message: ${message}`);
     
   if (!email) {
+      console.log(`❌ Email validation failed - no email provided`);
       return res.status(400).json({ success: false, message: 'Email is required' });
   }
+  
+  console.log(`🔐 Checking for existing OTP...`);
   const  oldOtp=Otp.findOne({email})
   if(oldOtp)
   {
+     console.log(`🔐 Found existing OTP, deleting...`);
      await Otp.deleteOne({email})
+     console.log(`🔐 Existing OTP deleted`);
   }
 
   const otp = crypto.randomInt(1000, 9999).toString();
   const expiresAt = new Date(Date.now() + 2 * 60 * 1000);  
+  
+  console.log(`🔐 Generated OTP: ${otp}`);
+  console.log(`🔐 OTP expires at: ${expiresAt.toISOString()}`);
 
   try {
-       
+       console.log(`🔐 Saving OTP to database...`);
       await Otp.create({ email, otp, expiresAt });
+      console.log(`✅ OTP saved to database successfully`);
          
- 
-      
-     
-     
       const fullMessage = `${message} ${otp}`;
+      console.log(`📧 Preparing to send email with OTP...`);
+      console.log(`📧 Full message: ${fullMessage}`);
 
+      console.log(`📧 Calling sendEmail function...`);
+      const emailResult = await sendEmail(email,subject,fullMessage);
+      console.log(`📧 Email function returned:`, emailResult);
       
-     
-     
-     
-        sendEmail(email,subject,fullMessage);
-       
-      
-       
-
-      
+      console.log(`✅ [${new Date().toISOString()}] OTP process completed successfully`);
       res.status(200).json({ success: true, message: 'OTP sent to email' });
   } catch (error) {
    
-    console.log(error)
-      res.status(500).json({ success: false, message: 'Failed to send OTP', error });
+    console.error(`❌ [${new Date().toISOString()}] OTP sending failed:`);
+    console.error(`❌ Error in sendOtp:`, error);
+    res.status(500).json({ success: false, message: 'Failed to send OTP', error: error.message });
   }
 };
 
